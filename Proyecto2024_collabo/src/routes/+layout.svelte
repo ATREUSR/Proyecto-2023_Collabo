@@ -1,12 +1,16 @@
 <script>
 	import logo from './images/Logo_home.png';
+    import logobackground from './images/Background_logo.png';
 </script>
 
 
 
 <header>
     <nav class="nav">
-        <div class="logoimg"><img src={logo} alt=""/></div>
+        <label class="logo-container" for="">
+            <div class="logobackgroundimg"><img src={logobackground} alt=""/></div>
+            <div class="logoimg"><img src={logo} alt=""/></div>
+        </label>
         <h1 class="collabotxt">collabo</h1>
         <ul>
             <li>
@@ -67,12 +71,22 @@
         height: 30px;
     }
 
+    .logo-container {
+        position: relative;
+        text-align: center;
+    }
+
     .logoimg {
-        background-color: #4800B6;
-        padding: 5px;
-        padding-top: 1.5%;
-        margin: -10px;
-        margin-bottom: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+    }
+
+    .logobackgroundimg img{
+        width: 70px;
+        height: 100%;
     }
 
     .collabotxt {
