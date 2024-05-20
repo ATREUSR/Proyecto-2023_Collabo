@@ -6,14 +6,14 @@
 
 <header>
     <nav class="nav">
-        <img src={logo} alt=""/>
+        <div class="logoimg"><img src={logo} alt=""/></div>
         <h1 class="collabotxt">collabo</h1>
         <ul>
             <li>
                 <a href="/">Home</a>
             </li>
             <li>
-                <a href="/about">About</a>
+                <a href="/about">Feed</a>
             </li>
             <li>
                 <a href="/discover">Discover</a>
@@ -22,7 +22,7 @@
                 <a href="/About">About us</a>
             </li>
             <li>
-                <input type="text" placeholder="Search..">
+                <input type="text" placeholder="Search Stuff">
             </li>
             <li>
                 <button class="uploadBtn">Upload</button>
@@ -42,6 +42,14 @@
         font-family: 'Coolvetica', sans-serif;
     }
 
+    nav {
+        display: flex;
+        background-color: #fff;
+        border-bottom: solid 1px #000;
+        align-items: center;
+        width: 100%;
+    }
+
     .uploadBtn {
         background-color: #4800B6;
         color: #fff;
@@ -50,17 +58,21 @@
         border-radius: 5px;
     }
 
-    nav {
-        display: flex;
-        background-color: #fff;
-        border-bottom: solid 1px #000;
-        align-items: center;
+    .uploadBtn:hover {
+        cursor: pointer;
     }
 
-    img {
+    .nav img {
         width: 30px;
         height: 30px;
+    }
+
+    .logoimg {
         background-color: #4800B6;
+        padding: 5px;
+        padding-top: 1.5%;
+        margin: -10px;
+        margin-bottom: 0;
     }
 
     .collabotxt {
@@ -73,23 +85,23 @@
         display: flex;
         align-items: center;
         list-style: none;
-        
     }
 
     li {
-        margin-right: 5rem;
+        margin-right: 4rem;
     }
 
-    h1 {
-        margin: 0;
+    .nav h1 {
+        margin-left: 1rem;
     }
 
-    a {
+    .nav a {
         position: relative;
         font-size: 1.1em;
         color: #000;
         text-decoration: none;
-        font-weight: 500;
+        font-weight: 650;
+        white-space: nowrap
     }
 
 
@@ -97,11 +109,11 @@
         float: right;
         padding: 6px;
         border: none;
-        margin-top: 8px;
         margin-right: 16px;
         font-size: 17px;
         border: solid 1px black;
-        border-radius: 10px;
+        border-radius: 20px;
+        font-weight: 700;
     }
 
 
