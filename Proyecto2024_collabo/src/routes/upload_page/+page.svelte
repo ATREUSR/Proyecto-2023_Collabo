@@ -97,7 +97,7 @@
     }
 
     .label-container{
-        position: relative;;
+        position: relative;
         display: inline-block;
         text-align: center;
     }
