@@ -1,5 +1,17 @@
 <script>
 	import rectangle from '../images/rectangulo_color.png';
+    /*import { page } from '$app/stores';
+
+    const dropArea = $page.params.dropArea;
+    const input = $page.params;
+    const fileView = $page.params.fileView;
+
+    input.addEventListener("change", uploadimage)
+
+    function uploadimage() {
+        let audioLink = URL.createObjectURL(input.files[0]);
+        fileView.style.backgroundImage = `url(${audioLink})`;
+    }*/
 </script>
 
 <div class="space">
@@ -11,11 +23,10 @@
                     <img src={rectangle} alt="">
                     <p class="centrado">Or select your files here</p>
                 </label>
-                <input type="file" class="btn-file" accept=".wav/.flac/.alac/.aiff" id="input-file">
+                <input multiple type="file" class="btn-file" accept=".wav/.flac/.alac/.aiff" id="input-file">
             </div>
             <span>Upload your files in WAV, FLAC, ALAC or AIFF for the highest quality</span>
         </div>
-        <input type="file" accept=".wav/.flac/.alac/.aiff" id="input-file" hidden>
     </label>
 </div>
 
@@ -101,5 +112,3 @@
     }
     
 </style>
-
-<h1>yeah</h1>
