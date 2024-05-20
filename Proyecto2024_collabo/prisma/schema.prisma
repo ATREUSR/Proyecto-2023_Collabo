@@ -15,6 +15,36 @@ datasource db {
 }
 
 model User {
-  id Int
-  
+  id      Int     @id @default(autoincrement())
+  email   String  @unique
+  name    String  
+  profile Profile?
+  loops   Loops[]
+}
+model Profile {
+  id     Int    @id @default(autoincrement())
+  bio    String
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int    @unique
+}
+model Loops{
+  id    Int   @id @default(autoincrement())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  userId Int  @unique
+  user User  @relation(fields: [userId], references: [id])
+  Title  String
+  Descripcion String
+  Tags String
+  comments Comment[]
+
+}
+model Comment {
+  id          Int      @id @default(autoincrement())
+  loopId      Int
+  userId      Int
+  commentText String
+  createdAt   DateTime @default(now())
+  loop        Loops     @relation(fields: [loopId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
 }
