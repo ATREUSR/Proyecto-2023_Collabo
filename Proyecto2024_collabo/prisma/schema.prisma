@@ -20,6 +20,7 @@ model User {
   name    String  
   profile Profile?
   loops   Loops[]
+  comment Comment[]
 }
 model Profile {
   id     Int    @id @default(autoincrement())
