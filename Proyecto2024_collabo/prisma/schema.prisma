@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "postgresql"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -49,3 +49,4 @@ model Comment {
   loop        Loops     @relation(fields: [loopId], references: [id])
   user        User     @relation(fields: [userId], references: [id])
 }
+
