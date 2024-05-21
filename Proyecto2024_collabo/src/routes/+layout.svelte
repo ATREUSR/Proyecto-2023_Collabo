@@ -1,6 +1,7 @@
 <script>
 	import logo from './images/Logo_home.png';
     import logobackground from './images/Background_logo.png';
+    import defaultpfp from './images/defaultpfp.png';
 </script>
 
 
@@ -25,11 +26,16 @@
             <li>
                 <a href="/About">About us</a>
             </li>
-            <li>
+            <li class="searcher-li">
                 <input type="text" placeholder="Search Stuff">
             </li>
             <li>
                 <button class="uploadBtn">Upload</button>
+            </li>
+            <li>
+                <div class="profile-container">
+                    <img src={defaultpfp} alt="profile" />
+                </div>
             </li>
         </ul>
     </nav>
@@ -58,6 +64,8 @@
         background-color: #4800B6;
         color: #fff;
         border: none;
+        width: 140px;
+        height: 30px;
         padding: 0.5rem 1rem;
         border-radius: 5px;
     }
@@ -92,7 +100,11 @@
     .collabotxt {
         color: #000;
         font-size: 1.5rem;
-        margin-right: 20%;
+        margin-right: 5%;
+    }
+
+    .searcher-li{
+        margin-left: 150px;
     }
 
     ul {
@@ -102,7 +114,7 @@
     }
 
     li {
-        margin-right: 4rem;
+        margin-right: 3rem;
     }
 
     .nav h1 {
@@ -118,16 +130,23 @@
         white-space: nowrap
     }
 
-
     .nav input[type=text] {
         float: right;
+        width: 140%;
         padding: 6px;
         border: none;
-        margin-right: 16px;
+        margin-right:0;
         font-size: 17px;
         border: solid 1px black;
         border-radius: 20px;
         font-weight: 700;
+    }
+
+    .profile-container {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        overflow: hidden;
     }
 
 

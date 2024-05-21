@@ -89,7 +89,7 @@
         font-weight: 500;
         transition: .5s;
         bottom: 5px; 
-        display: none;  
+        display: none; 
     }
 
     .btn-file-container{
