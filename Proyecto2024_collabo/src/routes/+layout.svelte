@@ -58,8 +58,9 @@
         border-bottom: solid 1px #000;
         align-items: center;
         width: 100%;
-    }
 
+    }
+    
     .uploadBtn {
         background-color: #4800B6;
         color: #fff;

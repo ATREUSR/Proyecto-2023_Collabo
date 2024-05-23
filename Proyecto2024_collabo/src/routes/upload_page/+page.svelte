@@ -1,34 +1,68 @@
-<script>
+<script lang="ts">
+    import { onMount } from 'svelte';
 	import rectangle from '../images/rectangulo_color.png';
-    /*import { page } from '$app/stores';
+    import { page } from '$app/stores';
 
-    const dropArea = $page.params.dropArea;
-    const input = $page.params;
-    const fileView = $page.params.fileView;
+    let dropArea: HTMLElement;
+    let input: HTMLInputElement;
+    let fileView: HTMLElement;
 
-    input.addEventListener("change", uploadimage)
+    onMount(() => {
+        input = document.getElementById("input-file") as HTMLInputElement;
+        fileView = document.getElementById("file-view") as HTMLElement;
+        dropArea = document.getElementById("drop-area") as HTMLElement;
+        if (input) {
+            input.addEventListener("change", uploadaudio);
+            dropArea.addEventListener("dragover", handleDragOver); 
+            dropArea.addEventListener("drop", handleDrag);
+        } else {
+            console.error("El elemento con ID 'input-file' no se encontró en el DOM.");
+        }
+    });
 
-    function uploadimage() {
-        let audioLink = URL.createObjectURL(input.files[0]);
-        fileView.style.backgroundImage = `url(${audioLink})`;
-    }*/
+    function uploadaudio() {
+        if (input.files && input.files[0]) {
+            let audioLink = URL.createObjectURL(input.files[0]);
+            let audioElement = document.createElement('audio');
+            audioElement.controls = true;
+            audioElement.src = audioLink;
+            fileView.textContent = "";
+            fileView.style.display = "flex";
+            fileView.style.justifyContent = "center";
+            fileView.style.alignItems = "center";
+            fileView.appendChild(audioElement);
+            console.log("Audio subido correctamente.");
+        }
+    }
+
+    function handleDragOver(e: DragEvent) {
+        e.preventDefault();
+    }
+
+    function handleDrag(e: DragEvent) {
+        e.preventDefault();
+        input.files = e.dataTransfer.files;
+        uploadaudio();
+    }
 </script>
 
 <div class="space">
-    <label for="input-file" id="drop-area">
-        <div id="file-view">
+    <label for="input-file" id="drop-area" bind:this={dropArea} on:dragover={handleDragOver}>
+        <div id="file-view" bind:this={fileView}>
             <p>Drag your stuff to upload:</p>
             <div class="btn-file-container">
-                <label class="label-container" for="">
-                    <img src={rectangle} alt="">
+                <div class="label-select-files">
+                    <img src={rectangle} alt=""> <!-- this should be a button -->
                     <p class="centrado">Or select your files here</p>
-                </label>
-                <input multiple type="file" class="btn-file" accept=".wav/.flac/.alac/.aiff" id="input-file">
+                </div>
+                <input multiple type="file" class="btn-file" accept="audio/*" id="input-file" bind:this={input} on:change={uploadaudio}> <!-- no se pueden archivos de audio raros -->
             </div>
             <span>Upload your files in WAV, FLAC, ALAC or AIFF for the highest quality</span>
         </div>
     </label>
 </div>
+
+
 
 <style>
 
@@ -79,7 +113,6 @@
         position: relative;
         width: 100%;
         height: 45px;
-        background: #0A3403;
         border: none;
         outline: none;
         border-radius: 6px;
@@ -96,7 +129,7 @@
         margin-bottom: 100px;
     }
 
-    .label-container{
+    .label-select-files{
         position: relative;
         display: inline-block;
         text-align: center;
