@@ -1,49 +1,55 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-	import rectangle from '../images/rectangulo_color.png';
-    import { page } from '$app/stores';
+import { onMount } from 'svelte';
+import rectangle from '../images/rectangulo_color.png';
+import { page } from '$app/stores';
 
-    let dropArea: HTMLElement;
-    let input: HTMLInputElement;
-    let fileView: HTMLElement;
+let dropArea: HTMLElement;
+let input: HTMLInputElement;
+let fileView: HTMLElement;
+let submitBtn: HTMLElement;
 
-    onMount(() => {
-        input = document.getElementById("input-file") as HTMLInputElement;
-        fileView = document.getElementById("file-view") as HTMLElement;
-        dropArea = document.getElementById("drop-area") as HTMLElement;
-        if (input) {
-            input.addEventListener("change", uploadaudio);
-            dropArea.addEventListener("dragover", handleDragOver); 
-            dropArea.addEventListener("drop", handleDrag);
-        } else {
-            console.error("El elemento con ID 'input-file' no se encontró en el DOM.");
-        }
-    });
 
-    function uploadaudio() {
-        if (input.files && input.files[0]) {
-            let audioLink = URL.createObjectURL(input.files[0]);
-            let audioElement = document.createElement('audio');
-            audioElement.controls = true;
-            audioElement.src = audioLink;
-            fileView.textContent = "";
-            fileView.style.display = "flex";
-            fileView.style.justifyContent = "center";
-            fileView.style.alignItems = "center";
-            fileView.appendChild(audioElement);
-            console.log("Audio subido correctamente.");
-        }
+onMount(() => {
+    input = document.getElementById("input-file") as HTMLInputElement;
+    fileView = document.getElementById("file-view") as HTMLElement;
+    dropArea = document.getElementById("drop-area") as HTMLElement;
+    submitBtn = document.querySelector('.submit-btn') as HTMLElement;
+    if (input) {
+        input.addEventListener("change", uploadaudio);
+        dropArea.addEventListener("dragover", handleDragOver); 
+        dropArea.addEventListener("drop", handleDrag);
+    } else {
+        console.error("El elemento con ID 'input-file' no se encontró en el DOM.");
     }
+});
 
-    function handleDragOver(e: DragEvent) {
-        e.preventDefault();
+function uploadaudio() {
+    if (input.files && input.files[0]) {
+        let audioLink = URL.createObjectURL(input.files[0]);
+        let audioElement = document.createElement('audio');
+        audioElement.controls = true;
+        audioElement.src = audioLink;
+        fileView.textContent = "";
+        fileView.style.display = "flex";
+        fileView.style.flexDirection = "column";
+        fileView.style.justifyContent = "center";
+        fileView.style.alignItems = "center";
+        submitBtn.style.display = "flex";
+        fileView.appendChild(audioElement);
+        fileView.appendChild(submitBtn);
+        console.log("Audio subido correctamente.");
     }
+}
 
-    function handleDrag(e: DragEvent) {
-        e.preventDefault();
-        input.files = e.dataTransfer.files;
-        uploadaudio();
-    }
+function handleDragOver(e: DragEvent) {
+    e.preventDefault();
+}
+
+function handleDrag(e: DragEvent) {
+    e.preventDefault();
+    input.files = e.dataTransfer.files;
+    uploadaudio();
+}
 </script>
 
 <div class="space">
@@ -56,13 +62,12 @@
                     <p class="centrado">Or select your files here</p>
                 </div>
                 <input multiple type="file" class="btn-file" accept="audio/*" id="input-file" bind:this={input} on:change={uploadaudio}> <!-- no se pueden archivos de audio raros -->
+                <button class="submit-btn" type="submit">Continue</button>
             </div>
             <span>Upload your files in WAV, FLAC, ALAC or AIFF for the highest quality</span>
         </div>
     </label>
 </div>
-
-
 
 <style>
 
@@ -143,5 +148,13 @@
         color: #fff;
         font-weight: 600;
     }
-    
+
+    .submit-btn {
+        display: none;
+        width: 100px;
+        height: 50px;
+        background-color: #4800B6;
+        border-radius: 30%;
+    }
 </style>
+
