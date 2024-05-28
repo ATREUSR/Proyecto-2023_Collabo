@@ -152,9 +152,14 @@ function handleDrag(e: DragEvent) {
     .submit-btn {
         display: none;
         width: 100px;
-        height: 50px;
+        height: 40px;
         background-color: #4800B6;
-        border-radius: 30%;
+        color: white;
+        border-radius: 5px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-top: 50px;
     }
 </style>
 
