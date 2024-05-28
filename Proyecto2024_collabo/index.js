@@ -1,37 +1,28 @@
-import {v2 as cloudinary} from 'cloudinary';
+// src/routes/api/signature.js
 
-(async function() {
+import { v2 as cloudinary } from 'cloudinary';
 
-    // Configuration
-    cloudinary.config({ 
-        cloud_name: "dw26qdtlf", 
-        api_key: "646641215983919", 
-        api_secret: "Rd41xA0LM8TA75-OLK7h5pqZxqY" 
-    });
-    try {
-        const timestamp = Math.floor(Date.now() / 1000);
-    // Upload an image
-    const uploadResult = await cloudinary.uploader.upload("https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg", {
-        public_id: "shoes"
-    }).catch((error)=>{console.log(error)});
-    
-    console.log(uploadResult);
-    
-    // Optimize delivery by resizing and applying auto-format and auto-quality
-    const optimizeUrl = cloudinary.url("shoes", {
-        fetch_format: 'auto',
-        quality: 'auto'
-    });
-    
-    console.log(optimizeUrl);
-    
-    // Transform the image: auto-crop to square aspect_ratio
-    const autoCropUrl = cloudinary.url("shoes", {
-        crop: 'auto',
-        gravity: 'auto',
-        width: 500,
-        height: 500,
-    });
-    
-    console.log(autoCropUrl);    
-})();
+// Configuración de Cloudinary (reemplaza con tus credenciales)
+cloudinary.config({ 
+  cloud_name: 'sdw26qdtlf', 
+  api_key: '646641215983919',
+  api_secret: 'Rd41xA0LM8TA75-OLK7h5pqZxqY',
+  secure: true
+});
+
+export async function GET({ url }) {
+  const public_id = url.searchParams.get('public_id');
+  const timestamp = Math.floor(Date.now() / 1000);
+
+  const paramsToSign = {
+    timestamp: timestamp,
+    public_id: public_id
+  };
+
+  const signature = cloudinary.utils.api_sign_request(paramsToSign, cloudinary.config().api_secret);
+
+  return {
+    status: 200,
+    body: { timestamp, signature }
+  };
+}
