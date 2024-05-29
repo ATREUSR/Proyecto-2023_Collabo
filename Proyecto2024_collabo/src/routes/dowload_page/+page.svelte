@@ -11,6 +11,4 @@
             Your browser does not support the audio element.
     </audio><!-- aca lo del audio que tengo que ver como se hace -->
     <button>collab</button>
-
-
 </div>

@@ -1,55 +1,55 @@
 <script lang="ts">
-import { onMount } from 'svelte';
-import rectangle from '../images/rectangulo_color.png';
-import { page } from '$app/stores';
-
-let dropArea: HTMLElement;
-let input: HTMLInputElement;
-let fileView: HTMLElement;
-let submitBtn: HTMLElement;
-
-
-onMount(() => {
-    input = document.getElementById("input-file") as HTMLInputElement;
-    fileView = document.getElementById("file-view") as HTMLElement;
-    dropArea = document.getElementById("drop-area") as HTMLElement;
-    submitBtn = document.querySelector('.submit-btn') as HTMLElement;
-    if (input) {
-        input.addEventListener("change", uploadaudio);
-        dropArea.addEventListener("dragover", handleDragOver); 
-        dropArea.addEventListener("drop", handleDrag);
-    } else {
-        console.error("El elemento con ID 'input-file' no se encontró en el DOM.");
+    import { onMount } from 'svelte';
+    import rectangle from '../images/rectangulo_color.png';
+    import { page } from '$app/stores';
+    
+    let dropArea: HTMLElement;
+    let input: HTMLInputElement;
+    let fileView: HTMLElement;
+    let submitBtn: HTMLElement;
+    
+    
+    onMount(() => {
+        input = document.getElementById("input-file") as HTMLInputElement;
+        fileView = document.getElementById("file-view") as HTMLElement;
+        dropArea = document.getElementById("drop-area") as HTMLElement;
+        submitBtn = document.querySelector('.submit-btn') as HTMLElement;
+        if (input) {
+            input.addEventListener("change", uploadaudio);
+            dropArea.addEventListener("dragover", handleDragOver); 
+            dropArea.addEventListener("drop", handleDrag);
+        } else {
+            console.error("El elemento con ID 'input-file' no se encontró en el DOM.");
+        }
+    });
+    
+    function uploadaudio() {
+        if (input.files && input.files[0]) {
+            let audioLink = URL.createObjectURL(input.files[0]);
+            let audioElement = document.createElement('audio');
+            audioElement.controls = true;
+            audioElement.src = audioLink;
+            fileView.textContent = "";
+            fileView.style.display = "flex";
+            fileView.style.flexDirection = "column";
+            fileView.style.justifyContent = "center";
+            fileView.style.alignItems = "center";
+            submitBtn.style.display = "flex";
+            fileView.appendChild(audioElement);
+            fileView.appendChild(submitBtn);
+            console.log("Audio subido correctamente.");
+        }
     }
-});
-
-function uploadaudio() {
-    if (input.files && input.files[0]) {
-        let audioLink = URL.createObjectURL(input.files[0]);
-        let audioElement = document.createElement('audio');
-        audioElement.controls = true;
-        audioElement.src = audioLink;
-        fileView.textContent = "";
-        fileView.style.display = "flex";
-        fileView.style.flexDirection = "column";
-        fileView.style.justifyContent = "center";
-        fileView.style.alignItems = "center";
-        submitBtn.style.display = "flex";
-        fileView.appendChild(audioElement);
-        fileView.appendChild(submitBtn);
-        console.log("Audio subido correctamente.");
+    
+    function handleDragOver(e: DragEvent) {
+        e.preventDefault();
     }
-}
-
-function handleDragOver(e: DragEvent) {
-    e.preventDefault();
-}
-
-function handleDrag(e: DragEvent) {
-    e.preventDefault();
-    input.files = e.dataTransfer.files;
-    uploadaudio();
-}
+    
+    function handleDrag(e: DragEvent) {
+        e.preventDefault();
+        input.files = e.dataTransfer.files;
+        uploadaudio();
+    }
 </script>
 
 <div class="space">
@@ -160,6 +160,11 @@ function handleDrag(e: DragEvent) {
         justify-content: center;
         text-align: center;
         margin-top: 50px;
+    }
+
+    .submit-btn:hover {
+        background-color: #935ce0;
+        cursor: pointer;
     }
 </style>
 
