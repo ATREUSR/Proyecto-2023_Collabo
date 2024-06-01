@@ -8,10 +8,10 @@
 
 <header>
     <nav class="nav">
-        <label class="logo-container" for="">
+        <div class="logo-container">
             <div class="logobackgroundimg"><img src={logobackground} alt=""/></div>
             <div class="logoimg"><img src={logo} alt=""/></div>
-        </label>
+        </div>
         <h1 class="collabotxt">collabo</h1>
         <ul>
             <li>
@@ -27,7 +27,7 @@
                 <a href="/About">About us</a>
             </li>
             <li class="searcher-li">
-                <input type="text" placeholder="Search Stuff">
+                <input type="text" placeholder="Search Stuff" id="search_bar">
             </li>
             <li>
                 <button class="uploadBtn">Upload</button>
