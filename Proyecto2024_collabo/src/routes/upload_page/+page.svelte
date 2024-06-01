@@ -39,6 +39,8 @@
             fileView.appendChild(submitBtn);
             console.log("Audio subido correctamente.");
         }
+        
+
     }
     
     function handleDragOver(e: DragEvent) {
@@ -47,9 +49,14 @@
     
     function handleDrag(e: DragEvent) {
         e.preventDefault();
-        input.files = e.dataTransfer.files;
+        //input.files = e.dataTransfer.files;
         uploadaudio();
     }
+
+    function handleContinue() {
+        console.log("Continuar");
+    }
+    
 </script>
 
 <div class="space">
@@ -62,7 +69,7 @@
                     <p class="centrado">Or select your files here</p>
                 </div>
                 <input multiple type="file" class="btn-file" accept="audio/*" id="input-file" bind:this={input} on:change={uploadaudio}> <!-- no se pueden archivos de audio raros -->
-                <button class="submit-btn" type="submit">Continue</button>
+                <button on:click={handleContinue} class="submit-btn" type="submit">Continue</button>
             </div>
             <span>Upload your files in WAV, FLAC, ALAC or AIFF for the highest quality</span>
         </div>
