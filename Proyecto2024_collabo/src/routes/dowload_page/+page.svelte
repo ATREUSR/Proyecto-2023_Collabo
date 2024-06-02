@@ -1,7 +1,40 @@
-<script>
+<script lang="ts">
     import artista from "../images/artista.png";
     import audio from "../audios/sunflower-street-drumloop-85bpm-163900.mp3"
     import profile from "../images/defaultpfp.png";
+    import WaveSurfer from 'wavesurfer.js'
+    import { onMount } from "svelte";
+    
+    let audioElement: HTMLDivElement;
+    let wavesurfer: WaveSurfer;
+
+    function downloadAudio(e: MouseEvent) {
+        e.stopPropagation();
+        const link = document.createElement('a');
+        link.href = audio;
+        link.download = audio; 
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    onMount(() => {
+        wavesurfer = WaveSurfer.create({
+            container: audioElement,
+            waveColor: '#4800B6',
+            progressColor: 'rgba(72, 0, 182, 0.5)',
+            barWidth: 7,
+            barHeight: 0.5,
+            barGap: 3,
+            barRadius: 5,
+        })
+
+        wavesurfer.load(audio);
+    });
+
+    function togglePlayPause() {
+        wavesurfer.playPause();
+    }
 </script>
 
 
@@ -20,10 +53,10 @@
                         <p class="artist-follow">@ArtisitYouFollow</p> <!-- esta linea tambien -->
                         <p>upload 30 mins ago</p> <!-- esta linea tambien -->
                     </div>
-                    <audio controls>
-                        <source src={audio} type="audio/ogg">
-                        Your browser does not support the audio element.
-                    </audio><!-- aca lo del audio que tengo que ver como se hace -->
+                    <div bind:this={audioElement} class="audio-container" id="audio-container">
+                        <source src={audio} type="audio">
+                    </div>
+                    <button class="pause-play-button" on:click={togglePlayPause}>play/pause</button>
                 </div>
             </div>
             <div class="profile-container">
@@ -35,9 +68,7 @@
             </div>
         </div>
         <div class="dowload-btn-conatainer">
-            <a href={audio} download>
-                <button class="dowload-button">collab</button>
-            </a>
+            <button class="dowload-button" on:click|preventDefault={downloadAudio}>Collab</button>
         </div>
     </div>
 </div>
@@ -107,14 +138,38 @@
         margin-right: 50px;
     }
 
+    .audio-container{
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        transform: translateY(-35px);
+    }
+
+    .audio-container:hover {
+        cursor: pointer;
+    }
+
+    .pause-play-button {
+        width: 100px;
+        height: 40px;
+        background-color: #4800B6;
+        border: 0.5px solid #777877;
+        color: white;
+        border-radius: 5px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        transform: translateX(170px);
+    }
+
+    .pause-play-button:hover {
+        background-color: #935ce0;
+        cursor: pointer;
+    }
+
     .dowload-btn-conatainer{
         border-top: 1px solid #777877; 
         border-bottom: 1px solid #777877;
         width: 70%;
-    }
-
-    .dowload-btn-conatainer a {
-        text-decoration-line: none;
     }
 
     .dowload-button {
@@ -122,9 +177,9 @@
         width: 150px;
         height: 40px;
         background-color: #4800B6;
-        color: white;
         border-radius: 5px;
         border: 0.5px solid #777877;
+        color: #fff;
         align-items: center;
         justify-content: center;
         text-align: center;
