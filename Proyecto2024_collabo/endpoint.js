@@ -5,13 +5,6 @@ import cors from 'cors';
 
 import { v2 as cloudinary } from "cloudinary";
 
-cloudinary.config({
-  cloud_name: 'sdw26qdtlf',
-  api_key: '646641215983919',
-  api_secret: process.env.CLOUDINARY_API_KEY,
-  secure: true,
-});
-
 //import * as app from 'express';
 const app = express();
 const PORT= 8080;
@@ -20,20 +13,21 @@ const upload = multer({ storage: storage });
 app.use(cors());
 app.post ('/uploadloops',upload.single('audio'),(req,res)=>{
     console.log(req.body);
-    const bb = busboy({ headers: req.headers })
     let accInfo=[]
+    const uploadStream = cloudinary.uploader.upload_stream({resource_type: "video", use_filename: true}, (err, result) => {
+      if (err)
+        return console.log(err);
+
+      console.log(result);
+      res.status(201).json(result);
+    });//.end(fileContent);
+    uploadStream.end(req.file.buffer)
+    /*const bb = busboy({ headers: req.headers })
     bb.on('file', (name, file, info) => {
       console.log(name);
       console.log(info);
       //const fileContent = file.read();
-      const uploadStream = cloudinary.uploader.upload_stream({resource_type: "video", use_filename: true}, (err, result) => {
-        if (err)
-          return console.log(err);
-
-        console.log(result);
-       
-      });//.end(fileContent);
-      file.pipe(uploadStream);
+      
     });
     bb.on('error', error => {
       console.log("bb error:", error)
@@ -44,9 +38,19 @@ app.post ('/uploadloops',upload.single('audio'),(req,res)=>{
       res.writeHead(201, { Connection: 'close' }).json(accInfo);
     })
     bb.end(req.file)
+    */
 
 })
 app.listen(
     PORT,
-    () => console.log('lol')
+    () => {
+      console.log(process.env.CLOUDINARY_API_KEY)
+      cloudinary.config({
+        cloud_name: 'dw26qdtlf',
+        api_key: '646641215983919',
+        api_secret: process.env.CLOUDINARY_API_KEY,
+        secure: true,
+      });
+      console.log('lol');
+    }
 )
