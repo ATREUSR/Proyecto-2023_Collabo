@@ -23,6 +23,7 @@
 	"dependencies": {
 		"@prisma/client": "^5.13.0",
 		"audiomotion-analyzer": "^4.5.0",
+		"busboy": "^1.6.0",
 		"cloudinary": "^2.2.0",
 		"prisma": "^5.13.0",
 		"wavesurfer.js": "^7.7.15"

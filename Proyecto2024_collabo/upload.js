@@ -1,5 +1,5 @@
 import express from 'express';
-import multer from 'multer';
+import busboy from 'busboy';
 import { v2 as cloudinary } from 'cloudinary';
 
 const router = express.Router();
@@ -12,26 +12,37 @@ cloudinary.config({
   secure: true
 });
 
-// Configuración de Multer para manejar la carga de archivos de audio
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+// Endpoint para la carga de archivos de audio
+router.post('/upload/audio', (req, res) => {
+    const bb = busboy({ headers: req.headers });
+    let uploadStream;
 
-
-router.post('/audio', upload.single('audio'), async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ success: false, message: 'No audio file uploaded.' });
+    bb.on('file', (fieldname, file, filename, encoding, mimetype) => {
+        if (mimetype.startsWith('audio/')) {
+            uploadStream = cloudinary.uploader.upload_stream({ resource_type: "video" }, (error, result) => {
+                if (error) {
+                    console.error('Error uploading to Cloudinary:', error);
+                    return res.status(500).json({ success: false, message: 'Error uploading to Cloudinary' });
+                }
+                res.status(200).json({ success: true, url: result.secure_url });
+            });
+            file.pipe(uploadStream);
+        } else {
+            file.resume();
+            return res.status(400).json({ success: false, message: 'Invalid file type. Only audio files are allowed.' });
         }
+    });
 
-        const result = await cloudinary.uploader.upload(req.file.buffer, {
-            resource_type: "video" 
-        });
+    bb.on('finish', () => {
+        console.log('Upload complete');
+    });
 
-        res.status(200).json({ success: true, url: result.secure_url });
-    } catch (error) {
-        console.error(error);
+    bb.on('error', (error) => {
+        console.error('Busboy error:', error);
         res.status(500).json({ success: false, message: 'Internal server error.' });
-    }
+    });
+
+    req.pipe(bb);
 });
 
 export default router;
