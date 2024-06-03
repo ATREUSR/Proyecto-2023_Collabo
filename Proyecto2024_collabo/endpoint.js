@@ -1,6 +1,8 @@
 import express from 'express';
 import multer from 'multer';
 import busboy from "busboy";
+import cors from 'cors';
+
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
@@ -15,7 +17,7 @@ const app = express();
 const PORT= 8080;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
+app.use(cors());
 app.post ('/uploadloops',upload.single('audio'),(req,res)=>{
     console.log(req.body);
     const bb = busboy({ headers: req.headers })
