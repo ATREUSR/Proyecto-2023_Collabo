@@ -1,6 +1,5 @@
 import express from 'express';
 import multer from 'multer';
-import busboy from "busboy";
 import cors from 'cors';
 
 import { v2 as cloudinary } from "cloudinary";
