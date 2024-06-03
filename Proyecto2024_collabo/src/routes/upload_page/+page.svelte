@@ -7,6 +7,9 @@
     let input: HTMLInputElement;
     let fileView: HTMLElement;
     let submitBtn: HTMLElement;
+    let showPopup = false;
+    let fileInput;
+    let dataset: FileList | null = null;
     
     
     onMount(() => {
@@ -14,6 +17,7 @@
         fileView = document.getElementById("file-view") as HTMLElement;
         dropArea = document.getElementById("drop-area") as HTMLElement;
         submitBtn = document.querySelector('.submit-btn') as HTMLElement;
+        dataset = input.files;
         if (input) {
             input.addEventListener("change", uploadaudio);
             dropArea.addEventListener("dragover", handleDragOver); 
@@ -37,7 +41,7 @@
             submitBtn.style.display = "flex";
             fileView.appendChild(audioElement);
             fileView.appendChild(submitBtn);
-            console.log("Audio subido correctamente.");
+            //console.log("Audio subido correctamente.");
         }
         
 
@@ -54,8 +58,40 @@
     }
 
     function handleContinue() {
-        console.log("Continuar");
-    }
+        if (input.type === 'file') {
+            fetch("http://localhost:8080/uploadloops",
+            {
+                method: 'POST',
+                headers: {
+                "Content-Type": "application/json",
+                },
+                body: JSON.stringify({input})
+            }
+            ).then((response) => {
+                console.log(response);
+                console.log('Hola');
+            });
+        }else if (input.files) {
+            let formData = new FormData();
+            Array.from(input.files).forEach(file => {
+                console.log('Archivo seleccionado:', file.name);
+                formData.append(file.name, file);
+            });
+            formData.append("close", "close");
+            fetch("http://localhost:8080/uploadloops", {
+                method: 'POST',
+                body: formData
+            }).then((response) => {
+                console.log(response);
+                console.log('Chau');
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+    };
+
+    
+
     
 </script>
 
