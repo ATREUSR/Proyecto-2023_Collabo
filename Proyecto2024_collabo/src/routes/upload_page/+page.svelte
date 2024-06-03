@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import rectangle from '../images/rectangulo_color.png';
     import { page } from '$app/stores';
+    import WaveSurfer from 'wavesurfer.js'
     
     let dropArea: HTMLElement;
     let input: HTMLInputElement;
@@ -10,6 +11,9 @@
     let showPopup = false;
     let fileInput;
     let dataset: FileList | null = null;
+    let wavesurfer: WaveSurfer;
+    let audioContaier: HTMLDivElement;
+    let playPauseBtn: HTMLElement;
     
     
     onMount(() => {
@@ -17,7 +21,8 @@
         fileView = document.getElementById("file-view") as HTMLElement;
         dropArea = document.getElementById("drop-area") as HTMLElement;
         submitBtn = document.querySelector('.submit-btn') as HTMLElement;
-        dataset = input.files;
+        playPauseBtn = document.querySelector('.pause-play-button') as HTMLElement;
+
         if (input) {
             input.addEventListener("change", uploadaudio);
             dropArea.addEventListener("dragover", handleDragOver); 
@@ -25,7 +30,21 @@
         } else {
             console.error("El elemento con ID 'input-file' no se encontró en el DOM.");
         }
+
+        wavesurfer = WaveSurfer.create({
+            container: audioContaier,
+            waveColor: '#4800B6',
+            progressColor: 'rgba(72, 0, 182, 0.5)',
+            barWidth: 7,
+            barHeight: 0.5,
+            barGap: 3,
+            barRadius: 5,
+        })
     });
+
+    function togglePlayPause() {
+        wavesurfer.playPause();
+    }
     
     function uploadaudio() {
         if (input.files && input.files[0]) {
@@ -39,6 +58,7 @@
             fileView.style.justifyContent = "center";
             fileView.style.alignItems = "center";
             submitBtn.style.display = "flex";
+            playPauseBtn.style.display = "flex";
             fileView.appendChild(audioElement);
             fileView.appendChild(submitBtn);
             //console.log("Audio subido correctamente.");
@@ -104,7 +124,8 @@
                     <img src={rectangle} alt=""> <!-- this should be a button -->
                     <p class="centrado">Or select your files here</p>
                 </div>
-                <input multiple type="file" class="btn-file" accept="audio/*" id="input-file" bind:this={input} on:change={uploadaudio}> <!-- no se pueden archivos de audio raros -->
+                <div class="audioContaier" bind:this={audioContaier}><input multiple type="file" class="btn-file" accept="audio/*" id="input-file" bind:this={input} on:change={uploadaudio}></div>
+                <button class="pause-play-button" on:click={togglePlayPause}>play/pause</button>
                 <button on:click={handleContinue} class="submit-btn" type="submit">Continue</button>
             </div>
             <span>Upload your files in WAV, FLAC, ALAC or AIFF for the highest quality</span>
@@ -190,6 +211,19 @@
         transform: translate(-50%, -50%);
         color: #fff;
         font-weight: 600;
+    }
+
+    .pause-play-button {
+        display: none;
+        width: 100px;
+        height: 40px;
+        background-color: #4800B6;
+        border: 0.5px solid #777877;
+        color: white;
+        border-radius: 5px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
     }
 
     .submit-btn {
