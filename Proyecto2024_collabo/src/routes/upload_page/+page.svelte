@@ -2,7 +2,8 @@
     import { onMount } from 'svelte';
     import rectangle from '../images/rectangulo_color.png';
     import { page } from '$app/stores';
-    import WaveSurfer from 'wavesurfer.js'
+    import WaveSurfer from 'wavesurfer.js';
+
     
     let dropArea: HTMLElement;
     let input: HTMLInputElement;
@@ -79,7 +80,9 @@
           method: 'POST',
           body: formData
         }).then((response) => {
-          console.log("yeahhh");
+          console.log(response.url);
+
+          
         }).catch(err => {
           console.log(err);
         })
@@ -177,6 +180,11 @@
         position: relative;
         display: inline-block;
         text-align: center;
+    }
+
+    .label-select-files:hover{
+        cursor: pointer;
+        
     }
 
     .centrado{
