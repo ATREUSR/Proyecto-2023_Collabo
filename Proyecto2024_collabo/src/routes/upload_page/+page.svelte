@@ -4,7 +4,6 @@
     import { page } from '$app/stores';
     import WaveSurfer from 'wavesurfer.js';
 
-    
     let dropArea: HTMLElement;
     let input: HTMLInputElement;
     let inputValue: File;
@@ -58,8 +57,6 @@
             fileView.appendChild(submitBtn);
             //console.log("Audio subido correctamente.");
         }
-        
-
     }
     
     function handleDragOver(e: DragEvent) {
@@ -80,9 +77,7 @@
           method: 'POST',
           body: formData
         }).then((response) => {
-          console.log(response.url);
-
-          
+          console.log(response);
         }).catch(err => {
           console.log(err);
         })
