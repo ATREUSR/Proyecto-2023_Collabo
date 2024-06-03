@@ -6,22 +6,15 @@
     
     let dropArea: HTMLElement;
     let input: HTMLInputElement;
+    let inputValue: File;
     let fileView: HTMLElement;
     let submitBtn: HTMLElement;
-    let showPopup = false;
-    let fileInput;
-    let dataset: FileList | null = null;
     let wavesurfer: WaveSurfer;
     let audioContaier: HTMLDivElement;
     let playPauseBtn: HTMLElement;
     
     
     onMount(() => {
-        input = document.getElementById("input-file") as HTMLInputElement;
-        fileView = document.getElementById("file-view") as HTMLElement;
-        dropArea = document.getElementById("drop-area") as HTMLElement;
-        submitBtn = document.querySelector('.submit-btn') as HTMLElement;
-        playPauseBtn = document.querySelector('.pause-play-button') as HTMLElement;
 
         if (input) {
             input.addEventListener("change", uploadaudio);
@@ -47,7 +40,8 @@
     }
     
     function uploadaudio() {
-        if (input.files && input.files[0]) {
+        if (input.files) {
+            inputValue = input.files[0];
             let audioLink = URL.createObjectURL(input.files[0]);
             let audioElement = document.createElement('audio');
             audioElement.controls = true;
@@ -78,36 +72,17 @@
     }
 
     function handleContinue() {
-        if (input.type === 'file') {
-            fetch("http://localhost:8080/uploadloops",
-            {
-                method: 'POST',
-                headers: {
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify({input})
-            }
-            ).then((response) => {
-                console.log(response);
-                console.log('Hola');
-            });
-        }else if (input.files) {
-            let formData = new FormData();
-            Array.from(input.files).forEach(file => {
-                console.log('Archivo seleccionado:', file.name);
-                formData.append(file.name, file);
-            });
-            formData.append("close", "close");
-            fetch("http://localhost:8080/uploadloops", {
-                method: 'POST',
-                body: formData
-            }).then((response) => {
-                console.log(response);
-                console.log('Chau');
-            }).catch(err => {
-                console.log(err);
-            });
-        }
+        let formData = new FormData();
+        formData.append("audio", inputValue);
+        
+        fetch("http://localhost:8080/uploadloops", {
+          method: 'POST',
+          body: formData
+        }).then((response) => {
+          console.log("yeahhh");
+        }).catch(err => {
+          console.log(err);
+        })
     };
 
     
@@ -124,9 +99,9 @@
                     <img src={rectangle} alt=""> <!-- this should be a button -->
                     <p class="centrado">Or select your files here</p>
                 </div>
-                <div class="audioContaier" bind:this={audioContaier}><input multiple type="file" class="btn-file" accept="audio/*" id="input-file" bind:this={input} on:change={uploadaudio}></div>
-                <button class="pause-play-button" on:click={togglePlayPause}>play/pause</button>
-                <button on:click={handleContinue} class="submit-btn" type="submit">Continue</button>
+                <div class="audioContaier" bind:this={audioContaier}><input type="file" class="btn-file" accept="audio/*" id="input-file" bind:this={input} on:change={uploadaudio}></div>
+                <button class="pause-play-button" bind:this={playPauseBtn} on:click={togglePlayPause}>play/pause</button>
+                <button on:click={handleContinue} bind:this={submitBtn} class="submit-btn" type="submit">Continue</button>
             </div>
             <span>Upload your files in WAV, FLAC, ALAC or AIFF for the highest quality</span>
         </div>
