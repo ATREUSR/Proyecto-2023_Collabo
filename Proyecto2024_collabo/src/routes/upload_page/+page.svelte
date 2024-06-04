@@ -39,8 +39,11 @@
             fileView.style.justifyContent = "center";
             fileView.style.alignItems = "center";
             submitBtn.style.display = "flex";
+            waveformContainer.style.backgroundColor = "#d6d4ce";
+            waveformContainer.style.borderRadius = "5px";
             playPauseBtn.style.display = 'flex';
             playPauseBtn.style.marginBottom = '10px';
+            playPauseBtn.style.marginTop = '20px';
             waveformContainer.style.width = "60%";
             waveformContainer.appendChild(audioElement);
             fileView.appendChild(audioElement);
