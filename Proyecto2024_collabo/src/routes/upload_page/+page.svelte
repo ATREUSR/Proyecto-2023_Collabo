@@ -65,11 +65,7 @@
             wavesurfer.load(audioLink);
 
             playPauseBtn.addEventListener('click', function() {
-                if (wavesurfer.isPlaying()) {
-                    wavesurfer.pause();
-                } else {
-                    wavesurfer.play();
-                }
+                wavesurfer.playPause();
             });
         }     
     }
@@ -95,6 +91,7 @@
           body: formData
         }).then((response) => {
           console.log(response);
+          alert("Audio uploaded successfully!")
         }).catch(err => {
           console.log(err);
         })

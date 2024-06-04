@@ -2,7 +2,7 @@
     import artista from "../images/artista.png";
     import audio from "../audios/sunflower-street-drumloop-85bpm-163900.mp3"
     import profile from "../images/defaultpfp.png";
-    import WaveSurfer from 'wavesurfer.js'
+    import WaveSurfer from 'wavesurfer.js';
     import { onMount } from "svelte";
     
     let audioElement: HTMLDivElement;
