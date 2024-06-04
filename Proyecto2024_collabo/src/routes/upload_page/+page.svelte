@@ -77,8 +77,10 @@
     
     function handleDrag(e: DragEvent) {
         e.preventDefault();
-        //input.files = e.dataTransfer.files;
-        uploadaudio();
+        if (e.dataTransfer) {
+            input.files = e.dataTransfer.files;
+            uploadaudio();
+        }
     }
 
     function handleContinue() {
