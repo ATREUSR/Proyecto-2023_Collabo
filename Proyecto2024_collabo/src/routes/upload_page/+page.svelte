@@ -23,40 +23,52 @@
         } else {
             console.error("El elemento con ID 'input-file' no se encontró en el DOM.");
         }
-
-        wavesurfer = WaveSurfer.create({
-            container: audioContaier,
-            waveColor: '#4800B6',
-            progressColor: 'rgba(72, 0, 182, 0.5)',
-            barWidth: 7,
-            barHeight: 0.5,
-            barGap: 3,
-            barRadius: 5,
-        })
     });
 
-    function togglePlayPause() {
-        wavesurfer.playPause();
-    }
-    
     function uploadaudio() {
         if (input.files) {
             inputValue = input.files[0];
             let audioLink = URL.createObjectURL(input.files[0]);
             let audioElement = document.createElement('audio');
-            audioElement.controls = true;
+            let waveformContainer = document.createElement('div'); 
             audioElement.src = audioLink;
+            audioElement.style.display = 'none';
             fileView.textContent = "";
             fileView.style.display = "flex";
             fileView.style.flexDirection = "column";
             fileView.style.justifyContent = "center";
             fileView.style.alignItems = "center";
             submitBtn.style.display = "flex";
-            playPauseBtn.style.display = "flex";
+            playPauseBtn.style.display = 'flex';
+            playPauseBtn.style.marginBottom = '10px';
+            waveformContainer.style.width = "60%";
+            waveformContainer.appendChild(audioElement);
             fileView.appendChild(audioElement);
+            fileView.appendChild(waveformContainer); 
+            fileView.appendChild(playPauseBtn);
             fileView.appendChild(submitBtn);
             //console.log("Audio subido correctamente.");
-        }
+            
+            wavesurfer = WaveSurfer.create({
+                container: waveformContainer,
+                waveColor: '#4800B6',
+                progressColor: 'rgba(72, 0, 182, 0.5)',
+                barWidth: 7,
+                barHeight: 0.5,
+                barGap: 3,
+                barRadius: 5,
+            })
+
+            wavesurfer.load(audioLink);
+
+            playPauseBtn.addEventListener('click', function() {
+                if (wavesurfer.isPlaying()) {
+                    wavesurfer.pause();
+                } else {
+                    wavesurfer.play();
+                }
+            });
+        }     
     }
     
     function handleDragOver(e: DragEvent) {
@@ -83,9 +95,6 @@
         })
     };
 
-    
-
-    
 </script>
 
 <div class="space">
@@ -98,7 +107,7 @@
                     <p class="centrado">Or select your files here</p>
                 </div>
                 <div class="audioContaier" bind:this={audioContaier}><input type="file" class="btn-file" accept="audio/*" id="input-file" bind:this={input} on:change={uploadaudio}></div>
-                <button class="pause-play-button" bind:this={playPauseBtn} on:click={togglePlayPause}>play/pause</button>
+                <button class="pause-play-button" bind:this={playPauseBtn}>play/pause</button>
                 <button on:click={handleContinue} bind:this={submitBtn} class="submit-btn" type="submit">Continue</button>
             </div>
             <span>Upload your files in WAV, FLAC, ALAC or AIFF for the highest quality</span>
@@ -179,7 +188,6 @@
 
     .label-select-files:hover{
         cursor: pointer;
-        
     }
 
     .centrado{
@@ -204,12 +212,18 @@
         text-align: center;
     }
 
+    .pause-play-button:hover {
+        background-color: #935ce0;
+        cursor: pointer;
+    }
+
     .submit-btn {
         display: none;
         width: 100px;
         height: 40px;
         background-color: #4800B6;
         color: white;
+        border: 0.5px solid #777877;
         border-radius: 5px;
         align-items: center;
         justify-content: center;
