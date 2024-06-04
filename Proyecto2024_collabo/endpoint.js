@@ -1,11 +1,10 @@
 import express from 'express';
 import multer from 'multer';
-import busboy from "busboy";
 import cors from 'cors';
 
 import { v2 as cloudinary } from "cloudinary";
 
-//import * as app from 'express';
+
 const app = express();
 const PORT= 8080;
 const storage = multer.memoryStorage();
@@ -20,27 +19,15 @@ app.post ('/uploadloops',upload.single('audio'),(req,res)=>{
 
       console.log(result);
       res.status(201).json(result);
-    });//.end(fileContent);
+    });
     uploadStream.end(req.file.buffer)
-    /*const bb = busboy({ headers: req.headers })
-    bb.on('file', (name, file, info) => {
-      console.log(name);
-      console.log(info);
-      //const fileContent = file.read();
-      
-    });
-    bb.on('error', error => {
-      console.log("bb error:", error)
-      //res.status(500).json(error);
-    });
-    bb.on('close', () => {
-      console.log(accInfo);
-      res.writeHead(201, { Connection: 'close' }).json(accInfo);
-    })
-    bb.end(req.file)
-    */
-
+    
 })
+app.get('/download/:public_id', (req, res) => {
+  const publicId = req.params.public_id;
+  const url = cloudinary.url(publicId, { resource_type: 'video' });
+  res.redirect(url);
+});
 app.listen(
     PORT,
     () => {
