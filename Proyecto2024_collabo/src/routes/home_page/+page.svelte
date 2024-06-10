@@ -20,13 +20,15 @@
         display: flex;
         flex-direction: column;
         width: 100%;
-        height: 100vh;       
+        height: 100vh;  
     }
 
     .uncolor-half {
         background-color: #fff;
         margin-bottom: 50vh;
-        /*margin-left: 50px;*/
+        font-size: 1.5em;
+        margin-left: 100px;
+        margin-top: 50px;
     }
 
     .different-color{
@@ -37,8 +39,8 @@
 
     .go-button{
         display: flex;
-        width: 200px;
-        height: 40px;
+        width: 300px;
+        height: 50px;
         background-color: #4800B6;
         border: 0.5px solid #777877;
         color: white;
@@ -46,6 +48,13 @@
         align-items: center;
         justify-content: center;
         text-align: center;
+        font-size: 0.9em;
+        font-weight: 600;
+    }
+
+    .go-button:hover{
+        background-color: #935ce0;
+        cursor: pointer;
     }
 
     .color-half{
@@ -56,7 +65,8 @@
 
     .color-half h1{
         color: white;
-        margin-left: 20px;
+        font-size: 3em;
+        margin: 50px;
     }
 
     .color-half-h1-increase{
