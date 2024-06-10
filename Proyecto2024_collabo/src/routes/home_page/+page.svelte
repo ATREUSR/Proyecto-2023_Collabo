@@ -4,18 +4,15 @@
         <button class="go-button">Upload your stuff</button>
     </div>
     <div class="color-half">
-        <h1>Increase your reach</h1>
-        <h1>And get sales</h1>
+        <h1 class="color-half-h1-increase">Increase <br> your <br> reach</h1>
+        <h1>And <br> get sales</h1>
     </div>
 </div>
-
 <style>
 
     @import url('https://fonts.cdnfonts.com/css/utendo');
 
     *{
-        margin: 0;
-        padding: 0;
         font-family: 'Utendo', sans-serif;
     }
 
@@ -23,14 +20,13 @@
         display: flex;
         flex-direction: column;
         width: 100%;
-        height: 100vh;
-        
+        height: 100vh;       
     }
 
     .uncolor-half {
         background-color: #fff;
         margin-bottom: 50vh;
-        margin-left: 50px;
+        /*margin-left: 50px;*/
     }
 
     .different-color{
@@ -61,5 +57,11 @@
     .color-half h1{
         color: white;
         margin-left: 20px;
+    }
+
+    .color-half-h1-increase{
+        display: flex;
+        align-items: end;
+        justify-content: flex-end;
     }
 </style>
