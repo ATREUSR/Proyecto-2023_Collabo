@@ -24,6 +24,23 @@
             </div>
         </form>
     </div>
+    <div class="sign-in-container">
+        <h1>Sign in</h1>
+        <div class="gradient-line"></div>
+        <form action="">
+            <div class="input">
+                <label for="">Email</label>
+                <input type="email" placeholder="example@gmail.com" required>
+            </div>
+            <div class="input">
+                <label for="">Password</label>
+                <input type="password" placeholder="password" required>
+            </div>
+            <div class="input">
+                <input type="submit" class="submit-btn" placeholder="Register" required>
+            </div>
+        </form>
+    </div>
 </div>
 
 <style>
@@ -44,6 +61,7 @@
 
     .log-in-container {
         transform: translateX(-30%);
+        display: none;
     }
 
     .log-in-container h1 {
@@ -100,5 +118,20 @@
     .submit-btn:hover {
         background-color: #935ce0;
         cursor: pointer;
+    }
+
+    .sign-in-container {
+        transform: translateX(-30%);
+    }
+
+    .sign-in-container h1 {
+        display: flex;
+        justify-content: center;    
+        align-items: center;
+        transform: translateX(30%);
+    }
+    
+    .sign-in-container label {
+        font-weight: 600;
     }
 </style>
