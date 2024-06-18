@@ -61,7 +61,7 @@
 
     .log-in-container {
         transform: translateX(-30%);
-        display: none;
+        /*display: none;*/
     }
 
     .log-in-container h1 {
@@ -122,6 +122,7 @@
 
     .sign-in-container {
         transform: translateX(-30%);
+        display: none;
     }
 
     .sign-in-container h1 {
