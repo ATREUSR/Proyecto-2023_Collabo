@@ -59,7 +59,7 @@ app.get('/', (req, res) => {
       });
   
       if (existingUser) {
-        return res.status(400).json({ error: 'El usuario ya existe' });
+        return res.status(400).json({ error: 'Ya existe una cuenta con el mismo email' });
       }
   
       // Encriptar la contraseña antes de guardarla
