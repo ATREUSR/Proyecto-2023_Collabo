@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import pkg from 'express-openid-connect';
 import bodyParser from 'body-parser'; 
+import { PrismaClient } from '@prisma/client';
 
 dotenv.config();
 const { auth, requiresAuth } = pkg;
@@ -13,6 +14,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 app.use(cors());
+const prisma = new PrismaClient();
 app.use(bodyParser.json()); 
 
 
