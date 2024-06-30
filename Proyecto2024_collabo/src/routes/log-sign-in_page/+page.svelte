@@ -1,45 +1,107 @@
+<script lang="ts">
+    let username = '';
+    let email = '';
+    let password = '';
+    let confirmPassword = '';
+    
+
+    async function register() {
+        const userData = { username, email, password};
+
+        if (password !== confirmPassword) {
+            alert('Las contraseñas no coinciden');
+            return;
+        }
+
+        console.log(userData); 
+    }
+
+    async function signIn() {
+        const userData = { email, password };
+
+        console.log(userData); 
+    }
+
+    function toggleLogIn() {
+        const logInContainer = document.querySelector('.log-in-container') as HTMLElement;
+        const signInContainer = document.querySelector('.sign-in-container') as HTMLElement;
+    
+        if (logInContainer && signInContainer) {
+            logInContainer.style.display = 'block';
+            signInContainer.style.display = 'none';
+            email = '';
+            password = '';
+            username = '';
+            confirmPassword = '';
+        }
+    }
+    
+    function toggleSignIn() {
+        const logInContainer = document.querySelector('.log-in-container') as HTMLElement;
+        const signInContainer = document.querySelector('.sign-in-container') as HTMLElement;
+    
+        if (logInContainer && signInContainer) {
+            logInContainer.style.display = 'none';
+            signInContainer.style.display = 'block';
+            email = '';
+            password = '';
+        }
+    }
+</script>
+
+
 <div class="log-sign-in-container">
     <div class="log-in-container">
         <h1>Create account</h1>
         <div class="gradient-line"></div>
-        <form action="">
+        <form on:submit|preventDefault={register}>
             <div class="input">
                 <label for="">Username</label>
-                <input type="text" placeholder="example" required>
+                <input bind:value={username} type="text" placeholder="example" required>
             </div>
             <div class="input">
                 <label for="">Email</label>
-                <input type="email" placeholder="example@gmail.com" required>
+                <input bind:value={email} type="email" placeholder="example@gmail.com" required>
             </div>
             <div class="input">
                 <label for="">Password</label>
-                <input type="password" placeholder="password" required>
+                <input bind:value={password} type="password" placeholder="password" required>
             </div>
             <div class="input">
                 <label for="">Confirm Password</label>
-                <input type="password" placeholder="password" required>
+                <input bind:value={confirmPassword} type="password" placeholder="password" required>
             </div>
             <div class="input">
                 <input type="submit" class="submit-btn" placeholder="Register" required>
             </div>
         </form>
+        <!-- svelte-ignore a11y-interactive-supports-focus -->
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-missing-attribute -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <a class="toggle-link" on:click={() => toggleSignIn()}>¿No tenés cuenta?</a>
     </div>
-    <div class="sign-in-container">
+    <div class="sign-in-container" >
         <h1>Sign in</h1>
         <div class="gradient-line"></div>
-        <form action="">
+        <form on:submit|preventDefault={signIn}>
             <div class="input">
                 <label for="">Email</label>
-                <input type="email" placeholder="example@gmail.com" required>
+                <input bind:value={email} type="email" placeholder="example@gmail.com" required>
             </div>
             <div class="input">
                 <label for="">Password</label>
-                <input type="password" placeholder="password" required>
+                <input bind:value={password} type="password" placeholder="password" required>
             </div>
             <div class="input">
                 <input type="submit" class="submit-btn" placeholder="Register" required>
             </div>
         </form>
+        <!-- svelte-ignore a11y-interactive-supports-focus -->
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-missing-attribute -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <a class="toggle-link" on:click={() => toggleLogIn()}>¿Ya tenés cuenta?</a>
     </div>
 </div>
 
@@ -95,6 +157,8 @@
         margin-right: 20px;
         background-color: #E9E9E9;
         border: 0.5px solid #E9E9E9;
+        font-family: 'Utendo', sans-serif;
+        font-weight: 600;
     }
 
     input::placeholder {
@@ -133,5 +197,21 @@
     
     .sign-in-container label {
         font-weight: 600;
+    }
+
+    .toggle-link {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(37%);
+        margin-top: 20px;
+        color: #4800B6;
+        font-weight: 600;
+        text-decoration: underline;
+    }
+
+    .toggle-link:hover {
+        cursor: pointer;
+        color: #935ce0;
     }
 </style>

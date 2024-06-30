@@ -160,11 +160,11 @@
     <div class="gradient-line"></div>
     <div class="filter-loops-container">
         <div class="search-container">
-            <input type="text" bind:value="{terminoBusqueda}" placeholder="Buscar...">
-            <button on:click="{filtrarLoops}">Buscar</button>
+            <input class="search-input" type="text" bind:value="{terminoBusqueda}" placeholder="Buscar...">
+            <button class="search-button" on:click="{filtrarLoops}">Buscar</button>
         </div>
     </div>
-    <h2>trending topics</h2>
+    <h2 class="trending-loops">trending loops</h2>
     <div class="loops-container">
         {#each resultadosFiltrados as usuario, index}
         <div class="loop-container">
@@ -223,6 +223,32 @@
         margin-bottom: 20px;
     }
 
+    .search-container {
+        display: flex; /* Esto alinea los elementos horizontalmente */
+        align-items: center; /* Centra los elementos verticalmente */
+        gap: 10px; /* Espacio entre el campo de búsqueda y el botón */
+    }
+  
+    .search-input {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        flex-grow: 1; /* Hace que el campo de búsqueda ocupe el espacio disponible */
+    }
+  
+    .search-button {
+        padding: 8px 16px;
+        background-color: #4800B6;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+  
+    .search-button:hover {
+        background-color: #B700BD;
+    }
+
     .search-container input[type=text] {
         width: 100%;
         padding: 6px;
@@ -235,6 +261,10 @@
         background-color: #E9E9E9;
     }
 
+    .trending-loops {
+        margin: 500px;
+    }
+        
     .loops-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
