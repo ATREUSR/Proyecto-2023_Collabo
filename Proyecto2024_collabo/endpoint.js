@@ -4,12 +4,13 @@ import cors from 'cors';
 
 import { v2 as cloudinary } from "cloudinary";
 
-
 const app = express();
 const PORT= 8080;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
 app.use(cors());
+
 app.post ('/uploadloops',upload.single('audio'),(req,res)=>{
     console.log(req.body);
     let accInfo=[]
