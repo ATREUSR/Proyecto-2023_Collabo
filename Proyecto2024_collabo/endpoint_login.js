@@ -5,11 +5,12 @@ import dotenv from 'dotenv';
 import pkg from 'express-openid-connect';
 import bodyParser from 'body-parser'; 
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
 dotenv.config();
 const { auth, requiresAuth } = pkg;
 const app = express();
-const PORT= 8001;
+const PORT= 8002;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -44,11 +45,23 @@ app.get('/', (req, res) => {
   app.get('/logout', (req, res) => {
     res.oidc.logout({ returnTo: process.env.BASEURL });
   });
-  // Ruta de registro
   app.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
   
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Faltan datos en la solicitud' });
+    }
+  
     try {
+      // Verificar si el usuario ya existe
+      const existingUser = await prisma.user.findUnique({
+        where: { email },
+      });
+  
+      if (existingUser) {
+        return res.status(400).json({ error: 'El usuario ya existe' });
+      }
+  
       // Encriptar la contraseña antes de guardarla
       const hashedPassword = await bcrypt.hash(password, 10);
   
