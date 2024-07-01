@@ -7,11 +7,24 @@
 
     async function register() {
         const userData = { username, email, password};
+        let formData = new FormData();
+        formData.append("userData", JSON.stringify(userData));
+
 
         if (password !== confirmPassword) {
             alert('Las contraseñas no coinciden');
             return;
         }
+
+        fetch("http://localhost:8080/uploadloops", {
+          method: 'POST',
+          body: formData
+        }).then((response) => {
+          console.log(response);
+          alert("Audio uploaded successfully!")
+        }).catch(err => {
+          console.log(err);
+        })
 
         console.log(userData); 
     }
