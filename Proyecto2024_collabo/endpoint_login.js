@@ -1,23 +1,32 @@
 import express from 'express';
 import multer from 'multer';
 import cors from 'cors';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 import pkg from 'express-openid-connect';
 import bodyParser from 'body-parser'; 
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { v2 as cloudinary } from "cloudinary";
 
-dotenv.config();
+// dotenv.config();
 const { auth, requiresAuth } = pkg;
 const app = express();
-const PORT= 8002;
+const PORT= 8003;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const prisma = new PrismaClient();
 
 app.use(cors());
-const prisma = new PrismaClient();
+
 app.use(bodyParser.json()); 
 
+// cloudinary.config({ 
+//   cloud_name: process.env.CLOUD_NAME, 
+//   api_key: process.env.API_KEY,
+//   api_secret: process.env.CLOUDINARY_API_KEY,
+//   secure: true
+// });
 
 const config = {
     authRequired: false,
@@ -29,6 +38,8 @@ const config = {
   };
   
 app.use(auth(config));
+
+const jwtSecret = process.env.JWT_SECRET;
 
 app.get('/', (req, res) => {
     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
@@ -58,14 +69,15 @@ app.post('/login', async (req, res) => {
       if (!passwordMatch) {
           return res.status(400).json({ error: 'Email o contraseña incorrectos' });
       }
+      
+      const token = jwt.sign({ sub: user.id, email: user.email }, jwtSecret, { expiresIn: '1h' });
 
-      // Aquí puedes generar un token JWT o iniciar una sesión
-      res.status(200).json({ message: 'Login successful' });
-  } catch (error) {
+      res.status(200).json({ message: 'Login successful', token });
+    } catch (error) {
       console.error('Error during login:', error);
       res.status(500).json({ error: 'Error al iniciar sesión' });
-  }
-});
+    }
+  });
 
 // logout
 app.get('/logout', requiresAuth(), (req, res) => {
@@ -109,6 +121,85 @@ app.post('/register', async (req, res) => {
     }
   });
   
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
+ // Ruta para subir archivos
+app.post('/uploadloops', upload.single('audio'), async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ error: 'No se proporcionó un token' });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, jwtSecret);
+    } catch (err) {
+      return res.status(401).json({ error: 'Token inválido' });
+    }
+
+    const userId = decoded.sub;
+
+    const uploadStream = async () => {
+      return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream({ resource_type: "video", use_filename: true }, (err, result) => {
+          if (err) {
+            console.error('Error uploading to Cloudinary:', err);
+            return reject(err);
+          }
+          resolve(result);
+        }).end(req.file.buffer);
+      });
+    };
+
+    const result = await uploadStream();
+
+    try {
+      const newLoop = await prisma.loops.create({
+        data: {
+          userId: userId,
+          Title: req.body.title,
+          Descripcion: req.body.descripcion,
+          Tags: req.body.tags,
+        },
+      });
+
+      res.status(201).json(result);
+    } catch (error) {
+      console.error('Error saving loop to database:', error);
+      res.status(500).json({ error: 'Error al guardar el loop en la base de datos' });
+    }
+  } catch (error) {
+    console.error('Error processing request:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
+  }
+});
+
+app.get('/download/:public_id', (req, res) => {
+  const publicId = req.params.public_id;
+  const url = cloudinary.url(publicId, { resource_type: 'video' });
+  res.redirect(url);
+});
+
+// app.listen(PORT, () => {
+//   cloudinary.config({
+//     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//     api_key: process.env.CLOUDINARY_API_KEY,
+//     api_secret: process.env.CLOUDINARY_API_SECRET,
+//     secure: true,
+//   });
+//   console.log(`Server is running on port ${PORT}`);
+// });
+app.listen(
+     PORT,
+     () => {
+       console.log(process.env.CLOUDINARY_API_KEY)
+       cloudinary.config({
+         cloud_name: 'dw26qdtlf',
+         api_key: '646641215983919',
+         api_secret: process.env.CLOUDINARY_API_KEY,
+         secure: true,
+       });
+       console.log('lol');
+     }
+ )
