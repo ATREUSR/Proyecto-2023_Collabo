@@ -1,10 +1,10 @@
 // src/routes/api/signature.js
 import { v2 as cloudinary } from 'cloudinary';
 
-// Configuración de Cloudinary (reemplaza con tus credenciales)
+// Configuración de Cloudinary 
 cloudinary.config({ 
-  cloud_name: 'sdw26qdtlf', 
-  api_key: '646641215983919',
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key: process.env.API_KEY,
   api_secret: process.env.CLOUDINARY_API_KEY,
   secure: true
 });

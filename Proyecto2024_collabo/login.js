@@ -1,36 +1,18 @@
-const express = require('express');
-const app = express();
-const { auth, requiredScopes } = require('express-oauth2-jwt-bearer');
+const { auth } = require('express-openid-connect');
 
-// Authorization middleware. When used, the Access Token must
-// exist and be verified against the Auth0 JSON Web Key Set.
-const checkJwt = auth({
-  audience: '{yourApiIdentifier}',
-  issuerBaseURL: `https://{yourDomain}/`,
-});
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: process.env.SECRET,
+  baseURL: process.env.BASEURL,
+  clientID: process.env.CLIENTID,
+  issuerBaseURL: process.env.ISUUER,
+};
 
-// This route doesn't need authentication
-app.get('/api/public', function(req, res) {
-  res.json({
-    message: 'Hello from a public endpoint! You don\'t need to be authenticated to see this.'
-  });
-});
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+app.use(auth(config));
 
-// This route needs authentication
-app.get('/api/private', checkJwt, function(req, res) {
-  res.json({
-    message: 'Hello from a private endpoint! You need to be authenticated to see this.'
-  });
-});
-
-const checkScopes = requiredScopes('read:messages');
-
-app.get('/api/private-scoped', checkJwt, checkScopes, function(req, res) {
-  res.json({
-    message: 'Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.'
-  });
-});
-
-app.listen(3000, function() {
-  console.log('Listening on http://localhost:3000');
+// req.isAuthenticated is provided from the auth router
+app.get('/', (req, res) => {
+  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
