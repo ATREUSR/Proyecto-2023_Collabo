@@ -18,9 +18,9 @@
 
         fetch("http://localhost:8003/register", {
           method: 'POST',
-          credentials: "same-origin",
+          credentials: "include",
           headers: {
-                'Authorization': 'Basic '+btoa('username:password'),
+                //'Authorization': 'Basic '+btoa('username:password'),
                 'Content-Type': 'application/json'
             },
           body: JSON.stringify(userData)

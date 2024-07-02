@@ -88,10 +88,10 @@
         
         fetch("http://localhost:8003/uploadloops", {
           method: 'POST',
-          credentials: "same-origin",
+          credentials: "include",
           headers: {
                 //'Authorization': 'Basic '+btoa('username:password'),
-                'Content-Type': 'application/json'
+                //'Content-Type': 'application/json'
             },
           body: formData
         }).then((response) => {

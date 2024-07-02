@@ -166,9 +166,9 @@ app.post('/uploadloops', upload.single('audio'), async (req, res) => {
       const newLoop = await prisma.loops.create({
         data: {
           userId: userId,
-          Title: req.body.title,
-          Descripcion: req.body.descripcion,
-          Tags: req.body.tags,
+          Title: req.file.originalname,
+          Descripcion: "",
+          Tags: "",
         },
       });
 
