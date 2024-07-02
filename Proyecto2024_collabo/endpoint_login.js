@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import cors from 'cors';
-
+import cookieParser from 'cookie-parser';
 import pkg from 'express-openid-connect';
 import bodyParser from 'body-parser'; 
 import { PrismaClient } from '@prisma/client';
@@ -20,6 +20,9 @@ const prisma = new PrismaClient();
 app.use(cors());
 
 app.use(bodyParser.json()); 
+
+app.use(cookieParser());
+
 
 const config = {
     authRequired: false,
@@ -64,6 +67,10 @@ app.post('/login', async (req, res) => {
       }
       
       const token = jwt.sign({ sub: user.id, email: user.email }, jwtSecret, { expiresIn: '1h' });
+
+
+      res.cookie('token', token, { httpOnly: true, secure: true });
+
 
       res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
@@ -117,12 +124,11 @@ app.post('/register', async (req, res) => {
  // Ruta para subir archivos
 app.post('/uploadloops', upload.single('audio'), async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
+    const token = req.cookies.token;
+
+    if (!token) {
       return res.status(401).json({ error: 'No se proporcionó un token' });
     }
-
-    const token = authHeader.split(' ')[1];
 
     let decoded;
     try {
