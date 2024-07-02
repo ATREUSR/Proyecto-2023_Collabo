@@ -51,7 +51,7 @@
                 'Content-Type': 'application/json'
             },
           body: JSON.stringify(userData),
-          //credentials: 'same-origin',
+          credentials: 'include',
         })
 
         if (!response.ok) {

@@ -144,6 +144,7 @@
     async function filtrarLoops() {
         const response = await fetch("http://localhost:8003/searchloops?title=" + terminoBusqueda, {
           method: 'GET',
+          credentials: 'include',
         })
 
         console.log(response);

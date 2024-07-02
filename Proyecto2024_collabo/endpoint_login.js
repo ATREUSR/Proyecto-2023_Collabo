@@ -16,10 +16,18 @@ const PORT= 8003;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const prisma = new PrismaClient();
+// const cors = require('cors');
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:5173', // Reemplaza con la URL de tu frontend
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Permitir el envío de cookies y otros credenciales
+  optionsSuccessStatus: 204 // Algunos navegadores (Safari) fallan con 204
+};
 
-app.use(bodyParser.json()); 
+app.use(cors(corsOptions));
+
+app.use(express.json()); 
 
 app.use(cookieParser());
 
@@ -199,7 +207,7 @@ app.get('/searchloops', async (req, res) => {
     //const filteredLoop = loops[0];
 
     //res.status(200).json(filteredLoop);
-    res.status(200).json(loops);
+    res.status(200).json(loo)
   } catch (error) {
     console.error('Error fetching loop:', error);
     res.status(500).json({ error: 'Error al buscar el loop en la base de datos' });
