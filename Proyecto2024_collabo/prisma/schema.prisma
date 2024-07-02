@@ -30,7 +30,7 @@ model Profile {
   userId Int    @unique
 }
 model Loops{
-  id    Int   @id @default(autoincrement())
+  id    String   @id
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   userId Int  @unique
@@ -43,7 +43,7 @@ model Loops{
 }
 model Comment {
   id          Int      @id @default(autoincrement())
-  loopId      Int
+  loopId      String
   userId      Int
   commentText String
   createdAt   DateTime @default(now())

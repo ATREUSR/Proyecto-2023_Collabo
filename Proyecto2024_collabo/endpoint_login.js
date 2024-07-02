@@ -165,6 +165,7 @@ app.post('/uploadloops', upload.single('audio'), async (req, res) => {
     try {
       const newLoop = await prisma.loops.create({
         data: {
+          id: result.public_id,
           userId: userId,
           Title: req.file.originalname,
           Descripcion: "",
@@ -188,6 +189,7 @@ app.get('/download/:public_id', (req, res) => {
   const url = cloudinary.url(publicId, { resource_type: 'video' });
   res.redirect(url);
 });
+
 // Ruta para buscar loops por título
 app.get('/searchloops', async (req, res) => {
   const { title } = req.query;
@@ -207,7 +209,7 @@ app.get('/searchloops', async (req, res) => {
     //const filteredLoop = loops[0];
 
     //res.status(200).json(filteredLoop);
-    res.status(200).json(loo)
+    res.status(200).json(loops)
   } catch (error) {
     console.error('Error fetching loop:', error);
     res.status(500).json({ error: 'Error al buscar el loop en la base de datos' });

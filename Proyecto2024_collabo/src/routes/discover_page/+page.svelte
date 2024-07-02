@@ -26,72 +26,15 @@
     let audioElements: HTMLElement[] = [];
     let wavesurfers: WaveSurfer[] = [];
 
-    let Usuarios = [
-        {
-            nombre: "NLE CHOPPA LOOP",
-            artista: "@DanteBeats",
-            imagenArtista: artista,
-            imagenPerfil: profile,
-            audio: audio,
-            uploadTime: "30 mins ago"
-        },
-        {
-            nombre: "New Jazz Drums",
-            artista: "@SantinoGrammy",
-            imagenArtista: artista2,
-            imagenPerfil: profile,
-            audio: audio2,
-            uploadTime: "30 mins ago"
-        },
-        {
-            nombre: "Down with me",
-            artista: "@AlvaritoMusic",
-            imagenArtista: artista3,
-            imagenPerfil: profile,
-            audio: audio3,
-            uploadTime: "30 mins ago"
-        },
-        {
-            nombre: "Brawl Stars Epic Loop",
-            artista: "@WaterdyLoops",
-            imagenArtista: brawl,
-            imagenPerfil: profile,
-            audio: brawlaudio,
-            uploadTime: "30 mins ago"
-        },
-        {
-            nombre: "Orquesta Beat God",
-            artista: "@Bethoven",
-            imagenArtista: bethoven,
-            imagenPerfil: profile,
-            audio: orquesta,
-            uploadTime: "30 mins ago"
-        },
-        {
-            nombre: "Loops with drums",
-            artista: "@BlurJuanElPatan",
-            imagenArtista: artista4,
-            imagenPerfil: profile,
-            audio: audio4,
-            uploadTime: "30 mins ago"
-        },
-        {
-            nombre: "Acoustic Piano Loop",
-            artista: "@ScoobyDoo",
-            imagenArtista: artista6,
-            imagenPerfil: profile,
-            audio: audio5,
-            uploadTime: "30 mins ago"
-        },
-        {
-            nombre: "SuperDuperEpic Loop",
-            artista: "@Shredder",
-            imagenArtista: artista5,
-            imagenPerfil: profile,
-            audio: audio6,
-            uploadTime: "30 mins ago"
-        },
-    ];
+    type Resultado = {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        userId: number;
+        Title: string;
+        Description: string;
+        Tags: string;
+    }
 
     function downloadAudio(audio: string) {
         const link = document.createElement('a');
@@ -139,7 +82,7 @@
     }
 
     let terminoBusqueda = ''; 
-    let resultadosFiltrados = Usuarios; 
+    let resultadosFiltrados: Resultado[] = [];
 
     async function filtrarLoops() {
         const response = await fetch("http://localhost:8003/searchloops?title=" + terminoBusqueda, {
@@ -154,8 +97,18 @@
             return
         }
         
-        const responsejson = response.json()
+        const data = await response.json();
+        data.forEach((element: any) => {
+            element.createdAt = new Date(element.createdAt);
+            element.updatedAt = new Date(element.updatedAt);
+        });
+        resultadosFiltrados = data;
 
+        /*resultadosFiltrados = Usuarios.filter(usuario => {
+            return usuario.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+                   usuario.artista.toLowerCase().includes(terminoBusqueda.toLowerCase());
+            // Puedes añadir más campos de comparación aquí
+        });*/
         await tick();
         audioElements = Array.from(document.querySelectorAll('.audio-container')).map(elem => elem as HTMLElement);
         
@@ -176,30 +129,30 @@
     </div>
     <h2 class="trending-loops">trending loops</h2>
     <div class="loops-container">
-        {#each resultadosFiltrados as usuario, index}
+        {#each resultadosFiltrados as resultado, index}
         <div class="loop-container">
             <div class="loop-info">
-                <img class="loop-img" src={usuario.imagenArtista} alt="">
+                <img class="loop-img" src={artista} alt="">
                 <div class="artist-upload-info">
-                    <div class="loop-title">{usuario.nombre}</div>
+                    <div class="loop-title">{resultado.Title}</div>
                     <div class="artist-detail">
-                        <img class="profile-img" src={usuario.imagenPerfil} alt="">
-                        <p class="artist-follow">{usuario.artista}</p> <!-- esta linea tambien -->
-                        <p>{usuario.uploadTime}</p> <!-- esta linea tambien -->
+                        <img class="profile-img" src={profile} alt="">
+                        <p class="artist-follow">{resultado.userId.toString()}</p> <!-- esta linea tambien -->
+                        <p>{new Date(new Date().valueOf() - resultado.createdAt.valueOf()).getMinutes() + "minutes"}</p> <!-- esta linea tambien -->
                     </div>
                     <div bind:this={audioElements[index]} class="audio-container" id="audio-container">
-                        <source src={usuario.audio} type="audio" class="audio">
+                        <source src={audio} type="audio" class="audio">
                     </div>
                     <button class="pause-play-button" on:click={() => togglePlayPause(index)}>play/pause</button>
                 </div>
             </div>
             <div class="dowload-btn-conatainer">
-                <button on:click={() => downloadAudio(usuario.audio)} class="dowload-button" >Collab</button>
+                <button on:click={() => downloadAudio(audio)} class="dowload-button" >Collab</button>
             </div>
         </div>
         {/each}
     </div>
-    <div class="trending-artists-container">
+    <!--div class="trending-artists-container">
         {#each Usuarios as usuario}
         <div class="artist-container">
             <div class="artist-info">
@@ -209,7 +162,7 @@
             </div>
         </div>
         {/each}
-    </div>
+    </div-->
 </div>
 
 <style>
