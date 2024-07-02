@@ -1,7 +1,18 @@
+<script>
+    import { goto } from '$app/navigation';
+
+    function navtologin()
+    {
+        goto("/log-sign-in_page")
+    }
+</script>
+
+
+
 <div class="container">
     <div class="uncolor-half">
         <h1>Get<br> <span class="different-color">collabs</span><br> with other<br> producers</h1>
-        <button class="go-button">Upload your stuff</button>
+        <button on:click={navtologin} class="go-button">Upload your stuff</button>
     </div>
     <div class="color-half">
         <h1 class="color-half-h1-increase">Increase <br> your <br> reach</h1>

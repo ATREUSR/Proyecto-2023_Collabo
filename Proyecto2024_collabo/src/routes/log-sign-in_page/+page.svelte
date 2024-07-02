@@ -33,7 +33,7 @@
             //console.log(response);
             if(response.ok){
                 alert("Log in successfully!")
-                goto(`/discover_page`); 
+                goto(`/log-sign-in_page`); 
             } 
         }).catch(err => {
           console.log(err);

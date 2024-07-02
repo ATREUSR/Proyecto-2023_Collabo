@@ -38,7 +38,7 @@
                 <input type="text" placeholder="Search Stuff" id="search_bar">
             </li>
             <li>
-                <button  on:click={navtoupload} bind:this={uploadBtn} class="uploadBtn">Upload</button>
+                <button  on:click={navtoupload} class="uploadBtn">Upload</button>
             </li>
             <li>
                 <div class="profile-container">
