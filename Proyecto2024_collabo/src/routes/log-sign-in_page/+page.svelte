@@ -1,27 +1,27 @@
 <script lang="ts">
-    let username = '';
+    let name = '';
     let email = '';
     let password = '';
     let confirmPassword = '';
     
 
     async function register() {
-        const userData = { username, email, password};
-        let formData = new FormData();
-        formData.append("userData", JSON.stringify(userData));
-
+        const userData = { name, email, password};
 
         if (password !== confirmPassword) {
             alert('Las contraseñas no coinciden');
             return;
         }
 
-        fetch("http://localhost:8080/uploadloops", {
+        fetch("http://localhost:8003/register", {
           method: 'POST',
-          body: formData
+          headers: {
+                'Content-Type': 'application/json'
+            },
+          body: JSON.stringify(userData)
         }).then((response) => {
           console.log(response);
-          alert("Audio uploaded successfully!")
+          alert("Log in successfully!")
         }).catch(err => {
           console.log(err);
         })
@@ -44,7 +44,7 @@
             signInContainer.style.display = 'none';
             email = '';
             password = '';
-            username = '';
+            name = '';
             confirmPassword = '';
         }
     }
@@ -70,7 +70,7 @@
         <form on:submit|preventDefault={register}>
             <div class="input">
                 <label for="">Username</label>
-                <input bind:value={username} type="text" placeholder="example" required>
+                <input bind:value={name} type="text" placeholder="example" required>
             </div>
             <div class="input">
                 <label for="">Email</label>

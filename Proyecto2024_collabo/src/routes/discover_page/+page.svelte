@@ -262,7 +262,8 @@
     }
 
     .trending-loops {
-        margin: 500px;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
         
     .loops-container {
