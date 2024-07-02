@@ -92,7 +92,7 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-missing-attribute -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <a class="toggle-link" on:click={() => toggleSignIn()}>¿No tenés cuenta?</a>
+        <a class="toggle-link" on:click={() => toggleSignIn()}>¿Ya tenés cuenta?</a>
     </div>
     <div class="sign-in-container" >
         <h1>Sign in</h1>
@@ -114,7 +114,7 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-missing-attribute -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <a class="toggle-link" on:click={() => toggleLogIn()}>¿Ya tenés cuenta?</a>
+        <a class="toggle-link" on:click={() => toggleLogIn()}>¿No tenés cuenta?</a>
     </div>
 </div>
 
