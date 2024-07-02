@@ -2,6 +2,14 @@
 	import logo from './images/Logo_home.png';
     import logobackground from './images/Background_logo.png';
     import defaultpfp from './images/defaultpfp.png';
+    import { goto } from '$app/navigation';
+
+    let uploadBtn;
+
+    function navtoupload()
+    {
+        goto("/upload_page")
+    }
 </script>
 
 
@@ -30,7 +38,7 @@
                 <input type="text" placeholder="Search Stuff" id="search_bar">
             </li>
             <li>
-                <button class="uploadBtn">Upload</button>
+                <button  on:click={navtoupload} bind:this={uploadBtn} class="uploadBtn">Upload</button>
             </li>
             <li>
                 <div class="profile-container">

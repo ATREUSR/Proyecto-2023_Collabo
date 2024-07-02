@@ -1,8 +1,11 @@
 <script lang="ts">
+    import { goto } from '$app/navigation';
+
     let name = '';
     let email = '';
     let password = '';
     let confirmPassword = '';
+    
     
 
     async function register() {
@@ -15,24 +18,59 @@
 
         fetch("http://localhost:8003/register", {
           method: 'POST',
+          credentials: "same-origin",
           headers: {
+                'Authorization': 'Basic '+btoa('username:password'),
                 'Content-Type': 'application/json'
             },
           body: JSON.stringify(userData)
         }).then((response) => {
-          console.log(response);
-          alert("Log in successfully!")
+            const cookieHeader = response.headers.get('Set-Cookie');
+            if (cookieHeader) {
+                const cookies = cookieHeader.split(', ');
+            }
+            console.log(response.headers.getSetCookie());
+            //console.log(response);
+            if(response.ok){
+                alert("Log in successfully!")
+                goto(`/discover_page`); 
+            } 
         }).catch(err => {
           console.log(err);
         })
 
-        console.log(userData); 
+        //console.log(userData); 
     }
 
-    async function signIn() {
+    async function logIn() {
         const userData = { email, password };
+        const response = await fetch("http://localhost:8003/login", {
+          method: 'POST',
+          headers: {
+                //'Authorization': 'Basic '+btoa('username:password'),
+                'Content-Type': 'application/json'
+            },
+          body: JSON.stringify(userData),
+          //credentials: 'same-origin',
+        })
 
-        console.log(userData); 
+        if (!response.ok) {
+            // TODO: Handle not ok
+            console.log(response);
+            return;
+        }
+
+        console.log(response);
+        const cookieHeader = response.headers.get('Set-Cookie');
+        if (cookieHeader) {
+            const cookies = cookieHeader.split(', ');
+        }
+        console.log(response.headers.getSetCookie());
+        if(response.ok){
+            alert("Log in successfully!")
+            goto(`/discover_page`); 
+        }
+        //console.log(userData); 
     }
 
     function toggleLogIn() {
@@ -97,7 +135,7 @@
     <div class="sign-in-container" >
         <h1>Sign in</h1>
         <div class="gradient-line"></div>
-        <form on:submit|preventDefault={signIn}>
+        <form on:submit|preventDefault={logIn}>
             <div class="input">
                 <label for="">Email</label>
                 <input bind:value={email} type="email" placeholder="example@gmail.com" required>

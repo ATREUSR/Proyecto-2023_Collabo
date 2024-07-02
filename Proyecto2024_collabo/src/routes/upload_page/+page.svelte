@@ -86,12 +86,19 @@
         let formData = new FormData();
         formData.append("audio", inputValue);
         
-        fetch("http://localhost:8080/uploadloops", {
+        fetch("http://localhost:8003/uploadloops", {
           method: 'POST',
+          credentials: "same-origin",
+          headers: {
+                //'Authorization': 'Basic '+btoa('username:password'),
+                'Content-Type': 'application/json'
+            },
           body: formData
         }).then((response) => {
           console.log(response);
-          alert("Audio uploaded successfully!")
+          if(response.ok){
+            alert("audio upload successfully!")
+          }
         }).catch(err => {
           console.log(err);
         })

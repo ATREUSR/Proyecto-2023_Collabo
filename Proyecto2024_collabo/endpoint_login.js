@@ -43,9 +43,9 @@ app.get('/', (req, res) => {
 
 // login
 app.post('/login', async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password } = req.body;
 
-  if (!email || !password || !name) {
+  if (!email || !password) {
       return res.status(400).json({ error: 'Faltan datos en la solicitud' });
   }
 
@@ -196,9 +196,10 @@ app.get('/searchloops', async (req, res) => {
     }
 
     // Filtrar solo el primer resultado (suponiendo que esperas un solo resultado)
-    const filteredLoop = loops[0];
+    //const filteredLoop = loops[0];
 
-    res.status(200).json(filteredLoop);
+    //res.status(200).json(filteredLoop);
+    res.status(200).json(loops);
   } catch (error) {
     console.error('Error fetching loop:', error);
     res.status(500).json({ error: 'Error al buscar el loop en la base de datos' });

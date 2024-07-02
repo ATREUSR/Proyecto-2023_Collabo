@@ -142,14 +142,23 @@
     let resultadosFiltrados = Usuarios; 
 
     async function filtrarLoops() {
-        resultadosFiltrados = Usuarios.filter(usuario => {
-            return usuario.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-                   usuario.artista.toLowerCase().includes(terminoBusqueda.toLowerCase());
-            // Puedes añadir más campos de comparación aquí
-        });
+        const response = await fetch("http://localhost:8003/searchloops?title=" + terminoBusqueda, {
+          method: 'GET',
+        })
+
+        console.log(response);
+        
+        if (!response.ok) {
+            // TODO: Handle 404 or error
+            return
+        }
+        
+        const responsejson = response.json()
+
         await tick();
         audioElements = Array.from(document.querySelectorAll('.audio-container')).map(elem => elem as HTMLElement);
-        setwavesurfer();
+        
+        setwavesurfer(); 
     }
 
 </script>
