@@ -26,6 +26,57 @@
     let audioElements: HTMLElement[] = [];
     let wavesurfers: WaveSurfer[] = [];
 
+    let Usuarios = [
+        {
+            nombre: "Down with me",
+            artista: "@AlvaritoMusic",
+            imagenArtista: artista3,
+            imagenPerfil: profile,
+            audio: audio3,
+            uploadTime: "30 mins ago"
+        },
+        {
+            nombre: "Brawl Stars Epic Loop",
+            artista: "@WaterdyLoops",
+            imagenArtista: brawl,
+            imagenPerfil: profile,
+            audio: brawlaudio,
+            uploadTime: "30 mins ago"
+        },
+        {
+            nombre: "Orquesta Beat God",
+            artista: "@Bethoven",
+            imagenArtista: bethoven,
+            imagenPerfil: profile,
+            audio: orquesta,
+            uploadTime: "30 mins ago"
+        },
+        {
+            nombre: "Loops with drums",
+            artista: "@BlurJuanElPatan",
+            imagenArtista: artista4,
+            imagenPerfil: profile,
+            audio: audio4,
+            uploadTime: "30 mins ago"
+        },
+        {
+            nombre: "Acoustic Piano Loop",
+            artista: "@ScoobyDoo",
+            imagenArtista: artista6,
+            imagenPerfil: profile,
+            audio: audio5,
+            uploadTime: "30 mins ago"
+        },
+        {
+            nombre: "SuperDuperEpic Loop",
+            artista: "@Shredder",
+            imagenArtista: artista5,
+            imagenPerfil: profile,
+            audio: audio6,
+            uploadTime: "30 mins ago"
+        },
+    ];
+
     type Resultado = {
         id: string;
         createdAt: Date;
@@ -152,7 +203,7 @@
         </div>
         {/each}
     </div>
-    <!--div class="trending-artists-container">
+    <div class="trending-artists-container">
         {#each Usuarios as usuario}
         <div class="artist-container">
             <div class="artist-info">
@@ -162,7 +213,7 @@
             </div>
         </div>
         {/each}
-    </div-->
+    </div>
 </div>
 
 <style>
@@ -351,6 +402,7 @@
         display: flex;
         overflow-x: auto;
         white-space: nowrap;
+        margin-top: 300px;
     }
 
     .trending-artists-container > div {
