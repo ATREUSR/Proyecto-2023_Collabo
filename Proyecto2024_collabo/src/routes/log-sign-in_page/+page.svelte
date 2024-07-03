@@ -33,7 +33,7 @@
             //console.log(response);
             if(response.ok){
                 alert("Log in successfully!")
-                goto(`/log-sign-in_page`); 
+                goto(`/home_page`); 
             } 
         }).catch(err => {
           console.log(err);
@@ -57,6 +57,8 @@
         if (!response.ok) {
             // TODO: Handle not ok
             console.log(response);
+            alert("datos no encontrados")
+
             return;
         }
 
@@ -71,6 +73,7 @@
             goto(`/discover_page`); 
         }
         //console.log(userData); 
+        
     }
 
     function toggleLogIn() {

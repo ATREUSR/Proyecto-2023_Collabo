@@ -188,7 +188,7 @@
                     <div class="loop-title">{resultado.Title}</div>
                     <div class="artist-detail">
                         <img class="profile-img" src={profile} alt="">
-                        <p class="artist-follow">{resultado.userId.toString()}</p> <!-- esta linea tambien -->
+                        <p class="artist-follow">user</p> <!-- {resultado.userId.toString()} -->
                         <p>{new Date(new Date().valueOf() - resultado.createdAt.valueOf()).getMinutes() + "minutes"}</p> <!-- esta linea tambien -->
                     </div>
                     <div bind:this={audioElements[index]} class="audio-container" id="audio-container">
