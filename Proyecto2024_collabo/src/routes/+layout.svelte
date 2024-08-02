@@ -81,6 +81,7 @@
 
     .uploadBtn:hover {
         cursor: pointer;
+        background-color: #935ce0;
     }
 
     .nav img {
@@ -137,6 +138,25 @@
         text-decoration: none;
         font-weight: 650;
         white-space: nowrap
+    }
+
+    .nav a:after {
+        content: '';
+        position: absolute;
+        bottom: -5px; 
+        left: 0;
+        width: 100%;
+        height: 5px; 
+        border-radius: 5px;
+        background-image: linear-gradient(to right, #B700BD, #4800B6);
+        transform-origin: left;
+        transform: scaleX(0);
+        transition: transform .5s;
+    }
+
+    .nav a:hover:after {
+        transform-origin: left; 
+        transform: scaleX(1);
     }
 
     .nav input[type=text] {
