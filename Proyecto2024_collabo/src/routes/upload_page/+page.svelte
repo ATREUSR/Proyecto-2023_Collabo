@@ -3,6 +3,7 @@
     import rectangle from '../images/rectangulo_color.png';
     import { page } from '$app/stores';
     import WaveSurfer from 'wavesurfer.js';
+    import { goto } from '$app/navigation';
 
     let dropArea: HTMLElement;
     let input: HTMLInputElement;
@@ -26,11 +27,13 @@
     });
 
     function uploadaudio() {
-        if (input.files) {
-            inputValue = input.files[0];
-            let audioLink = URL.createObjectURL(input.files[0]);
+        const file = input.files?.[0];
+        if (file) {
+            let audioLink = URL.createObjectURL(file);
             let audioElement = document.createElement('audio');
             let waveformContainer = document.createElement('div'); 
+            localStorage.setItem('uploadedAudio', audioLink);
+            localStorage.setItem('audioFileName', file.name);
             audioElement.src = audioLink;
             audioElement.style.display = 'none';
             fileView.textContent = "";
@@ -83,7 +86,9 @@
     }
 
     function handleContinue() {
-        let formData = new FormData();
+
+        goto('/uploadForm_page');
+        /*let formData = new FormData();
         formData.append("audio", inputValue);
         
         fetch("http://localhost:8003/uploadloops", {
@@ -101,7 +106,7 @@
           }
         }).catch(err => {
           console.log(err);
-        })
+        })*/
     };
 
 </script>
