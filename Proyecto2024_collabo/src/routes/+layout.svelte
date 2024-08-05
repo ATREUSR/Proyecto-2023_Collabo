@@ -23,13 +23,13 @@
         <h1 class="collabotxt">collabo</h1>
         <ul>
             <li>
-                <a href="/">Home</a>
+                <a href="/home_page">Home</a>
             </li>
             <li>
-                <a href="/about">Feed</a>
+                <a href="/">Feed</a>
             </li>
             <li>
-                <a href="/discover">Discover</a>
+                <a href="/discover_page">Discover</a>
             </li>
             <li>
                 <a href="/About">About us</a>

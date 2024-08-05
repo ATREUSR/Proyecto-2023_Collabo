@@ -117,21 +117,19 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: auto;
-        padding: 0;
-        transform: translateX(-6.8%);
+        transform: translateX(-8%);
     }
 
     .page-container h1 {
         display: flex;
         justify-content: center;    
         align-items: center;
-        transform: translateX(30%);
+        transform: translateX(20%);
     }
 
     .gradient-line {
         height: 6px;
-        width: 170%;
+        width: 135%;
         background: linear-gradient(to right, #B700BD, #4800B6);
         border-radius: 5px;
         margin-bottom: 25px;

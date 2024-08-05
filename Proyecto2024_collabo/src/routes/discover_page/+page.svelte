@@ -214,6 +214,25 @@
         </div>
         {/each}
     </div>
+    <div class="security-wrap">
+        <h2>Collab Conditions</h2>
+        <div class="subtitle-line"></div>
+        <div class="loop-info">
+            <img src="" alt="">
+            <h2>nombre</h2>
+        </div>
+        <div class="use&split">
+            <div class="use">
+                <h2>Type of collab</h2>
+                <p></p>
+            </div>
+            <div class="split">
+                <h2>split percentage</h2>
+                <p></p>
+            </div>
+        </div>
+        <button class="collab-button"></button>
+    </div>
 </div>
 
 <style>
