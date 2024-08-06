@@ -22,6 +22,8 @@ model User {
   profile Profile?
   loops   Loops[]
   comment Comment[]
+  downloads Download[]
+
 }
 model Profile {
   id     Int    @id @default(autoincrement())
@@ -39,6 +41,7 @@ model Loops{
   Descripcion String
   Tags String
   comments Comment[]
+  downloads   Download[]
 
 }
 model Comment {
@@ -50,4 +53,15 @@ model Comment {
   loop        Loops     @relation(fields: [loopId], references: [id])
   user        User     @relation(fields: [userId], references: [id])
 }
+model Download {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  loopId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  loop      Loops    @relation(fields: [loopId], references: [id])
+
+  @@unique([userId, loopId]) // Para evitar descargas duplicadas por el mismo usuario
+}
+
 
