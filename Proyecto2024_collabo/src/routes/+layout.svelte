@@ -17,8 +17,8 @@
 <header>
     <nav class="nav">
         <div class="logo-container">
-            <div class="logobackgroundimg"><img src={logobackground} alt=""/></div>
             <div class="logoimg"><img src={logo} alt=""/></div>
+            <div class="linear-gradient"></div>
         </div>
         <h1 class="collabotxt">collabo</h1>
         <ul>
@@ -66,6 +66,7 @@
         border-bottom: solid 1px #000;
         align-items: center;
         width: 100%;
+        height: 70px;
 
     }
     
@@ -91,7 +92,11 @@
 
     .logo-container {
         position: relative;
-        text-align: center;
+        width: 100px; 
+        height: 100px;  
+        border-style: solid;
+        border-width: 10px;
+        border-image: linear-gradient(to right, #B700BD, #4800B6) 1;
     }
 
     .logoimg {
@@ -99,12 +104,6 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        color: #fff;
-    }
-
-    .logobackgroundimg img{
-        width: 70px;
-        height: 100%;
     }
 
     .collabotxt {
