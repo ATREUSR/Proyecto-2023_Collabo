@@ -184,10 +184,46 @@ app.post('/uploadloops', upload.single('audio'), async (req, res) => {
   }
 });
 
-app.get('/download/:public_id', (req, res) => {
-  const publicId = req.params.public_id;
-  const url = cloudinary.url(publicId, { resource_type: 'video' });
-  res.redirect(url);
+
+app.post('/download', async (req, res) => {
+  const { loopId } = req.body;
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ error: 'No se proporcionó un token' });
+  }
+
+  let decoded;
+  try {
+    decoded = jwt.verify(token, jwtSecret);
+  } catch (err) {
+    return res.status(401).json({ error: 'Token inválido' });
+  }
+
+  const userId = decoded.sub;
+
+  try {
+    const downloadRecord = await prisma.download.create({
+      data: {
+        userId: userId,
+        loopId: loopId,
+      },
+    });
+
+    const loop = await prisma.loops.findUnique({
+      where: { id: loopId },
+    });
+
+    if (!loop) {
+      return res.status(404).json({ error: 'Loop no encontrado' });
+    }
+
+    const url = cloudinary.url(loop.id, { resource_type: 'video' });
+    res.redirect(url);
+  } catch (error) {
+    console.error('Error recording download:', error);
+    res.status(500).json({ error: 'Error al registrar la descarga' });
+  }
 });
 
 // Ruta para buscar loops por título
