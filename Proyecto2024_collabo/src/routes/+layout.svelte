@@ -17,8 +17,12 @@
 <header>
     <nav class="nav">
         <div class="logo-container">
-            <div class="logobackgroundimg"><img src={logobackground} alt=""/></div>
-            <div class="logoimg"><img src={logo} alt=""/></div>
+            <div class="logobackgroundimg">
+                <img src="" alt=""/>
+            </div>
+            <div class="logoimg">
+                <img src={logo} alt=""/>
+            </div>
         </div>
         <h1 class="collabotxt">collabo</h1>
         <ul>
@@ -50,10 +54,8 @@
 </header>
 <slot />
 
-
 <style>
-
-    *{
+    * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
@@ -66,9 +68,8 @@
         border-bottom: solid 1px #000;
         align-items: center;
         width: 100%;
-
     }
-    
+
     .uploadBtn {
         background-color: #4800B6;
         color: #fff;
@@ -91,7 +92,29 @@
 
     .logo-container {
         position: relative;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logobackgroundimg {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        border-radius: 0 50% 50% 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(to right, #B700BD, #4800B6);
+    }
+
+
+    .logobackgroundimg img {
+        width: 120px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #fff; 
+        margin-left: -50px;
     }
 
     .logoimg {
@@ -102,18 +125,13 @@
         color: #fff;
     }
 
-    .logobackgroundimg img{
-        width: 70px;
-        height: 100%;
-    }
-
     .collabotxt {
         color: #000;
         font-size: 1.5rem;
         margin-right: 5%;
     }
 
-    .searcher-li{
+    .searcher-li {
         margin-left: 150px;
     }
 
@@ -137,16 +155,16 @@
         color: #000;
         text-decoration: none;
         font-weight: 650;
-        white-space: nowrap
+        white-space: nowrap;
     }
 
     .nav a:after {
         content: '';
         position: absolute;
-        bottom: -5px; 
+        bottom: -5px;
         left: 0;
         width: 100%;
-        height: 5px; 
+        height: 5px;
         border-radius: 5px;
         background-image: linear-gradient(to right, #B700BD, #4800B6);
         transform-origin: left;
@@ -155,7 +173,7 @@
     }
 
     .nav a:hover:after {
-        transform-origin: left; 
+        transform-origin: left;
         transform: scaleX(1);
     }
 
@@ -164,7 +182,7 @@
         width: 140%;
         padding: 6px;
         border: none;
-        margin-right:0;
+        margin-right: 0;
         font-size: 17px;
         border: solid 1px black;
         border-radius: 20px;
@@ -178,18 +196,18 @@
         overflow: hidden;
     }
 
-
     @media screen and (max-width: 600px) {
-    .nav a, .nav input[type=text] {
-        float: none;
-        display: block;
-        text-align: left;
-        width: 100%;
-        margin: 0;
-        padding: 14px;
-    }
-    .nav input[type=text] {
-        border: 1px solid #000;
-    }
+        .nav a, .nav input[type=text] {
+            float: none;
+            display: block;
+            text-align: left;
+            width: 100%;
+            margin: 0;
+            padding: 14px;
+        }
+
+        .nav input[type=text] {
+            border: 1px solid #000;
+        }
     }
 </style>
