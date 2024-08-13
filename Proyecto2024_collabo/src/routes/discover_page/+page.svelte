@@ -257,16 +257,16 @@
     }
 
     .search-container {
-        display: flex; 
-        align-items: center; 
-        gap: 10px; 
+        display: flex; /* Esto alinea los elementos horizontalmente */
+        align-items: center; /* Centra los elementos verticalmente */
+        gap: 10px; /* Espacio entre el campo de búsqueda y el botón */
     }
   
     .search-input {
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        flex-grow: 1; 
+        flex-grow: 1; /* Hace que el campo de búsqueda ocupe el espacio disponible */
     }
   
     .search-button {
