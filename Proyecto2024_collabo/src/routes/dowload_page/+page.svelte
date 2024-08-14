@@ -1,18 +1,29 @@
 <script lang="ts">
     import artista from "../images/artista.png";
-    import audio from "../audios/sunflower-street-drumloop-85bpm-163900.mp3"
+    //import audio from "../audios/bass-loops-012-with-drums-short-loop-120-bpm-6392.mp3"
     import profile from "../images/defaultpfp.png";
     import WaveSurfer from 'wavesurfer.js';
     import { onMount } from "svelte";
+    import { page } from '$app/stores';
     
     let audioElement: HTMLDivElement;
     let wavesurfer: WaveSurfer;
+    let title = '';
+    let audioFile = '';
+
+    $: {
+        title = $page.url.searchParams.get('title') || 'default title';
+        audioFile = $page.url.searchParams.get('audioFile') || 'default-audio.mp3';
+        if (wavesurfer && audioFile) {
+            wavesurfer.load(`/audios/${audioFile}`);
+        }
+    }
 
     function downloadAudio(e: MouseEvent) {
         e.stopPropagation();
         const link = document.createElement('a');
-        link.href = audio;
-        link.download = audio; 
+        link.href = `/audios/${audioFile}`;
+        link.download = audioFile; 
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -29,7 +40,7 @@
             barRadius: 5,
         })
 
-        wavesurfer.load(audio);
+        wavesurfer.load(`/audios/${audioFile}`);
     });
 
     function togglePlayPause() {
@@ -47,14 +58,14 @@
             <div class="post-container">
                 <img src={artista} alt="">
                 <div class="post-info">
-                    <h2 class="loop-title">NLE CHOPPA TYPE LOOP | TRAP CHORDS</h2> <!-- esta linea usa valores planos pero que van a ser variables -->
+                    <h2 class="loop-title">{title}</h2> <!-- esta linea usa valores planos pero que van a ser variables -->
                     <div class="artist-upload-info">
                         <img class="profile-img" src={profile} alt="">
                         <p class="artist-follow">@ArtisitYouFollow</p> <!-- esta linea tambien -->
                         <p>upload 30 mins ago</p> <!-- esta linea tambien -->
                     </div>
                     <div bind:this={audioElement} class="audio-container" id="audio-container">
-                        <source src={audio} type="audio">
+                        <source src={audioFile} type="audio">
                     </div>
                     <button class="pause-play-button" on:click={togglePlayPause}>play/pause</button>
                 </div>

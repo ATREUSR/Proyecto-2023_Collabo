@@ -17,11 +17,12 @@
     import brawlaudio from "../audios/brawl-stars-loading-sound.mp3"
     import orquesta from "../audios/dramatic-ochestral-loop-154350.mp3"
     import audio4 from "../audios/bass-loops-012-with-drums-short-loop-120-bpm-6392.mp3"
-    import audio5 from "../audios/marie-louise-janneman-acoustic-piano-loop-190241.mp3"
+    import audio5 from "../audios/beat-loop-by-mary.mp3"
     import audio6 from "../audios/beat-loop-by-marie-louise-janneman-21287.mp3"
 
     import WaveSurfer from 'wavesurfer.js';
     import { onMount, tick } from "svelte";
+    import { goto } from '$app/navigation';
     
     let audioElements: HTMLElement[] = [];
     let wavesurfers: WaveSurfer[] = [];
@@ -87,13 +88,17 @@
         Tags: string;
     }
 
-    function downloadAudio(audio: string) {
-        const link = document.createElement('a');
-        link.href = audio;
-        link.download = audio; 
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    interface Loop {
+        nombre: string;
+        audio: string;
+    }
+
+    function gotoAudio(loop: Resultado, audio: string) {
+        const params = new URLSearchParams({
+            title: loop.Title,
+            audioFile: audio
+        }).toString();
+        goto(`/dowload_page?${params}`);
     }
 
     onMount(() => {
@@ -198,7 +203,7 @@
                 </div>
             </div>
             <div class="dowload-btn-conatainer">
-                <button on:click={() => downloadAudio(audio)} class="dowload-button" >Collab</button>
+                <button on:click={() => gotoAudio(resultado, audio)} class="dowload-button" >Collab</button>
             </div>
         </div>
         {/each}
