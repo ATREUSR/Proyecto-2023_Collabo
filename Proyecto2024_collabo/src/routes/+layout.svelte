@@ -106,12 +106,14 @@
         align-items: center;
         justify-content: center;
         background: linear-gradient(to right, #B700BD, #4800B6);
+        margin-top: 5px;
+        margin-bottom: 5px;
+        overflow: hidden;
     }
-
 
     .logobackgroundimg img {
         width: 120px;
-        height: 80px;
+        height: 70px;
         border-radius: 50%;
         background-color: #fff; 
         margin-left: -50px;
