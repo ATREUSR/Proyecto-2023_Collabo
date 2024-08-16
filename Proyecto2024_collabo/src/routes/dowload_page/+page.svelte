@@ -1,6 +1,7 @@
 <script lang="ts">
     import artista from "../images/artista.png";
     //import audio from "../audios/bass-loops-012-with-drums-short-loop-120-bpm-6392.mp3"
+    import img from "../images/brawlstars.png";
     import profile from "../images/defaultpfp.png";
     import WaveSurfer from 'wavesurfer.js';
     import { onMount } from "svelte";
@@ -81,6 +82,34 @@
         <div class="dowload-btn-conatainer">
             <button class="dowload-button" on:click|preventDefault={downloadAudio}>Collab</button>
         </div>
+
+        <div class="security-wrap">
+            <h2 class="collab-conditions">Collab Conditions</h2>
+            <div class="subtitle-line"></div>
+            <div class="collab-conditions">
+                <div class="loop-info">
+                    <img class="loop-img" src={img} alt="">
+                    <div class="loop-details">
+                        <h2 class="loop-name">nombre</h2>
+                        <div class="user-info">
+                            <img src={profile} alt="" class="pfp-img">
+                            <span class="user">Username</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="use-split">
+                    <div class="use">
+                        <h2>Type of collab</h2>
+                        <p>This is the type of use that the creator selected, this has to be respected when using the loop</p>
+                    </div>
+                    <div class="split">
+                        <h2>split percentage</h2>
+                        <p>This is the percentage of the split that the creator has selected, if you think you can reach a new agreement with him you have the option of negotiation</p>
+                    </div>
+                </div>
+                <button class="collab-button"></button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -130,11 +159,13 @@
 
     .profile-img {
         width: 40px;
-        margin-right: -100px;
+        margin-right: 10px;
+        border-radius: 50%;
     }
 
-    .loop-title {
-        margin-bottom: 10px;
+    .loop-details {
+        display: flex;
+        align-items: center; 
     }
 
     .artist-upload-info {
@@ -248,5 +279,92 @@
     .follow-button:hover {
         background-color: #935ce0;
         cursor: pointer;
+    }
+
+    .subtitle-line {
+        height: 3px;
+        background: #E9E9E9;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .security-wrap {
+        margin-top: 20px;
+        border: 1px solid #777877;
+        border-radius: 15px;
+        box-shadow: 0px 0px 10px 0px #777877;
+        padding: 20px;
+        max-width: 400px; 
+        height: auto; 
+    }
+
+    .collab-conditions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .loop-info {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    .loop-img {
+        width: 50px; 
+        height: 50px;
+        margin-right: 20px;
+    }
+
+    .pfp-img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .user {
+        margin-top: 0; 
+        display: flex;
+        align-items: center;
+    }
+
+    .loop-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .user-info {
+        display: flex; 
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px; 
+    }
+
+    .pfp-img {
+        margin-top: 10px;
+    }
+
+    .use-split {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        margin-right: auto;
+    }
+
+    .use, .split {
+        margin-bottom: 20px;
+        max-width: 300px;
+    }
+
+    .use h2, .split h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .use p, .split p {
+        word-wrap: break-word;
     }
 </style>
