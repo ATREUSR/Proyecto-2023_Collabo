@@ -18,7 +18,7 @@
         title = $page.url.searchParams.get('title') || 'default title';
         audioFile = $page.url.searchParams.get('audioFile') || 'default-audio.mp3';
         if (wavesurfer && audioFile) {
-            wavesurfer.load(`/audios/${audioFile}`);
+            wavesurfer.load(audioFile);
         }
     }
 

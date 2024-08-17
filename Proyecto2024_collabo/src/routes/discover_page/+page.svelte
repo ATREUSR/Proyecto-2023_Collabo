@@ -87,13 +87,14 @@
         Title: string;
         Description: string;
         Tags: string;
-        audio: string
     }
 
     function gotoAudio(loop: Resultado) {
+        const cloudinaryBaseUrl = "https://res.cloudinary.com/dw26qdtlf/video/upload/v1722284452/";
+        const audioUrl = `${cloudinaryBaseUrl}${loop.id}.mp3`;
         const params = new URLSearchParams({
             title: loop.Title,
-            audioFile: loop.audio
+            audioFile: audioUrl,
         }).toString();
         goto(`/dowload_page?${params}`);
     }
@@ -128,12 +129,16 @@
                     
                 });
             }
-
-            if(resultadosFiltrados[index] && resultadosFiltrados[index].audio) {
-                wavesurfers[index].load(resultadosFiltrados[index].audio);
-            }
+            
+            const cloudinaryBaseUrl = "https://res.cloudinary.com/dw26qdtlf/video/upload/v1722284452/";
+            const audioId = resultadosFiltrados[index].id; 
+            const audioUrl = `${cloudinaryBaseUrl}${audioId}.mp3`; 
+            
+            wavesurfers[index].load(audioUrl);
         });
     }
+
+    
 
     let terminoBusqueda = ''; 
     let resultadosFiltrados: Resultado[] = [];
