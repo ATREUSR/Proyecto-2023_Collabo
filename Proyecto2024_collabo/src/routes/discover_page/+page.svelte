@@ -83,20 +83,17 @@
         createdAt: Date;
         updatedAt: Date;
         userId: number;
+        user: string;
         Title: string;
         Description: string;
         Tags: string;
+        audio: string
     }
 
-    interface Loop {
-        nombre: string;
-        audio: string;
-    }
-
-    function gotoAudio(loop: Resultado, audio: string) {
+    function gotoAudio(loop: Resultado) {
         const params = new URLSearchParams({
             title: loop.Title,
-            audioFile: audio
+            audioFile: loop.audio
         }).toString();
         goto(`/dowload_page?${params}`);
     }
@@ -119,8 +116,7 @@
         wavesurfers = [];
 
         audioElements.forEach((elem, index) => {
-            const audios = [audio, audio2, audio3, brawlaudio, orquesta, audio4, audio5, audio6];
-            if (!wavesurfers[index]) { 
+            if (!wavesurfers[index] && resultadosFiltrados[index]) { 
                 wavesurfers[index] = WaveSurfer.create({
                     container: elem,
                     waveColor: '#4800B6',
@@ -133,7 +129,9 @@
                 });
             }
 
-            wavesurfers[index].load(audios[index]);
+            if(resultadosFiltrados[index] && resultadosFiltrados[index].audio) {
+                wavesurfers[index].load(resultadosFiltrados[index].audio);
+            }
         });
     }
 
@@ -197,13 +195,13 @@
                         <p>{new Date(new Date().valueOf() - resultado.createdAt.valueOf()).getMinutes() + "minutes"}</p> <!-- esta linea tambien -->
                     </div>
                     <div bind:this={audioElements[index]} class="audio-container" id="audio-container">
-                        <source src={audio} type="audio" class="audio">
+                        <source src={resultado.id} type="audio" class="audio">
                     </div>
                     <button class="pause-play-button" on:click={() => togglePlayPause(index)}>play/pause</button>
                 </div>
             </div>
             <div class="dowload-btn-conatainer">
-                <button on:click={() => gotoAudio(resultado, audio)} class="dowload-button" >Collab</button>
+                <button on:click={() => gotoAudio(resultado)} class="dowload-button" >Collab</button>
             </div>
         </div>
         {/each}
