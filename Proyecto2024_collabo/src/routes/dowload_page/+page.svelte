@@ -11,6 +11,8 @@
     let wavesurfer: WaveSurfer;
     let title = '';
     let audioFile = '';
+    let securityWrap: HTMLDivElement;
+
 
     $: {
         title = $page.url.searchParams.get('title') || 'default title';
@@ -29,6 +31,15 @@
         link.click();
         document.body.removeChild(link);
     }
+
+    function openwrap(e: MouseEvent) {
+        securityWrap.style.display = 'block';
+    }
+
+    function closeSecurityWrap() {
+        securityWrap.style.display = 'none';
+    }
+
 
     onMount(() => {
         wavesurfer = WaveSurfer.create({
@@ -79,11 +90,12 @@
                 </div>
             </div>
         </div>
-        <div class="dowload-btn-conatainer">
-            <button class="dowload-button" on:click|preventDefault={downloadAudio}>Collab</button>
+        <div class="collab-btn-conatainer">
+            <button class="collab-button" on:click={openwrap}>Collab</button>
         </div>
 
-        <div class="security-wrap">
+        <div class="security-wrap" bind:this={securityWrap}>
+            <button class="close-btn" on:click={closeSecurityWrap}>✖</button>
             <h2 class="collab-conditions">Collab Conditions</h2>
             <div class="subtitle-line"></div>
             <div class="collab-conditions">
@@ -93,7 +105,7 @@
                         <h2 class="loop-name">nombre</h2>
                         <div class="user-info">
                             <img src={profile} alt="" class="pfp-img">
-                            <span class="user">Username</span>
+                            <span class="user">@Username</span>
                         </div>
                     </div>
                 </div>
@@ -101,17 +113,26 @@
                     <div class="use">
                         <h2>Type of collab</h2>
                         <p>This is the type of use that the creator selected, this has to be respected when using the loop</p>
+                        <div class="giving-split">
+                            <h2>Giving<br>Split</h2>
+                        </div>
                     </div>
                     <div class="split">
                         <h2>split percentage</h2>
                         <p>This is the percentage of the split that the creator has selected, if you think you can reach a new agreement with him you have the option of negotiation</p>
+                        <div class="split-percentage">
+                            <h2>20%</h2>
+                        </div>
                     </div>
                 </div>
-                <button class="collab-button"></button>
+                <div class="dowload-btn-conatainer">
+                    <button class="dowload-btn" on:click|preventDefault={downloadAudio}>Collab</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <style>
     @import url('https://fonts.cdnfonts.com/css/utendo');
@@ -208,13 +229,13 @@
         cursor: pointer;
     }
 
-    .dowload-btn-conatainer{
+    .collab-btn-conatainer{
         border-top: 1px solid #777877; 
         border-bottom: 1px solid #777877;
         width: 70%;
     }
 
-    .dowload-button {
+    .collab-button {
         display: flex;
         width: 150px;
         height: 40px;
@@ -232,7 +253,7 @@
         margin-bottom: 10px;
     }
 
-    .dowload-button:hover {
+    .collab-button:hover {
         background-color: #935ce0;
         cursor: pointer;
     }
@@ -294,8 +315,25 @@
         border-radius: 15px;
         box-shadow: 0px 0px 10px 0px #777877;
         padding: 20px;
-        max-width: 400px; 
-        height: auto; 
+        width: 500px; 
+        height: auto;
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        z-index: 1000; 
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
     }
 
     .collab-conditions {
@@ -324,9 +362,15 @@
     }
 
     .user {
-        margin-top: 0; 
         display: flex;
         align-items: center;
+    }
+
+    .user-info {
+        display: flex; 
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px; 
     }
 
     .loop-details {
@@ -342,10 +386,6 @@
         margin-top: 10px; 
     }
 
-    .pfp-img {
-        margin-top: 10px;
-    }
-
     .use-split {
         display: flex;
         flex-direction: column;
@@ -356,7 +396,8 @@
 
     .use, .split {
         margin-bottom: 20px;
-        max-width: 300px;
+        max-width: 250px;
+        position: relative;
     }
 
     .use h2, .split h2 {
@@ -366,5 +407,66 @@
 
     .use p, .split p {
         word-wrap: break-word;
+    }
+
+    .giving-split, .split-percentage {
+        position: absolute;
+        right: -200px;
+        top: 0;
+        border: 1px solid #E9E9E9;
+        border-radius: 15px;
+        background: #E9E9E9; 
+        height: 100px;
+        width: 150px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .giving-split h2, .split-percentage h2 {
+        background: linear-gradient(to right, #B700BD, #4800B6); 
+        -webkit-background-clip: text; 
+        background-clip: text; 
+        color: transparent; 
+        margin: 0;
+    }
+
+    .giving-split h2{
+        font-size: 28px;
+    }
+
+    .split-percentage h2 {
+        font-size: 35px;
+    }
+
+    .dowload-btn-conatainer {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .dowload-btn{
+        display: flex;
+        width: 250px;
+        height: 40px;
+        background-color: #4800B6;
+        border-radius: 5px;
+        border: 0.5px solid #777877;
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-left: auto;
+        font-weight: 600;
+        font-size: medium;
+        margin-top: 10px; 
+        margin-bottom: 10px;
+    }
+
+    .dowload-btn:hover {
+        background-color: #935ce0;
+        cursor: pointer;
+        
     }
 </style>
