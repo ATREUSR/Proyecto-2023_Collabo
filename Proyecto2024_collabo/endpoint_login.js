@@ -251,6 +251,52 @@ app.get('/searchloops', async (req, res) => {
     res.status(500).json({ error: 'Error al buscar el loop en la base de datos' });
   }
 });
+app.get('/artist-loops/:artistId', async (req, res) => {
+  const { artistId } = req.params;
+
+  try {
+    const loops = await prisma.loops.findMany({
+      where: {
+        userId: parseInt(artistId),
+      },
+    });
+
+    if (loops.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron loops para este artista' });
+    }
+
+    res.status(200).json(loops);
+  } catch (error) {
+    console.error('Error fetching artist loops:', error);
+    res.status(500).json({ error: 'Error al buscar los loops del artista' });
+  }
+});
+app.get('/loop-downloads/:loopId', async (req, res) => {
+  const { loopId } = req.params;
+
+  try {
+    const downloads = await prisma.download.findMany({
+      where: {
+        loopId: loopId,
+      },
+      include: {
+        user: true, // Incluye los detalles del usuario en el resultado
+      },
+    });
+
+    if (downloads.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron descargas para este loop' });
+    }
+
+    // Extraer solo los datos de los usuarios
+    const users = downloads.map(download => download.user);
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Error fetching loop downloads:', error);
+    res.status(500).json({ error: 'Error al buscar las descargas del loop' });
+  }
+});
 
 
 app.listen(
