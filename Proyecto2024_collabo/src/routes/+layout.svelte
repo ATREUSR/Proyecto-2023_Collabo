@@ -1,6 +1,6 @@
 <script>
 	import logo from './images/Logo_home.png';
-    import logobackground from './images/Background_logo.png';
+    import logoborde from './images/borde_logo.png';
     import defaultpfp from './images/defaultpfp.png';
     import { goto } from '$app/navigation';
 
@@ -12,19 +12,17 @@
     }
 </script>
 
-
-
 <header>
     <nav class="nav">
         <div class="logo-container">
-            <div class="logobackgroundimg">
-                <img src="" alt=""/>
+            <div class="borderlogo">
+                <img src={logoborde} alt=""/>
             </div>
             <div class="logoimg">
                 <img src={logo} alt=""/>
             </div>
         </div>
-        <h1 class="collabotxt">collabo</h1>
+        <h1 class="collabotxt">Collabo</h1>
         <ul>
             <li>
                 <a href="/home_page">Home</a>
@@ -55,17 +53,19 @@
 <slot />
 
 <style>
-    * {
+    @import url('https://fonts.cdnfonts.com/css/utendo');
+    
+    *{
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'Coolvetica', sans-serif;
+        font-family: 'Utendo', sans-serif;
     }
+
 
     nav {
         display: flex;
         background-color: #fff;
-        border-bottom: solid 1px #000;
         align-items: center;
         width: 100%;
     }
@@ -95,46 +95,54 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        margin: 10px 0 10px 0;
     }
 
-    .logobackgroundimg {
-        position: relative;
-        width: 100px;
-        height: 100px;
-        border-radius: 0 50% 50% 0;
+    .borderlogo {
+        width: 80px; 
+        height: 70px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(to right, #B700BD, #4800B6);
-        margin-top: 5px;
-        margin-bottom: 5px;
-        overflow: hidden;
     }
 
-    .logobackgroundimg img {
-        width: 120px;
-        height: 70px;
-        border-radius: 50%;
-        background-color: #fff; 
-        margin-left: -50px;
+    .borderlogo img {
+        width: 100%; 
+        height: 100%;
     }
 
     .logoimg {
+        width: 60px; 
+        height: 60px;
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
-        color: #fff;
+        transform: translate(-60%, -50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logoimg img {
+        width: 70%; 
+        height: 80%;
+        border-radius: 50%;
     }
 
     .collabotxt {
         color: #000;
-        font-size: 1.5rem;
+        font-size: 2rem;
         margin-right: 5%;
     }
 
     .searcher-li {
-        margin-left: 150px;
+        margin-left: 100px;
+    }
+
+    .searcher-li input {
+        background: #E9E9E9;
+        height: 30px;
+        width: 200px;
     }
 
     ul {
@@ -153,10 +161,10 @@
 
     .nav a {
         position: relative;
-        font-size: 1.1em;
+        font-size: 1.3em;
         color: #000;
         text-decoration: none;
-        font-weight: 650;
+        font-weight: 700;
         white-space: nowrap;
     }
 

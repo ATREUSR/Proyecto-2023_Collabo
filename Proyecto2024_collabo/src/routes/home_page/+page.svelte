@@ -7,8 +7,6 @@
     }
 </script>
 
-
-
 <div class="container">
     <div class="uncolor-half">
         <h1>Get<br> <span class="different-color">collabs</span><br> with other<br> producers</h1>
@@ -19,6 +17,7 @@
         <h1>And <br> get sales</h1>
     </div>
 </div>
+
 <style>
 
     @import url('https://fonts.cdnfonts.com/css/utendo');

@@ -94,15 +94,6 @@
                             <label for="description">Description</label>
                             <input type="text" name="description" id="description" placeholder="Description" required>
                         </div>
-                        <div class="input">
-                            <label for="options">Daw</label>
-                            <select name="options" id="options">
-                                <option value="" disabled selected hidden>Insert the Daw where you made the loop</option>
-                                <option value="option1">Option 1</option>
-                                <option value="option2">Option 2</option>
-                                <option value="option3">Option 3</option>
-                            </select>
-                        </div>
                         <button class="submit-btn" type="submit">Upload</button>
                     </div>
                 </div>
@@ -118,7 +109,14 @@
         justify-content: center;
         align-items: center;
         transform: translateX(-8%);
+        height: 80vh;
     }
+
+    .form-section {
+        width: 100%;
+        max-width: 500px; /* Ajusta el ancho máximo del formulario */
+    }
+
 
     .page-container h1 {
         display: flex;
@@ -129,7 +127,7 @@
 
     .gradient-line {
         height: 6px;
-        width: 135%;
+        width: 153%;
         background: linear-gradient(to right, #B700BD, #4800B6);
         border-radius: 5px;
         margin-bottom: 25px;
@@ -172,8 +170,8 @@
         background-color: #E9E9E9;
     }
 
-    .input input, .input select {
-        width: 165%;
+    .input input {
+        width: 200%;
         height: 30px;
         padding-top: 5px;
         padding-left: 10px;
@@ -194,7 +192,7 @@
     }
 
     .submit-btn{
-        width: 170%;
+        width: 207%;
         background-color: #4800B6;
         border-radius: 5px;
         border: 0.5px solid #E9E9E9;
@@ -232,7 +230,7 @@
         background-color: #E9E9E9;
         border-radius: 5px;
         margin-bottom: 20px;
-        width: 170%;
+        width: 500px;
         height: 45%;
     }
 
