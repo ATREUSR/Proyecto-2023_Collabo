@@ -11,25 +11,68 @@
     let wavesurfer: WaveSurfer;
     let title = '';
     let audioFile = '';
+    let loopId = '';
+    let userId = '';
     let securityWrap: HTMLDivElement;
 
 
     $: {
         title = $page.url.searchParams.get('title') || 'default title';
         audioFile = $page.url.searchParams.get('audioFile') || 'default-audio.mp3';
+        loopId = $page.url.searchParams.get('loopid') || 'default-loopid';
+        userId = $page.url.searchParams.get('userid') || 'default-userid';
         if (wavesurfer && audioFile) {
             wavesurfer.load(audioFile);
         }
     }
 
+    function getCookie(name : string) {
+        if (typeof document !== 'undefined') {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop()?.split(';').shift() ?? '';
+        }
+        return '';
+    }
+
+    const token = getCookie('token');
+
+    const currentLoopId = $page.url.searchParams.get('loopid') || 'default-loopid';
+    console.log(currentLoopId);
+    console.log(token);
+
     function downloadAudio(e: MouseEvent) {
-        e.stopPropagation();
-        const link = document.createElement('a');
-        link.href = `/audios/${audioFile}`;
-        link.download = audioFile; 
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        e.preventDefault(); // Previene la navegación/redirección por defecto
+
+        fetch("http://localhost:8003/download", {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ loopId: currentLoopId, userId }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.blob(); 
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob); 
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = audioFile.split('/').pop() || 'audiodefault'; 
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(err => {
+            console.error('Download error:', err);
+            alert('Error downloading the file'); // Informa al usuario
+        });
     }
 
     function openwrap(e: MouseEvent) {
@@ -39,7 +82,6 @@
     function closeSecurityWrap() {
         securityWrap.style.display = 'none';
     }
-
 
     onMount(() => {
         wavesurfer = WaveSurfer.create({
@@ -52,7 +94,7 @@
             barRadius: 5,
         })
 
-        wavesurfer.load(`/audios/${audioFile}`);
+        wavesurfer.load(audioFile);
     });
 
     function togglePlayPause() {
@@ -77,7 +119,7 @@
                         <p>upload 30 mins ago</p> <!-- esta linea tambien -->
                     </div>
                     <div bind:this={audioElement} class="audio-container" id="audio-container">
-                        <source src={audioFile} type="audio">
+                        <source src={audioFile ?? ''} type="audio">
                     </div>
                     <button class="pause-play-button" on:click={togglePlayPause}>play/pause</button>
                 </div>

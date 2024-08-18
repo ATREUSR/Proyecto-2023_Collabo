@@ -28,7 +28,7 @@
                 <a href="/home_page">Home</a>
             </li>
             <li>
-                <a href="/">Feed</a>
+                <a href="/yourLoops_page">Yourloops</a>
             </li>
             <li>
                 <a href="/discover_page">Discover</a>

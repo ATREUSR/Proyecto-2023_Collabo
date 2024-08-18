@@ -1,5 +1,72 @@
-<script>
+<script lang="ts">
     import imagen from '../images/brawlstars.png';
+    import { onMount } from 'svelte';
+    
+
+    function getCookie(name : string) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift() ?? '';
+    }
+
+    function decodeToken(token: string): string {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload); 
+    }
+
+    const token = getCookie('token');
+    console.log(token);
+    const user = token ? decodeToken(token) : null;
+    console.log(user);
+
+    interface Loop {
+        name: string;
+        plays: number;
+        collabs: number;
+        likes: number;
+        comments: number;
+        date: Date; 
+        email: string;
+    }
+
+    let loops: Loop[] = [];
+
+    onMount(async () => {
+        if (!user) {
+            console.error('Token no encontrado');
+            return;
+        }
+
+        const userId = user.sub;
+        console.log(userId);
+
+        fetch(`http://localhost:8003/artist-loops/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            loops = data.map((loop: any) => ({
+                name: loop.Title,
+                plays: loop.downloads,
+                collabs: loop.collabs,
+                likes: loop.likes,
+                comments: loop.comments,
+                date: new Date(loop.createdAt).toLocaleDateString(), // Convertir a string
+            }));
+        })
+        .catch(err => {
+            console.error('Error fetching data:', err);
+        });
+    });
 </script>
 
 <div class="yourloops-container">
@@ -18,61 +85,19 @@
         </div>
         <div class="gradient-line"></div>
         <div class="loops">
-            <div class="loop">
-                <div class="loop-info">
-                    <img class="loop-img" src={imagen} alt="">
-                    <h2 class="loop-name">Brawl</h2>
+            {#each loops as loop}
+                <div class="loop">
+                    <div class="loop-info">
+                        <img class="loop-img" src={imagen} alt="">
+                        <h2 class="loop-name">{loop.name}</h2>
+                    </div>
+                    <h2 class="loop-plays">{loop.plays}</h2>
+                    <h2 class="loop-collabs">{loop.plays}</h2>
+                    <h2 class="loop-likes">-</h2>
+                    <h2 class="loop-comments">{loop.comments}</h2>
+                    <h2 class="loop-date">{loop.date}</h2>
                 </div>
-                <h2 class="loop-plays">47</h2>
-                <h2 class="loop-collabs">55</h2>
-                <h2 class="loop-likes">237</h2>
-                <h2 class="loop-comments">50</h2>
-                <h2 class="loop-date">27/8</h2>
-            </div>
-            <div class="loop">
-                <div class="loop-info">
-                    <img class="loop-img" src={imagen} alt="">
-                    <h2 class="loop-name">Brawl</h2>
-                </div>
-                <h2 class="loop-plays">47</h2>
-                <h2 class="loop-collabs">55</h2>
-                <h2 class="loop-likes">237</h2>
-                <h2 class="loop-comments">50</h2>
-                <h2 class="loop-date">27/8</h2>
-            </div>
-            <div class="loop">
-                <div class="loop-info">
-                    <img class="loop-img" src={imagen} alt="">
-                    <h2 class="loop-name">Brawl</h2>
-                </div>
-                <h2 class="loop-plays">47</h2>
-                <h2 class="loop-collabs">55</h2>
-                <h2 class="loop-likes">237</h2>
-                <h2 class="loop-comments">50</h2>
-                <h2 class="loop-date">27/8</h2>
-            </div>
-            <div class="loop">
-                <div class="loop-info">
-                    <img class="loop-img" src={imagen} alt="">
-                    <h2 class="loop-name">Brawl</h2>
-                </div>
-                <h2 class="loop-plays">47</h2>
-                <h2 class="loop-collabs">55</h2>
-                <h2 class="loop-likes">237</h2>
-                <h2 class="loop-comments">50</h2>
-                <h2 class="loop-date">27/8</h2>
-            </div>
-            <div class="loop">
-                <div class="loop-info">
-                    <img class="loop-img" src={imagen} alt="">
-                    <h2 class="loop-name">Brawl</h2>
-                </div>
-                <h2 class="loop-plays">47</h2>
-                <h2 class="loop-collabs">55</h2>
-                <h2 class="loop-likes">237</h2>
-                <h2 class="loop-comments">50</h2>
-                <h2 class="loop-date">27/8</h2>
-            </div>
+            {/each}
         </div>
     </div>
 </div>

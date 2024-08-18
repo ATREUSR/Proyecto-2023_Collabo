@@ -94,6 +94,8 @@
         const audioUrl = `${cloudinaryBaseUrl}${loop.id}.mp3`;
         const params = new URLSearchParams({
             title: loop.Title,
+            loopid: loop.id,
+            userid: loop.userId.toString(),
             audioFile: audioUrl,
         }).toString();
         goto(`/dowload_page?${params}`);
@@ -355,7 +357,7 @@
     .audio-container {
         position: relative;
         border-radius: 15px;
-        width: 150%;
+        width: 400px;
         margin-bottom: 50px;
         background-color: #f0f0f0;
     }
