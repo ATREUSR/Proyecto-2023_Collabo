@@ -35,7 +35,7 @@ model Loops{
   id    String   @id
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  userId Int  @unique
+  userId Int  
   user User  @relation(fields: [userId], references: [id])
   Title  String
   Name String?
