@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { goto } from '$app/navigation';
     import imagen from '../images/brawlstars.png';
     import { onMount } from 'svelte';
     
@@ -67,6 +68,13 @@
             console.error('Error fetching data:', err);
         });
     });
+
+    function gotoToSecurity(loop: Loop) {
+        const params = new URLSearchParams({
+            name: loop.name,
+        });
+        goto(`/security_page?${params}`);
+    }
 </script>
 
 <div class="yourloops-container">
@@ -86,7 +94,9 @@
         <div class="gradient-line"></div>
         <div class="loops">
             {#each loops as loop}
-                <div class="loop">
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <div class="loop" on:click={() => gotoToSecurity(loop)}>
                     <div class="loop-info">
                         <img class="loop-img" src={imagen} alt="">
                         <h2 class="loop-name">{loop.name}</h2>
@@ -174,6 +184,12 @@
         grid-template-columns: repeat(6, 1fr);
         align-items: center;
         padding: 10px 0;
+    }
+
+    .loop:hover {
+        background-color: #E9E9E9;
+        border-radius: 15px;
+        cursor: pointer;
     }
 
     .loop-info {

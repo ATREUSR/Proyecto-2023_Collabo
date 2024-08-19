@@ -136,7 +136,7 @@
         <a class="toggle-link" on:click={() => toggleSignIn()}>¿Ya tenés cuenta?</a>
     </div>
     <div class="sign-in-container" >
-        <h1>Sign in</h1>
+        <h1>Log in</h1>
         <div class="gradient-line"></div>
         <form on:submit|preventDefault={logIn}>
             <div class="input">

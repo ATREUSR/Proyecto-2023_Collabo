@@ -8,6 +8,30 @@
     let waveSurfer: WaveSurfer;
     let audioElement: HTMLDivElement;
     let audioFileName: string;
+    let inputValue: File;
+    let nameValue: string;
+    let descriptionValue: string;
+
+    function getCookie(name : string) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift() ?? '';
+    }
+
+    function decodeToken(token: string): string {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload); 
+    }
+
+    const token = getCookie('token');
+    console.log(token);
+    const user = token ? decodeToken(token) : null;
+    console.log(user);
 
     function handleImageChange(event: Event) {
         const input = event.target as HTMLInputElement;
@@ -24,7 +48,18 @@
             const url = URL.createObjectURL(file);
             waveSurfer.load(url);
             audioFileName = file.name;
+            inputValue = file;
         }
+    }
+
+    function handleTitleChange(event: Event) {
+        const input = event.target as HTMLInputElement;
+        nameValue = input.value;
+    }
+
+    function handleDescriptionChange(event: Event) {
+        const input = event.target as HTMLInputElement;
+        descriptionValue = input.value;
     }
 
     onMount(() => {
@@ -51,6 +86,31 @@
     function togglePlayPause() {
         waveSurfer.playPause();
     }
+
+    function uploadAudio(){
+        let formData = new FormData();
+        formData.append("audio", inputValue);
+        formData.append("Name", nameValue);
+        formData.append("Descripcion", descriptionValue);
+        
+        fetch("http://localhost:8003/uploadloops", {
+          method: 'POST',
+          credentials: "include",
+          headers: {
+                Authorization: `Bearer ${user}`,
+                //'Content-Type': 'application/json'
+            },
+          body: formData,
+        }).then((response) => {
+          console.log(formData.toString());
+          if(response.ok){
+            alert("audio upload successfully!")
+          }
+        }).catch(err => {
+          console.log(err);
+        })
+    }
+
 </script>
 
 
@@ -88,13 +148,13 @@
                         </div>
                         <div class="input">
                             <label for="title">Name</label>
-                            <input type="text" name="title" id="title" placeholder="Title" required>
+                            <input on:input={handleTitleChange} type="text" name="title" id="title" placeholder="Title" required>
                         </div>
                         <div class="input">
                             <label for="description">Description</label>
-                            <input type="text" name="description" id="description" placeholder="Description" required>
+                            <input on:input={handleDescriptionChange} type="text" name="description" id="description" placeholder="Description" required>
                         </div>
-                        <button class="submit-btn" type="submit">Upload</button>
+                        <button on:click={uploadAudio} class="submit-btn" type="submit">Upload</button>
                     </div>
                 </div>
             </form>

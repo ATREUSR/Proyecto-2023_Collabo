@@ -2,6 +2,14 @@
     import imagen from '../images/brawlstars.png';
     import pfp1 from '../images/artista.png';
     import pfp from '../images/artista2.png';
+    import { page } from '$app/stores';
+    import { derived } from 'svelte/store';
+
+    let name = '';
+
+    $: {
+        name =  $page.url.searchParams.get('name') || 'default name';
+    }
 </script>
 
 <div class="security-container">
@@ -12,7 +20,7 @@
     <div class="loop-info">
         <img class="loop-img" src={imagen} alt="">
         <div class="loop-details">
-            <h2 class="loop-name">brawl</h2>
+            <h2 class="loop-name">{name}</h2>
             <div class="artist-info">
                 <img class="artist-pfp" src={pfp1} alt="">
                 <span class="loop-user">@dante</span>
