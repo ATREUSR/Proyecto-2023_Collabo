@@ -38,6 +38,7 @@ model Loops{
   userId Int  @unique
   user User  @relation(fields: [userId], references: [id])
   Title  String
+  Name String?
   Descripcion String
   Tags String
   comments Comment[]

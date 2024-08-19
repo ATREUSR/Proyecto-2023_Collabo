@@ -168,6 +168,7 @@ app.post('/uploadloops', upload.single('audio'), async (req, res) => {
           id: result.public_id,
           userId: userId,
           Title: req.file.originalname,
+          Name: req.body.name,
           Descripcion: req.body.descripcion,
           Tags: "",
         },
