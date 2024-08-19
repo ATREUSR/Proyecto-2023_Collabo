@@ -11,8 +11,10 @@
     let inputValue: File;
     let nameValue: string;
     let descriptionValue: string;
+    let input: HTMLInputElement; 
+    
 
-    function getCookie(name : string) {
+    /*function getCookie(name : string) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
         if (parts.length === 2) return parts.pop()?.split(';').shift() ?? '';
@@ -32,6 +34,7 @@
     console.log(token);
     const user = token ? decodeToken(token) : null;
     console.log(user);
+    */
 
     function handleImageChange(event: Event) {
         const input = event.target as HTMLInputElement;
@@ -42,14 +45,18 @@
     }
 
     function handleAudioChange(event: Event) {
-        const input = event.target as HTMLInputElement;
-        const file = input.files?.[0];
-        if (file && waveSurfer) {
-            const url = URL.createObjectURL(file);
-            waveSurfer.load(url);
-            audioFileName = file.name;
-            inputValue = file;
+        if (input.files && input.files.length > 0) {
+            const file = input.files[0];
+            if (file instanceof File) { // Ensure the selected object is a File
+                const url = URL.createObjectURL(file);
+                waveSurfer.load(url);
+                inputValue = file;
+                console.log(inputValue.name);
+            }
+        } else {
+            console.error("No file was selected.");
         }
+        console.log(inputValue.name);
     }
 
     function handleTitleChange(event: Event) {
@@ -65,6 +72,7 @@
     onMount(() => {
         const audioLink = localStorage.getItem('uploadedAudio');
         audioFileName = localStorage.getItem('audioFileName') || 'Uploaded Audio';
+        //console.log(audioFileName);
         if (audioLink) {
             waveSurfer = WaveSurfer.create({
                 container: audioElement,
@@ -87,28 +95,31 @@
         waveSurfer.playPause();
     }
 
-    function uploadAudio(){
+    function uploadAudio() {
         let formData = new FormData();
+        console.log(inputValue.name);
+        console.log(nameValue);
+        console.log(descriptionValue);
         formData.append("audio", inputValue);
-        formData.append("Name", nameValue);
-        formData.append("Descripcion", descriptionValue);
-        
+        formData.append("name", nameValue);
+        formData.append("descripcion", descriptionValue);
+
         fetch("http://localhost:8003/uploadloops", {
-          method: 'POST',
-          credentials: "include",
-          headers: {
-                Authorization: `Bearer ${user}`,
-                //'Content-Type': 'application/json'
+            method: 'POST',
+            credentials: "include",
+            headers: {
+                // Authorization: `Bearer ${token}`,
             },
-          body: formData,
+            body: formData,
         }).then((response) => {
-          console.log(formData.toString());
-          if(response.ok){
-            alert("audio upload successfully!")
-          }
+            if (response.ok) {
+                alert("Audio uploaded successfully!");
+            } else {
+                response.text().then(text => console.error(text));
+            }
         }).catch(err => {
-          console.log(err);
-        })
+            console.log(err);
+        });
     }
 
 </script>
@@ -142,7 +153,7 @@
                             <p>{audioFileName}</p>
                             <label for="audio-file">
                                 <span>Change</span>
-                                <input type="file" name="file" id="audio-file" accept="audio/*" on:change={handleAudioChange}>
+                                <input type="file" name="file" id="audio-file" bind:this={input} accept="audio/*" on:change={handleAudioChange}>
                             </label>
                             <button class="pause-play-button" on:click={togglePlayPause}>play/pause</button>
                         </div>
