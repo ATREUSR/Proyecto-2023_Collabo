@@ -21,11 +21,12 @@
     }
 
     const token = getCookie('token');
-    console.log(token);
+    //console.log(token);
     const user = token ? decodeToken(token) : null;
-    console.log(user);
+    //console.log(user);
 
     interface Loop {
+        id: string;
         name: string;
         plays: number;
         collabs: number;
@@ -44,7 +45,7 @@
         }
 
         const userId = user.sub;
-        console.log(userId);
+        //console.log(userId);
 
         fetch(`http://localhost:8003/artist-loops/${userId}`, {
             method: 'GET',
@@ -56,6 +57,7 @@
         .then(response => response.json())
         .then(data => {
             loops = data.map((loop: any) => ({
+                id: loop.id,
                 name: loop.Title,
                 plays: loop.downloads,
                 collabs: loop.collabs,
@@ -63,15 +65,24 @@
                 comments: loop.comments,
                 date: new Date(loop.createdAt).toLocaleDateString(), // Convertir a string
             }));
+            //console.log(loops);
         })
         .catch(err => {
             console.error('Error fetching data:', err);
         });
+
+        //console.log(loops);
     });
 
     function gotoToSecurity(loop: Loop) {
+        //console.log(loop.id);
+        if (!loop.id) {
+            console.error('loop.id is undefined');
+            return;
+        }
         const params = new URLSearchParams({
             name: loop.name,
+            loopId: loop.id,
         });
         goto(`/security_page?${params}`);
     }

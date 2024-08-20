@@ -1,15 +1,39 @@
-<script>
+<script lang="ts">
     import imagen from '../images/brawlstars.png';
     import pfp1 from '../images/artista.png';
     import pfp from '../images/artista2.png';
     import { page } from '$app/stores';
     import { derived } from 'svelte/store';
 
+    interface User {
+        username: string;
+        profilePicture?: string;
+    }
+
     let name = '';
+    let loopId = '';
+    let users: User[] = []; // Variable para almacenar los usuarios
 
     $: {
         name =  $page.url.searchParams.get('name') || 'default name';
+        loopId = $page.url.searchParams.get('loopId') || 'default id';
     }
+
+    fetch(`http://localhost:8003/artist-downloads/${loopId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', 
+                //'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            users = data.users; 
+            console.log(users);
+        })
+        .catch(err => {
+            console.error('Error fetching data:', err);
+        });
 </script>
 
 <div class="security-container">
@@ -34,22 +58,12 @@
             <div class="gradient-line"></div>
         </div>
         <div class="users-list">
-            <div class="user">
-                <img class="user-pfp" src={pfp} alt="">
-                <span class="user-name">@collabouser</span>
-            </div>
-            <div class="user">
-                <img class="user-pfp" src={pfp} alt="">
-                <span class="user-name">@collabouser</span>
-            </div>
-            <div class="user">
-                <img class="user-pfp" src={pfp} alt="">
-                <span class="user-name">@collabouser</span>
-            </div>
-            <div class="user">
-                <img class="user-pfp" src={pfp} alt="">
-                <span class="user-name">@collabouser</span>
-            </div>
+            {#each users as user}
+                <div class="user">
+                    <img class="user-pfp" src={user.profilePicture || pfp} alt="">
+                    <span class="user-name">@{user.username}</span>
+                </div>
+            {/each}
         </div>
     </div>
 </div>

@@ -72,7 +72,7 @@
     onMount(() => {
         const audioLink = localStorage.getItem('uploadedAudio');
         audioFileName = localStorage.getItem('audioFileName') || 'Uploaded Audio';
-        //console.log(audioFileName);
+        console.log(audioLink);
         if (audioLink) {
             waveSurfer = WaveSurfer.create({
                 container: audioElement,
@@ -97,7 +97,7 @@
 
     function uploadAudio() {
         let formData = new FormData();
-        console.log(inputValue.name);
+        console.log(inputValue);
         console.log(nameValue);
         console.log(descriptionValue);
         formData.append("audio", inputValue);
