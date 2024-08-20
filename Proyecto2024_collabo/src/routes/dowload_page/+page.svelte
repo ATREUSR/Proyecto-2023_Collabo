@@ -1,6 +1,5 @@
 <script lang="ts">
     import artista from "../images/artista.png";
-    //import audio from "../audios/bass-loops-012-with-drums-short-loop-120-bpm-6392.mp3"
     import img from "../images/brawlstars.png";
     import profile from "../images/defaultpfp.png";
     import WaveSurfer from 'wavesurfer.js';
@@ -14,7 +13,6 @@
     let loopId = '';
     let userId = '';
     let securityWrap: HTMLDivElement;
-
 
     $: {
         title = $page.url.searchParams.get('title') || 'default title';
@@ -41,38 +39,40 @@
     console.log(currentLoopId);
     console.log(token);
 
-    function downloadAudio(e: MouseEvent) {
+    async function downloadAudio(e: MouseEvent) {
         e.preventDefault(); // Previene la navegación/redirección por defecto
 
-        fetch("http://localhost:8003/download", {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json', 
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({ loopId: currentLoopId, userId }),
-        })
-        .then(response => {
+        try {
+            const response = await fetch("http://localhost:8003/download", {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ loopId: currentLoopId, userId }),
+            });
+
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error(`Network response was not ok: ${response.statusText}`);
             }
-            return response.blob(); 
-        })
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob); 
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = audioFile.split('/').pop() || 'audiodefault'; 
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+
+            const blob = await response.blob();
+
+            // Crea un enlace de descarga y simula un clic en él
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            const url = window.URL.createObjectURL(blob);
+            a.href = url;
+            a.download = 'audio.mp3'; // Nombre del archivo a descargar
+            document.body.appendChild(a);
+            a.click();
             window.URL.revokeObjectURL(url);
-        })
-        .catch(err => {
+            document.body.removeChild(a);
+        } catch (err) {
             console.error('Download error:', err);
             alert('Error downloading the file'); // Informa al usuario
-        });
+        }
     }
 
     function openwrap(e: MouseEvent) {
@@ -92,7 +92,7 @@
             barHeight: 0.5,
             barGap: 3,
             barRadius: 5,
-        })
+        });
 
         wavesurfer.load(audioFile);
     });
@@ -101,8 +101,6 @@
         wavesurfer.playPause();
     }
 </script>
-
-
 
 <div class="upload-container">
     <h1>Post</h1>

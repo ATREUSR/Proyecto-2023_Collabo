@@ -5,7 +5,10 @@
     import { page } from '$app/stores';
 
     interface User {
-        username: string;
+        id: number;
+        email: string;
+        name: string;
+        password: string;
     }
 
     let name = '';
@@ -16,8 +19,6 @@
         name = $page.url.searchParams.get('name') || 'default name';
         loopId = $page.url.searchParams.get('loopId') || 'default id';
 
-        console.log(loopId);
-        
         fetch(`http://localhost:8003/loop-downloads/${loopId}`, {
             method: 'GET',
             headers: {
@@ -32,12 +33,8 @@
             return response.json();
         })
         .then(data => {
-            if (Array.isArray(data.users)) {
-                users = data.user; // Asegúrate de que 'users' sea un array
-            } else {
-                console.error('Fetched data is not an array:', data.user);
-                users = []; // Asigna un array vacío si los datos no son válidos
-            }
+            //console.log('Fetched data:', data); // Agrega este registro para ver la estructura de los datos
+            users = data;
             console.log(users);
         })
         .catch(err => {
@@ -72,7 +69,7 @@
             {#each users as user}
                 <div class="user">
                     <img class="user-pfp" src="" alt="">
-                    <span class="user-name">@{user.username}</span>
+                    <span class="user-name">@{user.name}</span>
                 </div>
             {/each}
         </div>
