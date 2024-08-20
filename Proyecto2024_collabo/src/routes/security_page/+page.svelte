@@ -3,37 +3,48 @@
     import pfp1 from '../images/artista.png';
     import pfp from '../images/artista2.png';
     import { page } from '$app/stores';
-    import { derived } from 'svelte/store';
 
     interface User {
         username: string;
-        profilePicture?: string;
     }
 
     let name = '';
     let loopId = '';
-    let users: User[] = []; // Variable para almacenar los usuarios
+    let users: User[] = [];
 
     $: {
-        name =  $page.url.searchParams.get('name') || 'default name';
+        name = $page.url.searchParams.get('name') || 'default name';
         loopId = $page.url.searchParams.get('loopId') || 'default id';
-    }
 
-    fetch(`http://localhost:8003/artist-downloads/${loopId}`, {
+        console.log(loopId);
+        
+        fetch(`http://localhost:8003/loop-downloads/${loopId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json', 
                 //'Authorization': `Bearer ${token}`,
             },
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
-            users = data.users; 
+            if (Array.isArray(data.users)) {
+                users = data.user; // Asegúrate de que 'users' sea un array
+            } else {
+                console.error('Fetched data is not an array:', data.user);
+                users = []; // Asigna un array vacío si los datos no son válidos
+            }
             console.log(users);
         })
         .catch(err => {
             console.error('Error fetching data:', err);
+            users = []; // Asigna un array vacío en caso de error
         });
+    }
 </script>
 
 <div class="security-container">
@@ -60,7 +71,7 @@
         <div class="users-list">
             {#each users as user}
                 <div class="user">
-                    <img class="user-pfp" src={user.profilePicture || pfp} alt="">
+                    <img class="user-pfp" src="" alt="">
                     <span class="user-name">@{user.username}</span>
                 </div>
             {/each}
