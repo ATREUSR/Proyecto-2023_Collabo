@@ -188,7 +188,7 @@
             <button class="search-button" on:click="{filtrarLoops}">Buscar</button>
         </div>
     </div>
-    <h2 class="trending-loops">trending loops</h2>
+    <h2 class="trending-loops"></h2>
     <div class="loops-container">
         {#each resultadosFiltrados as resultado, index}
         <div class="loop-container">

@@ -68,7 +68,7 @@
         <div class="users-list">
             {#each users as user}
                 <div class="user">
-                    <img class="user-pfp" src="" alt="">
+                    <img class="user-pfp" src={pfp} alt="">
                     <span class="user-name">@{user.name}</span>
                 </div>
             {/each}

@@ -40,7 +40,7 @@
     console.log(token);
 
     async function downloadAudio(e: MouseEvent) {
-        e.preventDefault(); // Previene la navegación/redirección por defecto
+        e.preventDefault(); 
 
         try {
             const response = await fetch("http://localhost:8003/download", {
@@ -57,18 +57,7 @@
                 throw new Error(`Network response was not ok: ${response.statusText}`);
             }
 
-            const blob = await response.blob();
-
-            // Crea un enlace de descarga y simula un clic en él
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            const url = window.URL.createObjectURL(blob);
-            a.href = url;
-            a.download = 'audio.mp3'; // Nombre del archivo a descargar
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
+            
         } catch (err) {
             console.error('Download error:', err);
             alert('Error downloading the file'); // Informa al usuario
@@ -140,9 +129,9 @@
             <div class="subtitle-line"></div>
             <div class="collab-conditions">
                 <div class="loop-info">
-                    <img class="loop-img" src={img} alt="">
+                    <img class="loop-img" src={artista} alt="">
                     <div class="loop-details">
-                        <h2 class="loop-name">nombre</h2>
+                        <h2 class="loop-name">{title}</h2>
                         <div class="user-info">
                             <img src={profile} alt="" class="pfp-img">
                             <span class="user">@Username</span>

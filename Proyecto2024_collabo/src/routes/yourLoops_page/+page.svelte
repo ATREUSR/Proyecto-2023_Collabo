@@ -112,10 +112,10 @@
                         <img class="loop-img" src={imagen} alt="">
                         <h2 class="loop-name">{loop.name}</h2>
                     </div>
-                    <h2 class="loop-plays">{loop.plays}</h2>
-                    <h2 class="loop-collabs">{loop.plays}</h2>
+                    <h2 class="loop-plays">-</h2>
+                    <h2 class="loop-collabs">-</h2>
                     <h2 class="loop-likes">-</h2>
-                    <h2 class="loop-comments">{loop.comments}</h2>
+                    <h2 class="loop-comments">-</h2>
                     <h2 class="loop-date">{loop.date}</h2>
                 </div>
             {/each}
@@ -161,7 +161,11 @@
         display: grid;
         grid-template-columns: repeat(6, 1fr);
         margin-bottom: 10px;
-        margin-left: 10px;
+        margin-left: 40px;
+    }
+
+    .date-categorie{
+        margin-left: 50px;
     }
 
     .loops {
@@ -203,6 +207,11 @@
         cursor: pointer;
     }
 
+    .loop > :not(.loop-info) {
+        margin-left: 50px; 
+    }
+
+
     .loop-info {
         display: flex;
         align-items: center;
@@ -214,7 +223,4 @@
         margin-right: 10px;
     }
 
-    .loop h2 {
-        margin: 0 10px;
-    }
 </style>

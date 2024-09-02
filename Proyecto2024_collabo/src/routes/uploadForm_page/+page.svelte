@@ -181,6 +181,7 @@
         align-items: center;
         transform: translateX(-8%);
         height: 80vh;
+        margin-top: 40px;
     }
 
     .form-section {
