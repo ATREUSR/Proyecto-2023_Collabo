@@ -42,6 +42,15 @@
     async function downloadAudio(e: MouseEvent) {
         e.preventDefault(); 
 
+        /*const downloadUrl = `https://res.cloudinary.com/dw26qdtlf/video/upload/v1722284452/attachment:${currentLoopId}`;
+
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = `${currentLoopId}.mp4`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);*/
+
         try {
             const response = await fetch("http://localhost:8003/download", {
                 method: 'POST',
