@@ -331,6 +331,23 @@ app.get('/searchloops', async (req, res) => {
     res.status(500).json({ error: 'Error al buscar loops en la base de datos' });
   }
 });
+app.get('/randomloops', async (req, res) => {
+  try {
+    const loops = await prisma.$queryRaw`
+      SELECT * FROM "Loops"
+      ORDER BY RANDOM()
+    `;
+
+    if (loops.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron loops' });
+    }
+
+    res.status(200).json(loops);
+  } catch (error) {
+    console.error('Error fetching random loops:', error);
+    res.status(500).json({ error: 'Error al obtener loops aleatorios de la base de datos' });
+  }
+});
 
 
 
