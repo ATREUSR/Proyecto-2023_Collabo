@@ -46,6 +46,7 @@
         const userData = { email, password };
         const response = await fetch("http://localhost:8003/login", {
           method: 'POST',
+          mode: 'no-cors',
           headers: {
                 //'Authorization': 'Basic '+btoa('username:password'),
                 "Access-Control-Allow-Headers" : "Content-Type",
