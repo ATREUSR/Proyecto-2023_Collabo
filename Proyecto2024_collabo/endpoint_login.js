@@ -228,7 +228,7 @@ app.post('/download', async (req, res) => {
 });
 
 // Ruta para buscar loops por título
-app.get('/searchloops', async (req, res) => {
+app.get('/searchloops2', async (req, res) => {
   const { title } = req.query;
 
   try {
@@ -298,6 +298,40 @@ app.get('/loop-downloads/:loopId', async (req, res) => {
     res.status(500).json({ error: 'Error al buscar las descargas del loop' });
   }
 });
+app.get('/searchloops', async (req, res) => {
+  const { title, artistName } = req.query;
+
+  try {
+    const loops = await prisma.loops.findMany({
+      where: {
+        OR: [
+          {
+            Title: {
+              contains: title,
+              mode: 'insensitive', // Para hacer la búsqueda insensible a mayúsculas y minúsculas
+            },
+          },
+          {
+            Name: {
+              contains: artistName,
+              mode: 'insensitive', // Búsqueda insensible a mayúsculas y minúsculas
+            },
+          },
+        ],
+      },
+    });
+
+    if (loops.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron loops con los criterios especificados' });
+    }
+
+    res.status(200).json(loops);
+  } catch (error) {
+    console.error('Error fetching loops:', error);
+    res.status(500).json({ error: 'Error al buscar loops en la base de datos' });
+  }
+});
+
 
 
 app.listen(
