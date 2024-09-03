@@ -48,11 +48,7 @@
           method: 'POST',
           headers: {
                 //'Authorization': 'Basic '+btoa('username:password'),
-                "Access-Control-Allow-Headers" : "Content-Type",
-                "Access-Control-Allow-Origin": "*",
-                'Content-Type': 'application/json',
-                "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH"
-                
+                'Content-Type': 'application/json'
             },
           body: JSON.stringify(userData),
           credentials: 'include',
