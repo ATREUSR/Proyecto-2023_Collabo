@@ -44,7 +44,7 @@
 
     async function logIn() {
         const userData = { email, password };
-        const response = await fetch("proyecto2024collaboback.vercel.app/login", {
+        const response = await fetch("https://proyecto2024collaboback.vercel.app/login", {
           method: 'POST',
           headers: {
                 //'Authorization': 'Basic '+btoa('username:password'),
