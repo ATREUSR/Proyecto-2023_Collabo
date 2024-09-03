@@ -19,7 +19,7 @@ const prisma = new PrismaClient();
 // const cors = require('cors');
 
 const corsOptions = {
-  origin: 'http://localhost:5173', // Reemplaza con la URL de tu frontend
+  origin: 'https://proyecto-2024collabo-2gmoha3mq-atreus-rs-projects.vercel.app', // Reemplaza con la URL de tu frontend
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // Permitir el envío de cookies y otros credenciales
   optionsSuccessStatus: 204 // Algunos navegadores (Safari) fallan con 204
