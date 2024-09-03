@@ -19,10 +19,10 @@ const prisma = new PrismaClient();
 // const cors = require('cors');
 
 const corsOptions = {
-  origin: 'https://proyecto-2024collabo-2gmoha3mq-atreus-rs-projects.vercel.app', // Reemplaza con la URL de tu frontend
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Permitir el envío de cookies y otros credenciales
-  optionsSuccessStatus: 204 // Algunos navegadores (Safari) fallan con 204
+  origin: '*', // Reemplaza con la URL de tu frontend
+  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE'],
+  // credentials: true, // Permitir el envío de cookies y otros credenciales
+  // optionsSuccessStatus: 204 // Algunos navegadores (Safari) fallan con 204
 };
 
 app.use(cors(corsOptions));
