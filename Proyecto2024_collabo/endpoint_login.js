@@ -349,6 +349,31 @@ app.get('/randomloops', async (req, res) => {
   }
 });
 
+app.get('/user/profile', requiresAuth(), async (req, res) => {
+  try {
+    // Obtener el ID del usuario autenticado
+    const userId = req.oidc.user.sub;
+
+    // Buscar el perfil del usuario usando Prisma
+    const userProfile = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+      include: {
+        profile: true, // Incluir el perfil relacionado
+      },
+    });
+
+    if (!userProfile) {
+      return res.status(404).json({ error: 'Perfil de usuario no encontrado' });
+    }
+
+    res.status(200).json(userProfile);
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ error: 'Error al obtener el perfil del usuario' });
+  }
+});
+
+
 
 
 app.listen(
