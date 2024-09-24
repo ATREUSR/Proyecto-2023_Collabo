@@ -91,7 +91,8 @@
 </script>
 
 <div class="profile-page-container">
-
+    <h1>Profile</h1>
+    <div class="gradient-line"></div>
     <div class="profile-square">
         <div class="profile-info">
             <div class="img">
@@ -129,7 +130,7 @@
             <div class="loop">
                 <div class="loop-title">{title}</div>
                 <div class="artist-detail">
-                    <img class="profile-img" src={profile} alt="Profile Image">
+                    <img class="profile-img" src={profile} alt="">
                     <p class="artist-follow">@dabteloops</p>
                 </div>
                 <div class="audio-container" bind:this={audioElement} id="audio-container">
@@ -156,9 +157,15 @@
         margin-right: 100px;
         margin-left: 100px; 
         display: flex;
-        flex-direction: row; /* Align items horizontally */
-        align-items: flex-start; /* Align items to the top */
-        gap: 20px; /* Add space between profile square and loops container */
+        align-items: flex-start; 
+        gap: 20px;
+    }
+
+    .gradient-line{
+        height: 6px;
+        background: linear-gradient(to right, #B700BD, #4800B6);
+        border-radius: 5px;
+        margin-bottom: 40px;
     }
 
     .profile-square {
