@@ -214,7 +214,7 @@
         left: 0;
         right: 0;
         height: 6px;
-        background: #B700BD;
+        background: #4800B6;
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
     }
