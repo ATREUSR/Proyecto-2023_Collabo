@@ -1,6 +1,7 @@
 <script lang="ts">
-    import artista from "../images/artista.png";
     import profile from "../images/defaultpfp.png";
+    import artista from "../images/artista.png"; // Import the artista image
+    import testAudio from "../audios/amen-break-no-copyright-remake-120bpm-25924.mp3";
     import WaveSurfer from 'wavesurfer.js';
     import { onMount } from "svelte";
     import { page } from '$app/stores';
@@ -12,6 +13,19 @@
     let loopId = '';
     let userId = '';
     let securityWrap: HTMLDivElement;
+
+    let userName = '';
+    let userDescription = '';
+    let userUploads = 0;
+    let userFollowers = 0;
+    let userCollabs = 0;
+
+    interface Loop {
+        title: string;
+        audioFile: string;
+    }
+
+    let userLoops: Loop[] = [];
 
     $: {
         title = $page.url.searchParams.get('title') || 'default title';
@@ -38,6 +52,35 @@
     console.log(currentLoopId);
     console.log(token);
 
+    async function fetchUserData() {
+        try {
+            const response = await fetch("http://localhost:8003/userdata", {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            userName = data.name;
+            userDescription = data.description;
+            userUploads = data.uploads;
+            userFollowers = data.followers;
+            userCollabs = data.collabs;
+            userLoops = data.loops;
+
+        } catch (err) {
+            console.error('Fetch user data error:', err);
+            alert('Error fetching user data'); // Inform the user
+        }
+    }
+
     async function downloadAudio(e: MouseEvent) {
         e.preventDefault(); 
 
@@ -59,7 +102,7 @@
             
         } catch (err) {
             console.error('Download error:', err);
-            alert('Error downloading the file'); // Informa al usuario
+            alert('Error downloading the file'); // Inform the user
         }
     }
 
@@ -82,7 +125,8 @@
             barRadius: 5,
         });
 
-        wavesurfer.load(audioFile);
+        wavesurfer.load(testAudio);
+        fetchUserData(); // Fetch user data on mount
     });
 
     function togglePlayPause() {
@@ -99,13 +143,13 @@
         <div class="profile-square">
             <div class="profile-info">
                 <div class="img">
-                    <img src="" alt="">
+                    <img src={profile} alt="">
                 </div>
                 <div class="user-name">
-                    <h2>@dabteloops</h2>
+                    <h2>{userName}</h2>
                 </div>
                 <div class="user-desc">
-                    <span>Hago loops medio pelo</span>
+                    <span>{userDescription}</span>
                 </div>
                 <div class="buttons-upload-edit">
                     <button>Uploads</button>
@@ -114,15 +158,15 @@
                 <div class="user-info">
                     <div class="uploads-info">
                         <span>Uploads</span>
-                        <span>25</span>
+                        <span>{userUploads}</span>
                     </div>
                     <div class="followers-info">
                         <span>Followers</span>
-                        <span>246</span>
+                        <span>{userFollowers}</span>
                     </div>
                     <div class="Collabs-info">
                         <span>Collabs</span>
-                        <span>87</span>
+                        <span>{userCollabs}</span>
                     </div>
                 </div>
             </div>
@@ -130,26 +174,27 @@
         <div class="loops-container">
             <h2>My loops</h2>
             <div class="loops">
-                <div class="loop-container">
-                    <div class="loop-info">
-                        <img class="loop-img" src={artista} alt="">
-                        <div class="artist-upload-info">
-                            <div class="loop-title">{title}</div>
-                            <div class="artist-detail">
-                                <img class="profile-img" src={profile} alt="">
-                                <p class="artist-follow">@dabteloops</p>
-                                <p></p>
-                            </div>
-                            <div bind:this={audioElement} class="audio-container" id="audio-container">
-                                <source src={audioFile ?? ''} type="audio" class="audio">
-                            </div>
-                            <div class="buttons-container">
-                                <button class="pause-play-button" on:click={togglePlayPause}>play/pause</button>
-                                <button class="dowload-button">Collab</button>
+                {#each userLoops as loop}
+                    <div class="loop-container">
+                        <div class="loop-info">
+                            <img class="loop-img" src={artista} alt="">
+                            <div class="artist-upload-info">
+                                <div class="loop-title">{loop.title}</div>
+                                <div class="artist-detail">
+                                    <img class="profile-img" src={profile} alt="">
+                                    <p class="artist-follow">{userName}</p>
+                                </div>
+                                <div bind:this={audioElement} class="audio-container" id="audio-container">
+                                    <source src={loop.audioFile} type="audio" class="audio">
+                                </div>
+                                <div class="buttons-container">
+                                    <button class="pause-play-button" on:click={togglePlayPause}>play/pause</button>
+                                    <button class="dowload-button">Collab</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {/each}
             </div>
         </div>
     </div>
@@ -227,7 +272,7 @@
     }
 
     .profile-info > div {
-        margin-bottom: 20px; 
+        margin-bottom: 30px; 
     }
 
     .img img {
@@ -281,6 +326,8 @@
 
     .loops-container {
         width: 100%;
+        max-height: 600px; /* Set a fixed height */
+        overflow-y: auto; /* Enable vertical scrolling */
     }
 
     .loops {
