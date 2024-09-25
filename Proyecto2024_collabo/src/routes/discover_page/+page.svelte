@@ -208,7 +208,7 @@
                 </div>
             </div>
             <div class="dowload-btn-conatainer">
-                <button on:click={() => gotoAudio(resultado)} class="dowload-button" >Collab</button>
+                <button on:click={() => gotoAudio(resultado)} class="dowload-button">Collab</button>
             </div>
         </div>
         {/each}
