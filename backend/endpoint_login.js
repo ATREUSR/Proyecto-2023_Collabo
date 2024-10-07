@@ -3,11 +3,13 @@ import multer from 'multer';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import pkg from 'express-openid-connect';
-import bodyParser from 'body-parser'; 
+import bodyParser from 'body-parser';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { v2 as cloudinary } from "cloudinary";
+
+
 
 
 const { auth, requiresAuth } = pkg;
@@ -16,20 +18,27 @@ const PORT= 8003;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const prisma = new PrismaClient();
-// const cors = require('cors');
+
+
+
 
 const corsOptions = {
-  origin: '*', // Reemplaza con la URL de tu frontend
+  origin: ['https://proyecto2024collaboal.vercel.app', 'http://localhost:3000','http://localhost:8003'],
   methods: ['GET','HEAD','PUT','PATCH','POST','DELETE'],
   // credentials: true, // Permitir el envío de cookies y otros credenciales
   // optionsSuccessStatus: 204 // Algunos navegadores (Safari) fallan con 204
 };
 
+
 app.use(cors(corsOptions));
 
-app.use(express.json()); 
+
+app.use(express.json());
+
 
 app.use(cookieParser());
+
+
 
 
 const config = {
@@ -40,22 +49,27 @@ const config = {
     clientID: process.env.CLIENTID,
     issuerBaseURL: process.env.ISSUER,
   };
-  
+ 
 app.use(auth(config));
 
+
 const jwtSecret = process.env.JWT_SECRET;
+
 
 app.get('/', (req, res) => {
     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
   });
 
+
 // login
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
+
   if (!email || !password) {
       return res.status(400).json({ error: 'Faltan datos en la solicitud' });
   }
+
 
   try {
       // Buscar usuario en la base de datos
@@ -63,21 +77,27 @@ app.post('/login', async (req, res) => {
           where: { email },
       });
 
+
       if (!user) {
           return res.status(400).json({ error: 'Email o contraseña incorrectos' });
       }
 
+
       // Verificar la contraseña
       const passwordMatch = await bcrypt.compare(password, user.password);
-      
+     
       if (!passwordMatch) {
           return res.status(400).json({ error: 'Email o contraseña incorrectos' });
       }
-      
+     
       const token = jwt.sign({ sub: user.id, email: user.email }, jwtSecret, { expiresIn: '1h' });
 
 
+
+
       res.cookie('token', token, { httpOnly: false, secure: true });
+
+
 
 
       res.status(200).json({ message: 'Login successful', token });
@@ -87,33 +107,35 @@ app.post('/login', async (req, res) => {
     }
   });
 
+
 // logout
 app.get('/logout', requiresAuth(), (req, res) => {
   req.logout();
   res.redirect('/');
 });
 
+
 //register
 app.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
-  
+ 
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Faltan datos en la solicitud' });
     }
-  
+ 
     try {
       // Verificar si el usuario ya existe
       const existingUser = await prisma.user.findUnique({
         where: { email },
       });
-  
+ 
       if (existingUser) {
         return res.status(400).json({ error: 'Ya existe una cuenta con el mismo email' });
       }
-  
+ 
       // Encriptar la contraseña antes de guardarla
       const hashedPassword = await bcrypt.hash(password, 10);
-  
+ 
       // Crear usuario usando Prisma
       const newUser = await prisma.user.create({
         data: {
@@ -122,22 +144,24 @@ app.post('/register', async (req, res) => {
           password: hashedPassword,
         },
       });
-  
+ 
       res.status(201).json(newUser);
     } catch (error) {
       res.status(500).json({ error: 'Error al registrar usuario' });
       console.log(error);
     }
   });
-  
+ 
  // Ruta para subir archivos
 app.post('/uploadloops', upload.single('audio'), async (req, res) => {
   try {
     const token = req.cookies.token;
 
+
     if (!token) {
       return res.status(401).json({ error: 'No se proporcionó un token' });
     }
+
 
     let decoded;
     try {
@@ -146,7 +170,9 @@ app.post('/uploadloops', upload.single('audio'), async (req, res) => {
       return res.status(401).json({ error: 'Token inválido' });
     }
 
+
     const userId = decoded.sub;
+
 
     const uploadStream = async () => {
       return new Promise((resolve, reject) => {
@@ -160,7 +186,9 @@ app.post('/uploadloops', upload.single('audio'), async (req, res) => {
       });
     };
 
+
     const result = await uploadStream();
+
 
     try {
       const newLoop = await prisma.loops.create({
@@ -174,6 +202,7 @@ app.post('/uploadloops', upload.single('audio'), async (req, res) => {
         },
       });
 
+
       res.status(201).json(result);
     } catch (error) {
       console.error('Error saving loop to database:', error);
@@ -186,13 +215,17 @@ app.post('/uploadloops', upload.single('audio'), async (req, res) => {
 });
 
 
+
+
 app.post('/download', async (req, res) => {
   const { loopId } = req.body;
   const token = req.cookies.token;
 
+
   if (!token) {
     return res.status(401).json({ error: 'No se proporcionó un token' });
   }
+
 
   let decoded;
   try {
@@ -201,7 +234,9 @@ app.post('/download', async (req, res) => {
     return res.status(401).json({ error: 'Token inválido' });
   }
 
+
   const userId = decoded.sub;
+
 
   try {
     const downloadRecord = await prisma.download.create({
@@ -211,13 +246,16 @@ app.post('/download', async (req, res) => {
       },
     });
 
+
     const loop = await prisma.loops.findUnique({
       where: { id: loopId },
     });
 
+
     if (!loop) {
       return res.status(404).json({ error: 'Loop no encontrado' });
     }
+
 
     const url = cloudinary.url(loop.id, { resource_type: 'video' });
     res.redirect(url);
@@ -227,9 +265,11 @@ app.post('/download', async (req, res) => {
   }
 });
 
+
 // Ruta para buscar loops por título
 app.get('/searchloops2', async (req, res) => {
   const { title } = req.query;
+
 
   try {
     const loops = await prisma.loops.findMany({
@@ -238,12 +278,15 @@ app.get('/searchloops2', async (req, res) => {
       }
     });
 
+
     if (loops.length === 0) {
       return res.status(404).json({ error: 'No se encontró ningún loop con el título especificado' });
     }
 
+
     // Filtrar solo el primer resultado (suponiendo que esperas un solo resultado)
     //const filteredLoop = loops[0];
+
 
     //res.status(200).json(filteredLoop);
     res.status(200).json(loops)
@@ -255,6 +298,7 @@ app.get('/searchloops2', async (req, res) => {
 app.get('/artist-loops/:artistId', async (req, res) => {
   const { artistId } = req.params;
 
+
   try {
     const loops = await prisma.loops.findMany({
       where: {
@@ -262,9 +306,11 @@ app.get('/artist-loops/:artistId', async (req, res) => {
       },
     });
 
+
     if (loops.length === 0) {
       return res.status(404).json({ error: 'No se encontraron loops para este artista' });
     }
+
 
     res.status(200).json(loops);
   } catch (error) {
@@ -274,6 +320,7 @@ app.get('/artist-loops/:artistId', async (req, res) => {
 });
 app.get('/loop-downloads/:loopId', async (req, res) => {
   const { loopId } = req.params;
+
 
   try {
     const downloads = await prisma.download.findMany({
@@ -285,12 +332,15 @@ app.get('/loop-downloads/:loopId', async (req, res) => {
       },
     });
 
+
     if (downloads.length === 0) {
       return res.status(404).json({ error: 'No se encontraron descargas para este loop' });
     }
 
+
     // Extraer solo los datos de los usuarios
     const users = downloads.map(download => download.user);
+
 
     res.status(200).json(users);
   } catch (error) {
@@ -300,6 +350,7 @@ app.get('/loop-downloads/:loopId', async (req, res) => {
 });
 app.get('/searchloops', async (req, res) => {
   const { title, artistName } = req.query;
+
 
   try {
     const loops = await prisma.loops.findMany({
@@ -321,9 +372,11 @@ app.get('/searchloops', async (req, res) => {
       },
     });
 
+
     if (loops.length === 0) {
       return res.status(404).json({ error: 'No se encontraron loops con los criterios especificados' });
     }
+
 
     res.status(200).json(loops);
   } catch (error) {
@@ -338,9 +391,11 @@ app.get('/randomloops', async (req, res) => {
       ORDER BY RANDOM()
     `;
 
+
     if (loops.length === 0) {
       return res.status(404).json({ error: 'No se encontraron loops' });
     }
+
 
     res.status(200).json(loops);
   } catch (error) {
@@ -349,22 +404,43 @@ app.get('/randomloops', async (req, res) => {
   }
 });
 
-app.get('/user/profile', requiresAuth(), async (req, res) => {
+
+app.get('/user/profile', async (req, res) => {
   try {
-    // Obtener el ID del usuario autenticado
-    const userId = req.oidc.user.sub;
+    // Obtener el token del cookie
+    const token = req.cookies.token;
+
+
+    if (!token) {
+      return res.status(401).json({ error: 'No se proporcionó un token' });
+    }
+
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, jwtSecret);
+    } catch (err) {
+      return res.status(401).json({ error: 'Token inválido' });
+    }
+
+
+    // Obtener el ID del usuario desde el token decodificado
+    const userId = decoded.sub;
+
 
     // Buscar el perfil del usuario usando Prisma
     const userProfile = await prisma.user.findUnique({
       where: { id: parseInt(userId) },
       include: {
-        profile: true, // Incluir el perfil relacionado
+        profile: true,
       },
     });
+
 
     if (!userProfile) {
       return res.status(404).json({ error: 'Perfil de usuario no encontrado' });
     }
+
 
     res.status(200).json(userProfile);
   } catch (error) {
@@ -374,11 +450,10 @@ app.get('/user/profile', requiresAuth(), async (req, res) => {
 });
 
 
-
-
 app.listen(
      PORT,
      () => {
+       console.log(`Listening on port: ${PORT}`)
        console.log(process.env.CLOUDINARY_API_KEY)
        cloudinary.config({
          cloud_name: 'dw26qdtlf',
