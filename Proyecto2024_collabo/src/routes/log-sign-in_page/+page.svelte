@@ -5,7 +5,7 @@
     let email = '';
     let password = '';
     let confirmPassword = '';
-    
+
     
 
     async function register() {
@@ -44,7 +44,7 @@
 
     async function logIn() {
         const userData = { email, password };
-        const response = await fetch("https://proyecto2024collaboback.vercel.app/login", {
+        const response = await fetch("http://localhost:8003/login", {
           method: 'POST',
           headers: {
                 //'Authorization': 'Basic '+btoa('username:password'),
