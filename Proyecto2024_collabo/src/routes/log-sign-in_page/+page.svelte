@@ -21,7 +21,8 @@
           credentials: "include",
           headers: {
                 //'Authorization': 'Basic '+btoa('username:password'),
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Credentials': 'true'
             },
           body: JSON.stringify(userData)
         }).then((response) => {

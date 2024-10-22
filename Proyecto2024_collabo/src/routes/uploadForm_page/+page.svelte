@@ -124,8 +124,6 @@
 
 </script>
 
-
-
 <div class="page-container">
     <div class="form-section">
         <div class="section-info">
@@ -164,6 +162,21 @@
                         <div class="input">
                             <label for="description">Description</label>
                             <input on:input={handleDescriptionChange} type="text" name="description" id="description" placeholder="Description" required>
+                        </div>
+                        <div class="input">
+                            <label for="Tags">Tags</label> <br>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select">
+                                    <select name="tags-selector" id="tags-select" class="tags-select">
+                                        <option value="Rock">Rock</option>
+                                        <option value="Techno">Techno</option>
+                                        <option value="Jazz">Jazz</option>
+                                        <option value="Clasic">Classic</option>
+                                        <option value="Reggaeton">Reggaeton</option>
+                                        <option value="Pop">Pop</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <button on:click={uploadAudio} class="submit-btn" type="submit">Upload</button>
                     </div>
@@ -329,5 +342,53 @@
         justify-content: center;
         align-items: center;
         margin-bottom: 10px;
+    }
+
+    .custom-select-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .custom-select {
+        position: relative;
+    }
+
+    .custom-select select {
+        display: none; /* Oculta el select original */
+    }
+
+    .custom-select::before {
+        content: attr(data-value);
+        display: block;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f8f8f8;
+        cursor: pointer;
+    }
+
+    .custom-select::after {
+        content: '▼';
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    /*.custom-select select:focus + .custom-select::before {
+        border-color: #007BFF;
+    }*/
+
+    .custom-select select option {
+        padding: 10px;
+        background-color: #f8f8f8;
+        color: #333;
+    }
+
+    .custom-select select option:hover {
+        background-color: #007BFF;
+        color: #fff;
     }
 </style>

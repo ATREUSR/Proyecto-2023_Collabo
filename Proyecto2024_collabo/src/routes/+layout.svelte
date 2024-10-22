@@ -10,6 +10,10 @@
     {
         goto("/upload_page")
     }
+
+    function navtoprofile(){
+        goto("/profile_page")
+    }
 </script>
 
 <header>
@@ -44,7 +48,7 @@
             </li>
             <li>
                 <div class="profile-container">
-                    <img src={defaultpfp} alt="profile" />
+                    <img on:click={navtoprofile} src={defaultpfp} alt="profile" />
                 </div>
             </li>
         </ul>
