@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import multer from 'multer';
 import cors from 'cors';
@@ -188,6 +190,8 @@ app.post('/uploadloops', upload.single('audio'), async (req, res) => {
 
 
     const result = await uploadStream();
+    const tagsArray = req.body.tags ? req.body.tags.split(',').map(tag => tag.trim()) : ["rock", "pop", "trap","rap"];
+
 
 
     try {
@@ -198,7 +202,7 @@ app.post('/uploadloops', upload.single('audio'), async (req, res) => {
           Title: req.file.originalname,
           Name: req.body.name,
           Descripcion: req.body.descripcion,
-          Tags: "",
+          Tags: tagsArray, 
         },
       });
 
@@ -214,7 +218,36 @@ app.post('/uploadloops', upload.single('audio'), async (req, res) => {
   }
 });
 
+app.get('/tags', async (req, res) => {
+  try {
+    const { tags } = req.query;
 
+    if (!tags) {
+      return res.status(400).json({ error: 'No se proporcionaron etiquetas para buscar' });
+    }
+
+    // Convierte las etiquetas en un array si se proporciona como cadena de texto
+    const tagsArray = tags.split(',').map(tag => tag.trim());
+
+    // Busca loops que contengan al menos una de las etiquetas
+    const loops = await prisma.loops.findMany({
+      where: {
+        Tags: {
+          hasSome: tagsArray,
+        },
+      },
+    });
+
+    if (loops.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron loops con las etiquetas especificadas' });
+    }
+
+    res.status(200).json(loops);
+  } catch (error) {
+    console.error('Error fetching loops by tags:', error);
+    res.status(500).json({ error: 'Error al buscar loops por etiquetas' });
+  }
+});
 
 
 app.post('/download', async (req, res) => {
