@@ -187,8 +187,16 @@
             <input class="search-input" type="text" bind:value="{terminoBusqueda}" placeholder="Buscar...">
             <button class="search-button" on:click="{filtrarLoops}">Buscar</button>
         </div>
+        <div class="tags-container">
+            <span class="tag">Rock</span>
+            <span class="tag">Techno</span>
+            <span class="tag">Jazz</span>
+            <span class="tag">Clasic</span>
+            <span class="tag">Reggaeton</span>
+            <span class="tag">Pop</span>
+        </div>
     </div>
-    <h2 class="trending-loops"></h2>
+    <h2 class="trending-loops">.</h2>
     <div class="loops-container">
         {#each resultadosFiltrados as resultado, index}
         <div class="loop-container">
@@ -283,6 +291,24 @@
         border-radius: 20px;
         font-weight: 700;
         background-color: #E9E9E9;
+    }
+
+    .tags-container {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .tag {
+        padding: 5px 10px;
+        background-color: #4800B6;
+        color: white;
+        border-radius: 20px;
+        cursor: pointer;
+    }
+
+    .tag:hover {
+        background-color: #B700BD;
     }
 
     .trending-loops {

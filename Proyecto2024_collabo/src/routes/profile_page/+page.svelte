@@ -6,8 +6,8 @@
     import { onMount } from "svelte";
     import { page } from '$app/stores';
     
-    let audioElement: HTMLDivElement;
-    let wavesurfer: WaveSurfer;
+    let audioElements: HTMLDivElement[] = [];
+    let wavesurfers: WaveSurfer[] = [];
     let title = '';
     let audioFile = '';
     let loopId = '';
@@ -32,8 +32,8 @@
         audioFile = $page.url.searchParams.get('audioFile') || 'default-audio.mp3';
         loopId = $page.url.searchParams.get('loopid') || 'default-loopid';
         userId = $page.url.searchParams.get('userid') || 'default-userid';
-        if (wavesurfer && audioFile) {
-            wavesurfer.load(audioFile);
+        if (wavesurfers.length && audioFile) {
+            wavesurfers.forEach(wavesurfer => wavesurfer.load(audioFile));
         }
     }
 
@@ -54,7 +54,7 @@
 
     async function fetchUserData() {
         try {
-            const response = await fetch("http://localhost:8003/userdata", {
+            const response = await fetch("http://localhost:8003/user/profile", {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -64,7 +64,11 @@
             });
 
             if (!response.ok) {
-                throw new Error(`Network response was not ok: ${response.statusText}`);
+                if (response.status === 404) {
+                    throw new Error('User data not found');
+                } else {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
             }
 
             const data = await response.json();
@@ -73,11 +77,15 @@
             userUploads = data.uploads;
             userFollowers = data.followers;
             userCollabs = data.collabs;
-            userLoops = data.loops;
+            userLoops = Array.isArray(data.loops) ? data.loops : []; // Ensure userLoops is an array
 
         } catch (err) {
             console.error('Fetch user data error:', err);
-            alert('Error fetching user data'); // Inform the user
+            if (err instanceof Error) {
+                alert(`Error fetching user data: ${err.message}`); // Inform the user
+            } else {
+                alert('An unknown error occurred while fetching user data.');
+            }
         }
     }
 
@@ -102,7 +110,11 @@
             
         } catch (err) {
             console.error('Download error:', err);
-            alert('Error downloading the file'); // Inform the user
+            if (err instanceof Error) {
+                alert(`Error downloading the file: ${err.message}`); // Inform the user
+            } else {
+                alert('An unknown error occurred while downloading the file.');
+            }
         }
     }
 
@@ -115,22 +127,29 @@
     }
 
     onMount(() => {
-        wavesurfer = WaveSurfer.create({
-            container: audioElement,
-            waveColor: '#4800B6',
-            progressColor: 'rgba(72, 0, 182, 0.5)',
-            barWidth: 7,
-            barHeight: 0.5,
-            barGap: 3,
-            barRadius: 5,
-        });
+        audioElements.forEach((audioElement, index) => {
+            if (audioElement) {
+                const wavesurfer = WaveSurfer.create({
+                    container: audioElement,
+                    waveColor: '#4800B6',
+                    progressColor: 'rgba(72, 0, 182, 0.5)',
+                    barWidth: 7,
+                    barHeight: 0.5,
+                    barGap: 3,
+                    barRadius: 5,
+                });
 
-        wavesurfer.load(testAudio);
+                wavesurfer.load(testAudio);
+                wavesurfers.push(wavesurfer);
+            } else {
+                console.error('audioElement not found');
+            }
+        });
         fetchUserData(); // Fetch user data on mount
     });
 
-    function togglePlayPause() {
-        wavesurfer.playPause();
+    function togglePlayPause(index: number) {
+        wavesurfers[index].playPause();
     }
 </script>
 
@@ -174,7 +193,7 @@
         <div class="loops-container">
             <h2>My loops</h2>
             <div class="loops">
-                {#each userLoops as loop}
+                {#each userLoops as loop, index}
                     <div class="loop-container">
                         <div class="loop-info">
                             <img class="loop-img" src={artista} alt="">
@@ -184,11 +203,11 @@
                                     <img class="profile-img" src={profile} alt="">
                                     <p class="artist-follow">{userName}</p>
                                 </div>
-                                <div bind:this={audioElement} class="audio-container" id="audio-container">
+                                <div bind:this={audioElements[index]} class="audio-container" id="audio-container">
                                     <source src={loop.audioFile} type="audio" class="audio">
                                 </div>
                                 <div class="buttons-container">
-                                    <button class="pause-play-button" on:click={togglePlayPause}>play/pause</button>
+                                    <button class="pause-play-button" on:click={() => togglePlayPause(index)}>play/pause</button>
                                     <button class="dowload-button">Collab</button>
                                 </div>
                             </div>

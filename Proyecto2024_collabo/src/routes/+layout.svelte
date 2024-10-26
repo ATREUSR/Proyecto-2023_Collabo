@@ -48,7 +48,9 @@
             </li>
             <li>
                 <div class="profile-container">
-                    <img on:click={navtoprofile} src={defaultpfp} alt="profile" />
+                    <button type="button" on:click={navtoprofile} style="background: none; border: none; padding: 0;">
+                        <img src={defaultpfp} alt="profile" />
+                      </button>
                 </div>
             </li>
         </ul>

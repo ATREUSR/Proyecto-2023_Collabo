@@ -12,29 +12,7 @@
     let nameValue: string;
     let descriptionValue: string;
     let input: HTMLInputElement; 
-    
-
-    /*function getCookie(name : string) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop()?.split(';').shift() ?? '';
-    }
-
-    function decodeToken(token: string): string {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-
-        return JSON.parse(jsonPayload); 
-    }
-
-    const token = getCookie('token');
-    console.log(token);
-    const user = token ? decodeToken(token) : null;
-    console.log(user);
-    */
+    let tags: string[] = []; // Explicitly define the type of tags as an array of strings
 
     function handleImageChange(event: Event) {
         const input = event.target as HTMLInputElement;
@@ -122,6 +100,17 @@
         });
     }
 
+    function addTag(event: KeyboardEvent) {
+        const input = event.target as HTMLInputElement;
+        if (event.key === 'Enter' && input.value.trim() !== '') {
+            tags = [...tags, input.value.trim()];
+            input.value = '';
+        }
+    }
+
+    function removeTag(index: number) {
+        tags = tags.filter((_, i) => i !== index);
+    }
 </script>
 
 <div class="page-container">
@@ -131,7 +120,7 @@
             <div class="gradient-line"></div>
         </div>
         <div class="upload-form-container">
-            <form action=""> <!--  action="http://localhost:3000/upload" method="POST" enctype="multipart/form-data -->
+            <form action="">
                 <div class="form-content">
                     <div class="left-section">
                         <div class="input-file">
@@ -163,21 +152,20 @@
                             <label for="description">Description</label>
                             <input on:input={handleDescriptionChange} type="text" name="description" id="description" placeholder="Description" required>
                         </div>
-                        <div class="input">
+                        <!--<div class="input">
                             <label for="Tags">Tags</label> <br>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select">
-                                    <select name="tags-selector" id="tags-select" class="tags-select">
-                                        <option value="Rock">Rock</option>
-                                        <option value="Techno">Techno</option>
-                                        <option value="Jazz">Jazz</option>
-                                        <option value="Clasic">Classic</option>
-                                        <option value="Reggaeton">Reggaeton</option>
-                                        <option value="Pop">Pop</option>
-                                    </select>
+                            <div class="tag-input-container">
+                                <input type="text" placeholder="Add a tag and press Enter" on:keydown={addTag}>
+                                <div class="tags-list">
+                                    {#each tags as tag, index}
+                                        <span class="tag">
+                                            {tag}
+                                            <button type="button" on:click={() => removeTag(index)}>x</button>
+                                        </span>
+                                    {/each}
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         <button on:click={uploadAudio} class="submit-btn" type="submit">Upload</button>
                     </div>
                 </div>
@@ -187,7 +175,6 @@
 </div>
 
 <style>
-
     .page-container {
         display: flex;
         justify-content: center;
@@ -199,13 +186,12 @@
 
     .form-section {
         width: 100%;
-        max-width: 500px; /* Ajusta el ancho máximo del formulario */
+        max-width: 500px;
     }
-
 
     .page-container h1 {
         display: flex;
-        justify-content: center;    
+        justify-content: center;
         align-items: center;
         transform: translateX(20%);
     }
@@ -238,18 +224,18 @@
         margin-bottom: 10px;
     }
 
-    .img-container{
+    .img-container {
         width: 200px;
         height: 200px;
         border-radius: 15px;
         margin-bottom: 15px;
-        overflow: hidden; 
+        overflow: hidden;
     }
 
     .loop-img {
         width: 100%;
         height: 100%;
-        object-fit: cover;/*container is also useful*/
+        object-fit: cover;
         border-radius: 15px;
         margin-bottom: 15px;
         background-color: #E9E9E9;
@@ -276,7 +262,7 @@
         font-weight: 600;
     }
 
-    .submit-btn{
+    .submit-btn {
         width: 207%;
         background-color: #4800B6;
         border-radius: 5px;
@@ -311,7 +297,7 @@
         background-color: #935ce0;
     }
 
-    .audio-container{
+    .audio-container {
         background-color: #E9E9E9;
         border-radius: 5px;
         margin-bottom: 20px;
@@ -344,51 +330,39 @@
         margin-bottom: 10px;
     }
 
-    .custom-select-wrapper {
-        position: relative;
-        display: inline-block;
+    .tag-input-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tag-input-container input {
         width: 100%;
-    }
-
-    .custom-select {
-        position: relative;
-    }
-
-    .custom-select select {
-        display: none; /* Oculta el select original */
-    }
-
-    .custom-select::before {
-        content: attr(data-value);
-        display: block;
-        padding: 10px;
+        padding: 5px;
         border: 1px solid #ccc;
-        border-radius: 4px;
-        background-color: #f8f8f8;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .tags-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .tag {
+        background-color: #4800B6;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .tag button {
+        background: none;
+        border: none;
+        color: white;
         cursor: pointer;
-    }
-
-    .custom-select::after {
-        content: '▼';
-        position: absolute;
-        top: 50%;
-        right: 10px;
-        transform: translateY(-50%);
-        pointer-events: none;
-    }
-
-    /*.custom-select select:focus + .custom-select::before {
-        border-color: #007BFF;
-    }*/
-
-    .custom-select select option {
-        padding: 10px;
-        background-color: #f8f8f8;
-        color: #333;
-    }
-
-    .custom-select select option:hover {
-        background-color: #007BFF;
-        color: #fff;
     }
 </style>
