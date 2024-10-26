@@ -438,49 +438,48 @@ app.get('/randomloops', async (req, res) => {
 });
 
 
-app.get('/user/profile', async (req, res) => {
+app.get('/profile', async (req, res) => {
   try {
-    // Obtener el token del cookie
-    const token = req.cookies.token;
+      const token = req.cookies.token;
 
+      if (!token) {
+          return res.status(401).json({ error: 'No se proporcionó un token' });
+      }
 
-    if (!token) {
-      return res.status(401).json({ error: 'No se proporcionó un token' });
-    }
+      let decoded;
+      try {
+          decoded = jwt.verify(token, jwtSecret);
+      } catch (err) {
+          return res.status(401).json({ error: 'Token inválido' });
+      }
 
+      const userId = decoded.sub; // Obtener el ID del usuario del token
 
-    let decoded;
-    try {
-      decoded = jwt.verify(token, jwtSecret);
-    } catch (err) {
-      return res.status(401).json({ error: 'Token inválido' });
-    }
+      // Obtener información del usuario, sus descargas y loops
+      const user = await prisma.user.findUnique({
+          where: { id: userId },
+          include: {
+              loops: true,
+              downloads: true, // Asegúrate de que estos modelos tengan la relación correcta
+          },
+      });
 
+      if (!user) {
+          return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
 
-    // Obtener el ID del usuario desde el token decodificado
-    const userId = decoded.sub;
-
-
-    // Buscar el perfil del usuario usando Prisma
-    const userProfile = await prisma.user.findUnique({
-      where: { id: parseInt(userId) },
-      include: {
-        profile: true,
-      },
-    });
-
-
-    if (!userProfile) {
-      return res.status(404).json({ error: 'Perfil de usuario no encontrado' });
-    }
-
-
-    res.status(200).json(userProfile);
+      // Enviar la respuesta
+      return res.json({
+          name: user.name,
+          downloads: user.downloads,
+          loops: user.loops,
+      });
   } catch (error) {
-    console.error('Error fetching user profile:', error);
-    res.status(500).json({ error: 'Error al obtener el perfil del usuario' });
+      console.error(error);
+      return res.status(500).json({ error: 'Error en el servidor' });
   }
 });
+
 
 
 app.listen(
