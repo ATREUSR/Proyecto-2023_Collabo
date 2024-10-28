@@ -1,7 +1,6 @@
 <script lang="ts">
     import profile from "../images/defaultpfp.png";
-    import artista from "../images/artista.png"; // Import the artista image
-    import testAudio from "../audios/amen-break-no-copyright-remake-120bpm-25924.mp3";
+    import artista from "../images/artista.png";
     import WaveSurfer from 'wavesurfer.js';
     import { onMount } from "svelte";
     import { page } from '$app/stores';
@@ -54,11 +53,11 @@
 
     async function fetchUserData() {
         try {
-            const response = await fetch("http://localhost:8003/user/profile", {
+            const response = await fetch("http://localhost:8003/profile", {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json', 
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 }
             });
@@ -72,17 +71,24 @@
             }
 
             const data = await response.json();
+            console.log('Fetched user data:', data);
+
             userName = data.name;
             userDescription = data.description;
             userUploads = data.uploads;
             userFollowers = data.followers;
             userCollabs = data.collabs;
-            userLoops = Array.isArray(data.loops) ? data.loops : []; // Ensure userLoops is an array
+            userLoops = data.loops.map((loop: any) => ({
+                title: loop.Title,
+                audioFile: loop.id // Assuming the audio file URL is stored in the Title property
+            }));
+
+            console.log('Fetched user loops:', userLoops);
 
         } catch (err) {
             console.error('Fetch user data error:', err);
             if (err instanceof Error) {
-                alert(`Error fetching user data: ${err.message}`); // Inform the user
+                alert(`Error fetching user data: ${err.message}`);
             } else {
                 alert('An unknown error occurred while fetching user data.');
             }
@@ -111,7 +117,7 @@
         } catch (err) {
             console.error('Download error:', err);
             if (err instanceof Error) {
-                alert(`Error downloading the file: ${err.message}`); // Inform the user
+                alert(`Error downloading the file: ${err.message}`);
             } else {
                 alert('An unknown error occurred while downloading the file.');
             }
@@ -127,8 +133,10 @@
     }
 
     onMount(() => {
+    fetchUserData().then(() => {
         audioElements.forEach((audioElement, index) => {
             if (audioElement) {
+                console.log('Creating WaveSurfer instance for:', audioElement);
                 const wavesurfer = WaveSurfer.create({
                     container: audioElement,
                     waveColor: '#4800B6',
@@ -139,14 +147,18 @@
                     barRadius: 5,
                 });
 
-                wavesurfer.load(testAudio);
+                // Construye la URL de Cloudinary
+                const cloudinaryBaseUrl = "https://res.cloudinary.com/dw26qdtlf/video/upload/v1722284452/";
+                const audioUrl = `${cloudinaryBaseUrl}${userLoops[index].audioFile}.mp3`;
+                
+                wavesurfer.load(audioUrl);  // Usa audioUrl para cargar el audio en WaveSurfer
                 wavesurfers.push(wavesurfer);
             } else {
                 console.error('audioElement not found');
             }
         });
-        fetchUserData(); // Fetch user data on mount
     });
+});
 
     function togglePlayPause(index: number) {
         wavesurfers[index].playPause();

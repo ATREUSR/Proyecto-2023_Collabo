@@ -110,7 +110,6 @@
     }
 
     function setwavesurfer(){
-
         wavesurfers.forEach(wavesurfer => {
             if (wavesurfer) {
                 wavesurfer.destroy();
@@ -128,7 +127,6 @@
                     barHeight: 0.5,
                     barGap: 3,
                     barRadius: 5,
-                    
                 });
             }
             
@@ -140,22 +138,26 @@
         });
     }
 
-    
-
     let terminoBusqueda = ''; 
     let resultadosFiltrados: Resultado[] = [];
+    let selectedTags: string[] = [];
 
     async function filtrarLoops() {
-        const response = await fetch("http://localhost:8003/searchloops?title=" + terminoBusqueda, {
+        let url = "http://localhost:8003/searchloops?title=" + terminoBusqueda;
+        if (selectedTags.length > 0) {
+            url = `http://localhost:8003/tags?tags=${selectedTags.join(',')}`;
+        }
+
+        const response = await fetch(url, {
           method: 'GET',
           credentials: 'include',
-        })
+        });
 
         console.log(response);
         
         if (!response.ok) {
             // TODO: Handle 404 or error
-            return
+            return;
         }
         
         const data = await response.json();
@@ -165,15 +167,19 @@
         });
         resultadosFiltrados = data;
 
-        /*resultadosFiltrados = Usuarios.filter(usuario => {
-            return usuario.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-                   usuario.artista.toLowerCase().includes(terminoBusqueda.toLowerCase());
-            // Puedes añadir más campos de comparación aquí
-        });*/
         await tick();
         audioElements = Array.from(document.querySelectorAll('.audio-container')).map(elem => elem as HTMLElement);
         
         setwavesurfer(); 
+    }
+
+    function toggleTag(tag: string) {
+        if (selectedTags.includes(tag)) {
+            selectedTags = selectedTags.filter(t => t !== tag);
+        } else {
+            selectedTags = [...selectedTags, tag];
+        }
+        filtrarLoops();
     }
 
 </script>
@@ -188,12 +194,10 @@
             <button class="search-button" on:click="{filtrarLoops}">Buscar</button>
         </div>
         <div class="tags-container">
-            <span class="tag">Rock</span>
-            <span class="tag">Techno</span>
-            <span class="tag">Jazz</span>
-            <span class="tag">Clasic</span>
-            <span class="tag">Reggaeton</span>
-            <span class="tag">Pop</span>
+            <button class="tag" type="button" on:click={() => toggleTag('Rock')}>Rock</button>
+            <button class="tag" type="button" on:click={() => toggleTag('Pop')}>Pop</button>
+            <button class="tag" type="button" on:click={() => toggleTag('Trap')}>Trap</button>
+            <button class="tag" type="button" on:click={() => toggleTag('Rap')}>Rap</button>
         </div>
     </div>
     <h2 class="trending-loops">.</h2>

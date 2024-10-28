@@ -12,7 +12,10 @@
     let nameValue: string;
     let descriptionValue: string;
     let input: HTMLInputElement; 
-    let tags: string[] = []; // Explicitly define the type of tags as an array of strings
+    let tags: string[] = [];
+    let availableTags: string[] = ["rock", "pop", "trap", "rap"];
+    let openDropdown = false;
+    let selectedTag = "";
 
     function handleImageChange(event: Event) {
         const input = event.target as HTMLInputElement;
@@ -25,7 +28,7 @@
     function handleAudioChange(event: Event) {
         if (input.files && input.files.length > 0) {
             const file = input.files[0];
-            if (file instanceof File) { // Ensure the selected object is a File
+            if (file instanceof File) {
                 const url = URL.createObjectURL(file);
                 waveSurfer.load(url);
                 inputValue = file;
@@ -67,6 +70,14 @@
         } else {
             console.error("No se encontró el audio en localStorage.");
         }
+
+        document.addEventListener('click', handleDocumentClick);
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('click', handleDocumentClick);
+            document.removeEventListener('keydown', handleKeyDown);
+        };
     });
 
     function togglePlayPause() {
@@ -81,6 +92,7 @@
         formData.append("audio", inputValue);
         formData.append("name", nameValue);
         formData.append("descripcion", descriptionValue);
+        formData.append("tags", JSON.stringify(tags)); // Append tags as a JSON string
 
         fetch("http://localhost:8003/uploadloops", {
             method: 'POST',
@@ -100,16 +112,27 @@
         });
     }
 
-    function addTag(event: KeyboardEvent) {
-        const input = event.target as HTMLInputElement;
-        if (event.key === 'Enter' && input.value.trim() !== '') {
-            tags = [...tags, input.value.trim()];
-            input.value = '';
+    function addTag(tag: string) {
+        if (!tags.includes(tag)) {
+            tags = [...tags, tag];
         }
+        openDropdown = false;
     }
 
     function removeTag(index: number) {
         tags = tags.filter((_, i) => i !== index);
+    }
+
+    function handleDocumentClick(event: MouseEvent) {
+        if (!(event.target as HTMLElement).closest('.custom-select')) {
+            openDropdown = false;
+        }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Escape') {
+            openDropdown = false;
+        }
     }
 </script>
 
@@ -152,20 +175,28 @@
                             <label for="description">Description</label>
                             <input on:input={handleDescriptionChange} type="text" name="description" id="description" placeholder="Description" required>
                         </div>
-                        <!--<div class="input">
-                            <label for="Tags">Tags</label> <br>
-                            <div class="tag-input-container">
-                                <input type="text" placeholder="Add a tag and press Enter" on:keydown={addTag}>
-                                <div class="tags-list">
-                                    {#each tags as tag, index}
-                                        <span class="tag">
-                                            {tag}
-                                            <button type="button" on:click={() => removeTag(index)}>x</button>
-                                        </span>
-                                    {/each}
-                                </div>
+                        <div class="input">
+                            <label for="tags">Tags</label>
+                            <div class="custom-select" role="button" tabindex="0" id="tag-dropdown-button" on:click={() => openDropdown = !openDropdown} on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && (openDropdown = !openDropdown)}>
+                                <div class="select-selected">{selectedTag || "Selecciona un tag"}</div>
+                                {#if openDropdown}
+                                    <div class="select-items">
+                                        {#each availableTags as tag}
+                                            <button type="button" on:click={() => addTag(tag)}>{tag}</button>
+                                        {/each}
+                                    </div>
+                                {/if}
                             </div>
-                        </div>-->
+                            
+                            <div class="tags-list">
+                                {#each tags as tag, index}
+                                    <span class="tag">
+                                        {tag}
+                                        <button type="button" on:click={() => removeTag(index)}>x</button>
+                                    </span>
+                                {/each}
+                            </div>
+                        </div>
                         <button on:click={uploadAudio} class="submit-btn" type="submit">Upload</button>
                     </div>
                 </div>
@@ -330,23 +361,11 @@
         margin-bottom: 10px;
     }
 
-    .tag-input-container {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .tag-input-container input {
-        width: 100%;
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        margin-bottom: 10px;
-    }
-
     .tags-list {
         display: flex;
         flex-wrap: wrap;
         gap: 5px;
+        margin-top: 10px;
     }
 
     .tag {
@@ -364,5 +383,44 @@
         border: none;
         color: white;
         cursor: pointer;
+    }
+
+    .custom-select {
+        position: relative;
+        display: inline-block;
+        width: 200%;
+        margin-top: 5px;
+    }
+
+    .select-selected {
+        background-color: #E9E9E9;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .select-items {
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+        z-index: 99;
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    .select-items button {
+        background: none;
+        border: none;
+        padding: 10px;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    .select-items button:hover {
+        background-color: #ddd;
     }
 </style>
