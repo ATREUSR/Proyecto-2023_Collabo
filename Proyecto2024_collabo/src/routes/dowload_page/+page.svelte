@@ -40,38 +40,46 @@
     console.log(token);
 
     async function downloadAudio(e: MouseEvent) {
-        e.preventDefault(); 
+    e.preventDefault(); 
 
-        /*const downloadUrl = `https://res.cloudinary.com/dw26qdtlf/video/upload/v1722284452/attachment:${currentLoopId}`;
+    const downloadUrl = `https://res.cloudinary.com/dw26qdtlf/video/upload/v1722284452/${currentLoopId}`;
 
+    try {
+        const response = await fetch(downloadUrl);
+        if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
-        link.href = downloadUrl;
+        link.href = url;
         link.download = `${currentLoopId}.mp4`;
         document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);*/
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
 
-        try {
-            const response = await fetch("http://localhost:8003/download", {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json', 
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({ loopId: currentLoopId, userId }),
-            });
+        // Send a POST request to your server
+        const postResponse = await fetch("http://localhost:8003/download", {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ loopId: currentLoopId, userId }),
+        });
 
-            if (!response.ok) {
-                throw new Error(`Network response was not ok: ${response.statusText}`);
-            }
-
-            
-        } catch (err) {
-            console.error('Download error:', err);
-            alert('Error downloading the file'); // Informa al usuario
+        if (!postResponse.ok) {
+            throw new Error(`Network response was not ok: ${postResponse.statusText}`);
         }
+
+    } catch (err) {
+        console.error('Download error:', err);
+        alert('Error downloading the file'); // Informa al usuario
     }
+}
 
     function openwrap(e: MouseEvent) {
         securityWrap.style.display = 'block';

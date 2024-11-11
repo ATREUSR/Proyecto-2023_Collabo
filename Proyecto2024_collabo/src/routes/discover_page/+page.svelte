@@ -85,6 +85,7 @@
         userId: number;
         user: string;
         Title: string;
+        Name: string;
         Description: string;
         Tags: string;
     }
@@ -93,7 +94,7 @@
         const cloudinaryBaseUrl = "https://res.cloudinary.com/dw26qdtlf/video/upload/v1722284452/";
         const audioUrl = `${cloudinaryBaseUrl}${loop.id}.mp3`;
         const params = new URLSearchParams({
-            title: loop.Title,
+            title: loop.Name,
             loopid: loop.id,
             userid: loop.userId.toString(),
             audioFile: audioUrl,
@@ -207,7 +208,7 @@
             <div class="loop-info">
                 <img class="loop-img" src={artista} alt="">
                 <div class="artist-upload-info">
-                    <div class="loop-title">{resultado.Title}</div>
+                    <div class="loop-title">{resultado.Name}</div>
                     <div class="artist-detail">
                         <img class="profile-img" src={profile} alt="">
                         <p class="artist-follow">user</p> <!-- {resultado.userId.toString()} -->
