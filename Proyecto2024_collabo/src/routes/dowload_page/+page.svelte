@@ -77,7 +77,7 @@
     
         } catch (err) {
             console.error('Download error:', err);
-            alert('Error downloading the file'); // Informa al usuario
+            //alert('Error downloading the file'); // Informa al usuario
         }
     }
 
