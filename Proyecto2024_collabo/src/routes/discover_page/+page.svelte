@@ -8,6 +8,7 @@
     import artista4 from "../images/artista4.png";
     import artista5 from "../images/artista5.png";
     import artista6 from "../images/artista6.png";
+    import loupeimg from "../images/icone-loupe-gris.png";
 
     import profile from "../images/defaultpfp.png"
 
@@ -201,7 +202,13 @@
             <button class="tag" type="button" on:click={() => toggleTag('Rap')}>Rap</button>
         </div>
     </div>
-    <h2 class="trending-loops">.</h2>
+    {#if resultadosFiltrados.length === 0}
+        <div class="no-results">
+            <img src={loupeimg} alt="" class="loop-image">
+            <p>Search for something in the discover bar</p>
+        </div>
+    {/if}
+    <h2 class="trending-loops"></h2>
     <div class="loops-container">
         {#each resultadosFiltrados as resultado, index}
         <div class="loop-container">
@@ -250,7 +257,8 @@
     }
 
     .discover-container{
-        margin: 0 20px
+        margin: 0 20px;
+        position: relative;
     }
 
     .gradient-line {
@@ -443,7 +451,7 @@
         display: flex;
         overflow-x: auto;
         white-space: nowrap;
-        margin-top: 300px;
+        margin-top: 100px;
     }
 
     .trending-artists-container > div {
@@ -493,5 +501,21 @@
     .follow-button:hover {
         background-color: #935ce0;
         cursor: pointer;
+    }
+
+    .no-results {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 300px;
+        text-align: center;
+        color: #777;
+    }
+
+    .loop-image {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 20px;
     }
 </style>
