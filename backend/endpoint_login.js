@@ -25,7 +25,7 @@ const prisma = new PrismaClient();
 
 
 const corsOptions = {
-  origin: ['https://proyecto2024collaboal.vercel.app', 'http://localhost:3000','http://localhost:8003', 'http://localhost:5173'],
+  origin: ['https://proyecto-2024-collabo.vercel.app', 'http://localhost:3000','http://localhost:8003', 'http://localhost:5173'],
   methods: ['GET','HEAD','PUT','PATCH','POST','DELETE'],
   credentials: true, // Permitir el envío de cookies y otros credenciales
   // optionsSuccessStatus: 204 // Algunos navegadores (Safari) fallan con 204
