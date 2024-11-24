@@ -40,43 +40,45 @@
     let loops: Loop[] = [];
 
     onMount(async () => {
-        token = getCookie('token');
-        user = token ? decodeToken(token) : null;
+        if (typeof document !== 'undefined') { // Añadir esta línea
+            token = getCookie('token');
+            user = token ? decodeToken(token) : null;
 
-        if (!user) {
-            console.error('Token no encontrado');
-            return;
-        }
+            if (!user) {
+                console.error('Token no encontrado');
+                return;
+            }
 
-        const userId = user.sub;
-        console.log(userId);
-        console.log(token);
-        console.log("alvarito saraviaaaaaaaaaaaaaaaa ");
-        fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json', 
-                'Authorization': `Bearer ${token}`,
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            loops = data.map((loop: any) => ({
-                id: loop.id,
-                name: loop.Name,
-                plays: loop.downloads,
-                collabs: loop.collabs,
-                likes: loop.likes,
-                comments: loop.comments,
-                date: new Date(loop.createdAt).toLocaleDateString(), // Convertir a string
-            }));
+            const userId = user.sub;
+            console.log(userId);
+            console.log(token);
+            console.log("alvarito saraviaaaaaaaaaaaaaaaa ");
+            fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${token}`,
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                loops = data.map((loop: any) => ({
+                    id: loop.id,
+                    name: loop.Name,
+                    plays: loop.downloads,
+                    collabs: loop.collabs,
+                    likes: loop.likes,
+                    comments: loop.comments,
+                    date: new Date(loop.createdAt).toLocaleDateString(), // Convertir a string
+                }));
+                //console.log(loops);
+            })
+            .catch(err => {
+                console.error('Error fetching data:', err);
+            });
+
             //console.log(loops);
-        })
-        .catch(err => {
-            console.error('Error fetching data:', err);
-        });
-
-        //console.log(loops);
+        } // Añadir esta línea
     });
 
     function gotoToSecurity(loop: Loop) {
