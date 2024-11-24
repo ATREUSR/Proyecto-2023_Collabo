@@ -3,23 +3,11 @@
     import imagen from '../images/brawlstars.png';
     import { onMount } from 'svelte';
     
-    let token: string | undefined;
-    let user: any = null;
-    let loops: Loop[] = [];
 
-    function getCookie(name: string, cookies: string | undefined): string | undefined {
-        if (cookies) {
-            const value = `; ${cookies}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop()?.split(';').shift();
-        } else if (typeof document !== 'undefined') {
-            // Solo se ejecuta en el navegador
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop()?.split(';').shift();
-        }
-        // Devuelve undefined si no se encuentra
-        return undefined;
+    function getCookie(name : string) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift() ?? '';
     }
 
     function decodeToken(token: string): string {
@@ -32,14 +20,10 @@
         return JSON.parse(jsonPayload); 
     }
 
-    onMount(() => {
-        token = getCookie('token', undefined);  // En el cliente, no se pasa cookies, se obtiene de document.cookie
-        if (token) {
-            user = decodeToken(token);
-        } else {
-            console.error('Token no encontrado en el cliente');
-        }
-    });
+    const token = getCookie('token');
+    //console.log(token);
+    const user = token ? decodeToken(token) : null;
+    //console.log(user);
 
     interface Loop {
         id: string;
@@ -52,6 +36,8 @@
         email: string;
     }
 
+    let loops: Loop[] = [];
+
     onMount(async () => {
         if (!user) {
             console.error('Token no encontrado');
@@ -59,9 +45,9 @@
         }
 
         const userId = user.sub;
-        console.log("userid:", userId);
-        console.log("token:", token);
-        console.log("alvarito saraviaaaaaaaaaaaaaaaa");
+        console.log(userId);
+        console.log(token);
+        console.log("alvarito saraviaaaaaaaaaaaaaaaa ");
         fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
             method: 'GET',
             headers: {
