@@ -2,15 +2,18 @@
     import { goto } from '$app/navigation';
     import imagen from '../images/brawlstars.png';
     import { onMount } from 'svelte';
-    
 
-    function getCookie(name : string) {
+    function getCookie(name: string): string | null {
+        if (typeof document === 'undefined') {
+            return null;
+        }
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop()?.split(';').shift() ?? '';
+        if (parts.length === 2) return parts.pop()?.split(';').shift() ?? null;
+        return null;
     }
 
-    function decodeToken(token: string): string {
+    function decodeToken(token: string): any {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
@@ -20,10 +23,8 @@
         return JSON.parse(jsonPayload); 
     }
 
-    const token = getCookie('token');
-    //console.log(token);
-    const user = token ? decodeToken(token) : null;
-    //console.log(user);
+    let token: string | null = null;
+    let user: any = null;
 
     interface Loop {
         id: string;
@@ -32,13 +33,16 @@
         collabs: number;
         likes: number;
         comments: number;
-        date: Date; 
+        date: string; 
         email: string;
     }
 
     let loops: Loop[] = [];
 
     onMount(async () => {
+        token = getCookie('token');
+        user = token ? decodeToken(token) : null;
+
         if (!user) {
             console.error('Token no encontrado');
             return;
