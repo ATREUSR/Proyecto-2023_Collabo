@@ -25,7 +25,7 @@ const prisma = new PrismaClient();
 
 
 const corsOptions = {
-  origin: ['https://proyecto2024collaboal.vercel.app', 'http://localhost:3000','http://localhost:8003', 'http://localhost:5173'],
+  origin: ['https://proyecto-2024collabo-i52mapon0-atreus-rs-projects.vercel.app', 'https://proyecto2024collaboal.vercel.app', 'http://localhost:3000','http://localhost:8003', 'http://localhost:5173'],
   methods: ['GET','HEAD','PUT','PATCH','POST','DELETE'],
   credentials: true, // Permitir el envío de cookies y otros credenciales
   optionsSuccessStatus: 204 // Algunos navegadores (Safari) fallan con 204
@@ -39,8 +39,6 @@ app.use(express.json());
 
 
 app.use(cookieParser());
-
-
 
 
 const config = {
@@ -57,7 +55,6 @@ app.use(auth(config));
 
 const jwtSecret = process.env.JWT_SECRET;
 
-app.options('*', cors(corsOptions));
 
 app.get('/', (req, res) => {
     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
@@ -98,7 +95,8 @@ app.post('/login', async (req, res) => {
 
 
 
-      res.cookie('token', token, { httpOnly: false, secure: true });
+      const isProduction = process.env.NODE_ENV === 'production';
+      res.cookie('token', token, { httpOnly: true, secure: isProduction });
 
 
 
