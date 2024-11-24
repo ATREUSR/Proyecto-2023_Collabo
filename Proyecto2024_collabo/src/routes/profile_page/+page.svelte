@@ -8,6 +8,7 @@
     let audioElements: HTMLDivElement[] = [];
     let wavesurfers: WaveSurfer[] = [];
     let title = '';
+    let name = '';
     let audioFile = '';
     let loopId = '';
     let userId = '';
@@ -22,12 +23,14 @@
     interface Loop {
         title: string;
         audioFile: string;
+        name: string;
     }
 
     let userLoops: Loop[] = [];
 
     $: {
         title = $page.url.searchParams.get('title') || 'default title';
+        name = $page.url.searchParams.get('name') || 'default name';
         audioFile = $page.url.searchParams.get('audioFile') || 'default-audio.mp3';
         loopId = $page.url.searchParams.get('loopid') || 'default-loopid';
         userId = $page.url.searchParams.get('userid') || 'default-userid';
@@ -80,7 +83,8 @@
             userCollabs = data.collabs;
             userLoops = data.loops.map((loop: any) => ({
                 title: loop.Title,
-                audioFile: loop.id // Assuming the audio file URL is stored in the Title property
+                audioFile: loop.id, // Assuming the audio file URL is stored in the Title property
+                name: loop.Name
             }));
 
             console.log('Fetched user loops:', userLoops);
@@ -180,7 +184,7 @@
                     <h2>{userName}</h2>
                 </div>
                 <div class="user-desc">
-                    <span>{userDescription}</span>
+                    <span>-</span>
                 </div>
                 <div class="buttons-upload-edit">
                     <button>Uploads</button>
@@ -189,15 +193,15 @@
                 <div class="user-info">
                     <div class="uploads-info">
                         <span>Uploads</span>
-                        <span>{userUploads}</span>
+                        <span>-</span>
                     </div>
                     <div class="followers-info">
                         <span>Followers</span>
-                        <span>{userFollowers}</span>
+                        <span>-</span>
                     </div>
                     <div class="Collabs-info">
                         <span>Collabs</span>
-                        <span>{userCollabs}</span>
+                        <span>-</span>
                     </div>
                 </div>
             </div>
@@ -210,7 +214,7 @@
                         <div class="loop-info">
                             <img class="loop-img" src={artista} alt="">
                             <div class="artist-upload-info">
-                                <div class="loop-title">{loop.title}</div>
+                                <div class="loop-title">{loop.name}</div>
                                 <div class="artist-detail">
                                     <img class="profile-img" src={profile} alt="">
                                     <p class="artist-follow">{userName}</p>

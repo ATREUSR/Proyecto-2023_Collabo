@@ -1,18 +1,22 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
+    import Modal from '../Modal.svelte'; 
 
     let name = '';
     let email = '';
     let password = '';
     let confirmPassword = '';
-
-    
+    let showModal = false;
+    let showModalError = false;
+    let showModalRegister = false;
+    let showModalErrorRegister = false;
+    let showModalPassword = false;
 
     async function register() {
         const userData = { name, email, password};
 
         if (password !== confirmPassword) {
-            alert('Las contraseñas no coinciden');
+            showModalPassword = true;
             return;
         }
 
@@ -33,9 +37,11 @@
             console.log(response.headers.getSetCookie());
             //console.log(response);
             if(response.ok){
-                alert("Log in successfully!")
-                goto(`/home_page`); 
+                showModalRegister = true; 
             } 
+            else {
+                showModalErrorRegister = true;
+            }
         }).catch(err => {
           console.log(err);
         })
@@ -45,7 +51,7 @@
 
     async function logIn() {
         const userData = { email, password };
-        const response = await fetch("https://proyecto-2024-collabo.vercel.app/login", {
+        const response = await fetch("http://localhost:8003/login", {
           method: 'POST',
           headers: {
                 //'Authorization': 'Basic '+btoa('username:password'),
@@ -58,7 +64,7 @@
         if (!response.ok) {
             // TODO: Handle not ok
             console.log(response);
-            alert("datos no encontrados")
+            showModalError = true;
 
             return;
         }
@@ -70,11 +76,32 @@
         }
         console.log(response.headers.getSetCookie());
         if(response.ok){
-            alert("Log in successfully!")
-            goto(`/discover_page`); 
+            showModal = true; 
         }
         //console.log(userData); 
         
+    }
+
+    function handleModalClose() {
+        showModal = false;
+        goto(`/discover_page`);
+    }
+
+    function handleModalCloseRegister() {
+        showModalRegister = false;
+        toggleSignIn();
+    }
+
+    function handleModalErrorClose() {
+        showModalError = false;
+    }
+
+    function handleModalErrorCloseRegister() {
+        showModalErrorRegister = false;
+    }
+
+    function handleModalPasswordClose() {
+        showModalPassword = false;
     }
 
     function toggleLogIn() {
@@ -159,6 +186,26 @@
         <a class="toggle-link" on:click={() => toggleLogIn()}>¿No tenés cuenta?</a>
     </div>
 </div>
+
+{#if showModal}
+    <Modal message="log in successfully!" onClose={handleModalClose} />
+{/if}
+
+{#if showModalRegister}
+    <Modal message="register successfully!" onClose={handleModalCloseRegister} />
+{/if}
+
+{#if showModalError}
+    <Modal message="data not found" onClose={handleModalErrorClose} />
+{/if}
+
+{#if showModalErrorRegister}
+    <Modal message="That user already exists" onClose={handleModalErrorCloseRegister} />
+{/if}
+
+{#if showModalPassword}
+    <Modal message="Passwords do not match" onClose={handleModalPasswordClose} />
+{/if}
 
 <style>
     @import url('https://fonts.cdnfonts.com/css/utendo');

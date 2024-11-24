@@ -3,6 +3,8 @@
     import audio from "../audios/sunflower-street-drumloop-85bpm-163900.mp3"
     import WaveSurfer from 'wavesurfer.js';
     import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
+    import Modal from '../Modal.svelte';
 
     let loopImgSrc = defaultImg;
     let waveSurfer: WaveSurfer;
@@ -16,6 +18,8 @@
     let availableTags: string[] = ["rock", "pop", "trap", "rap"];
     let openDropdown = false;
     let selectedTag = "";
+
+    let showModal = false;
 
     function handleImageChange(event: Event) {
         const input = event.target as HTMLInputElement;
@@ -103,13 +107,18 @@
             body: formData,
         }).then((response) => {
             if (response.ok) {
-                alert("Audio uploaded successfully!");
+                showModal = true;
             } else {
                 response.text().then(text => console.error(text));
             }
         }).catch(err => {
             console.log(err);
         });
+    }
+
+    function handleModalClose() {
+        showModal = false;
+        goto(`/discover_page`);
     }
 
     function addTag(tag: string) {
@@ -204,6 +213,9 @@
         </div>
     </div>
 </div>
+{#if showModal}
+    <Modal message="Audio uploaded successfully!" onClose={handleModalClose} />
+{/if}
 
 <style>
     .page-container {

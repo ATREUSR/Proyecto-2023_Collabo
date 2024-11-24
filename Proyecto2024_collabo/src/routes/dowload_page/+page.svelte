@@ -12,6 +12,7 @@
     let audioFile = '';
     let loopId = '';
     let userId = '';
+    let userName = '';
     let securityWrap: HTMLDivElement;
 
     $: {
@@ -19,6 +20,7 @@
         audioFile = $page.url.searchParams.get('audioFile') || 'default-audio.mp3';
         loopId = $page.url.searchParams.get('loopid') || 'default-loopid';
         userId = $page.url.searchParams.get('userid') || 'default-userid';
+        userName = $page.url.searchParams.get('username') || 'default-username';
         if (wavesurfer && audioFile) {
             wavesurfer.load(audioFile);
         }
@@ -38,6 +40,7 @@
     const currentLoopId = $page.url.searchParams.get('loopid') || 'default-loopid';
     console.log(currentLoopId);
     console.log(token);
+    console.log(title);
 
     async function downloadAudio(e: MouseEvent) {
         e.preventDefault(); 
@@ -54,7 +57,7 @@
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `${currentLoopId}.mp4`;
+            link.download = `${title}.mp4`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

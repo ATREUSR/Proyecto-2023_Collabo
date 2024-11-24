@@ -58,7 +58,7 @@
         .then(data => {
             loops = data.map((loop: any) => ({
                 id: loop.id,
-                name: loop.Title,
+                name: loop.Name,
                 plays: loop.downloads,
                 collabs: loop.collabs,
                 likes: loop.likes,
