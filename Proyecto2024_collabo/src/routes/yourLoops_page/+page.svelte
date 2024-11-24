@@ -45,7 +45,7 @@
         }
 
         const userId = user.sub;
-        //console.log(userId);
+        console.log(userId);
 
         fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
             method: 'GET',
