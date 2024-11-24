@@ -19,7 +19,7 @@
         name = $page.url.searchParams.get('name') || 'default name';
         loopId = $page.url.searchParams.get('loopId') || 'default id';
 
-        fetch(`http://localhost:8003/loop-downloads/${loopId}`, {
+        fetch(`https://proyecto2024collaboback.vercel.app/loop-downloads/${loopId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json', 

@@ -145,9 +145,9 @@
     let selectedTags: string[] = [];
 
     async function filtrarLoops() {
-        let url = "http://localhost:8003/searchloops?title=" + terminoBusqueda;
+        let url = "https://proyecto2024collaboback.vercel.app/searchloops?title=" + terminoBusqueda;
         if (selectedTags.length > 0) {
-            url = `http://localhost:8003/tags?tags=${selectedTags.join(',')}`;
+            url = `https://proyecto2024collaboback.vercel.app/tags?tags=${selectedTags.join(',')}`;
         }
 
         const response = await fetch(url, {

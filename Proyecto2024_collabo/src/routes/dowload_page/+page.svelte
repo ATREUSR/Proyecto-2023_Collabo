@@ -64,7 +64,7 @@
             window.URL.revokeObjectURL(url);
     
             // Send a POST request to your server
-            const postResponse = await fetch("http://localhost:8003/download", {
+            const postResponse = await fetch("https://proyecto2024collaboback.vercel.app/download", {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

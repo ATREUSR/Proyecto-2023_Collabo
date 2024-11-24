@@ -47,7 +47,7 @@
         const userId = user.sub;
         //console.log(userId);
 
-        fetch(`http://localhost:8003/artist-loops/${userId}`, {
+        fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json', 

@@ -98,7 +98,7 @@
         formData.append("descripcion", descriptionValue);
         formData.append("tags", JSON.stringify(tags)); // Append tags as a JSON string
 
-        fetch("http://localhost:8003/uploadloops", {
+        fetch("https://proyecto2024collaboback.vercel.app/uploadloops", {
             method: 'POST',
             credentials: "include",
             headers: {

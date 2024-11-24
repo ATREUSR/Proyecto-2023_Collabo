@@ -20,7 +20,7 @@
             return;
         }
 
-        fetch("http://localhost:8003/register", {
+        fetch("https://proyecto2024collaboback.vercel.app/register", {
           method: 'POST',
           credentials: "include",
           headers: {
