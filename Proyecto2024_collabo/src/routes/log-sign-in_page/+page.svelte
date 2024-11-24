@@ -55,10 +55,12 @@
           method: 'POST',
           headers: {
                 //'Authorization': 'Basic '+btoa('username:password'),
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
             },
           body: JSON.stringify(userData),
           credentials: 'include',
+          
         })
 
         if (!response.ok) {
