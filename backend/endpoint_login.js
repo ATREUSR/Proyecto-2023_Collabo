@@ -28,7 +28,7 @@ const corsOptions = {
   origin: ['https://proyecto2024collaboal.vercel.app', 'http://localhost:3000','http://localhost:8003', 'http://localhost:5173'],
   methods: ['GET','HEAD','PUT','PATCH','POST','DELETE'],
   credentials: true, // Permitir el envío de cookies y otros credenciales
-  // optionsSuccessStatus: 204 // Algunos navegadores (Safari) fallan con 204
+  optionsSuccessStatus: 204 // Algunos navegadores (Safari) fallan con 204
 };
 
 
@@ -57,6 +57,7 @@ app.use(auth(config));
 
 const jwtSecret = process.env.JWT_SECRET;
 
+app.options('*', cors(corsOptions));
 
 app.get('/', (req, res) => {
     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
