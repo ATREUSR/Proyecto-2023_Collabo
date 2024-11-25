@@ -73,7 +73,7 @@
         console.log('Token:', token);
         
         try {
-            const response = await fetch("http://localhost:8003/profile", {
+            const response = await fetch("https://proyecto2024collaboback.vercel.app/profile", {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
