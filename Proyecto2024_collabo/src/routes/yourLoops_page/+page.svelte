@@ -3,17 +3,13 @@
     import imagen from '../images/brawlstars.png';
     import { onMount } from 'svelte';
 
-    function getCookie(name: string): string | null {
-        if (typeof document === 'undefined') {
-            return null;
-        }
+    function getCookie(name: string) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop()?.split(';').shift() ?? null;
-        return null;
+        if (parts.length === 2) return parts.pop()?.split(';').shift() ?? '';
     }
 
-    function decodeToken(token: string): any {
+    function decodeToken(token: string): string {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
@@ -23,8 +19,8 @@
         return JSON.parse(jsonPayload); 
     }
 
-    let token: string | null = null;
-    let user: any = null;
+    const token = getCookie('token');
+    const user = token ? decodeToken(token) : null;
 
     interface Loop {
         id: string;
@@ -40,45 +36,41 @@
     let loops: Loop[] = [];
 
     onMount(async () => {
-        if (typeof document !== 'undefined') { // Añadir esta línea
-            token = getCookie('token');
-            user = token ? decodeToken(token) : null;
 
-            if (!user) {
-                console.error('Token no encontrado');
-                return;
-            }
+        if (!user) {
+            console.error('Token no encontrado');
+            return;
+        }
 
-            const userId = user.sub;
-            console.log(userId);
-            console.log(token);
-            console.log("alvarito saraviaaaaaaaaaaaaaaaa ");
-            fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json', 
-                    'Authorization': `Bearer ${token}`,
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                loops = data.map((loop: any) => ({
-                    id: loop.id,
-                    name: loop.Name,
-                    plays: loop.downloads,
-                    collabs: loop.collabs,
-                    likes: loop.likes,
-                    comments: loop.comments,
-                    date: new Date(loop.createdAt).toLocaleDateString(), // Convertir a string
-                }));
-                //console.log(loops);
-            })
-            .catch(err => {
-                console.error('Error fetching data:', err);
-            });
-
+        const userId = user.sub;
+        console.log(userId);
+        console.log(token);
+        console.log("alvarito saraviaaaaaaaaaaaaaaaa ");
+        fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            loops = data.map((loop: any) => ({
+                id: loop.id,
+                name: loop.Name,
+                plays: loop.downloads,
+                collabs: loop.collabs,
+                likes: loop.likes,
+                comments: loop.comments,
+                date: new Date(loop.createdAt).toLocaleDateString(), // Convertir a string
+            }));
             //console.log(loops);
-        } // Añadir esta línea
+        })
+        .catch(err => {
+            console.error('Error fetching data:', err);
+        });
+    
+        //console.log(loops);
     });
 
     function gotoToSecurity(loop: Loop) {
