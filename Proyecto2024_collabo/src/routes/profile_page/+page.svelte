@@ -39,16 +39,7 @@
         }
     }
 
-    function getCookie(name : string) {
-        if (typeof document !== 'undefined') {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop()?.split(';').shift() ?? '';
-        }
-        return '';
-    }
-
-    const token = getCookie('token');
+    const token = sessionStorage.getItem('token');
 
     const currentLoopId = $page.url.searchParams.get('loopid') || 'default-loopid';
     console.log(currentLoopId);
