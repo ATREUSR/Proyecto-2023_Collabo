@@ -20,8 +20,6 @@
     let userFollowers = 0;
     let userCollabs = 0;
 
-    const token = sessionStorage.getItem('token');
-
     interface Loop {
         title: string;
         audioFile: string;
@@ -43,11 +41,39 @@
 
     const currentLoopId = $page.url.searchParams.get('loopid') || 'default-loopid';
     console.log(currentLoopId);
-    console.log(token);
+
+    function decodeToken(token: string) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    }
 
     async function fetchUserData() {
+        const token = sessionStorage.getItem('token');
+
+        if (!token) {
+            console.error('Token no encontrado');
+            alert('No se encontró el token. Por favor, inicie sesión nuevamente.');
+            return;
+        }
+
+        const decodedToken = decodeToken(token);
+        const currentTime = Math.floor(Date.now() / 1000);
+
+        if (decodedToken.exp < currentTime) {
+            console.error('Token expirado');
+            alert('El token ha expirado. Por favor, inicie sesión nuevamente.');
+            return;
+        }
+
+        console.log('Token:', token);
+        
         try {
-            const response = await fetch("https://proyecto2024collaboback.vercel.app/profile", {
+            const response = await fetch("http://localhost:8003/profile", {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -56,12 +82,14 @@
                 }
             });
 
+            console.log('Request Headers:', {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            });
+
             if (!response.ok) {
-                if (response.status === 404) {
-                    throw new Error('User data not found');
-                } else {
-                    throw new Error(`Network response was not ok: ${response.statusText}`);
-                }
+                const errorText = await response.text();
+                throw new Error(`Network response was not ok: ${response.statusText} - ${errorText}`);
             }
 
             const data = await response.json();
@@ -93,6 +121,14 @@
     async function downloadAudio(e: MouseEvent) {
         e.preventDefault(); 
 
+        const token = sessionStorage.getItem('token');
+
+        if (!token) {
+            console.error('Token no encontrado');
+            alert('No se encontró el token. Por favor, inicie sesión nuevamente.');
+            return;
+        }
+
         try {
             const response = await fetch("https://proyecto2024collaboback.vercel.app/download", {
                 method: 'POST',
@@ -108,7 +144,6 @@
                 throw new Error(`Network response was not ok: ${response.statusText}`);
             }
 
-            
         } catch (err) {
             console.error('Download error:', err);
             if (err instanceof Error) {
@@ -128,32 +163,32 @@
     }
 
     onMount(() => {
-    fetchUserData().then(() => {
-        audioElements.forEach((audioElement, index) => {
-            if (audioElement) {
-                console.log('Creating WaveSurfer instance for:', audioElement);
-                const wavesurfer = WaveSurfer.create({
-                    container: audioElement,
-                    waveColor: '#4800B6',
-                    progressColor: 'rgba(72, 0, 182, 0.5)',
-                    barWidth: 7,
-                    barHeight: 0.5,
-                    barGap: 3,
-                    barRadius: 5,
-                });
+        fetchUserData().then(() => {
+            audioElements.forEach((audioElement, index) => {
+                if (audioElement) {
+                    console.log('Creating WaveSurfer instance for:', audioElement);
+                    const wavesurfer = WaveSurfer.create({
+                        container: audioElement,
+                        waveColor: '#4800B6',
+                        progressColor: 'rgba(72, 0, 182, 0.5)',
+                        barWidth: 7,
+                        barHeight: 0.5,
+                        barGap: 3,
+                        barRadius: 5,
+                    });
 
-                // Construye la URL de Cloudinary
-                const cloudinaryBaseUrl = "https://res.cloudinary.com/dw26qdtlf/video/upload/v1722284452/";
-                const audioUrl = `${cloudinaryBaseUrl}${userLoops[index].audioFile}.mp3`;
-                
-                wavesurfer.load(audioUrl);  // Usa audioUrl para cargar el audio en WaveSurfer
-                wavesurfers.push(wavesurfer);
-            } else {
-                console.error('audioElement not found');
-            }
+                    // Construye la URL de Cloudinary
+                    const cloudinaryBaseUrl = "https://res.cloudinary.com/dw26qdtlf/video/upload/v1722284452/";
+                    const audioUrl = `${cloudinaryBaseUrl}${userLoops[index].audioFile}.mp3`;
+                    
+                    wavesurfer.load(audioUrl);  // Usa audioUrl para cargar el audio en WaveSurfer
+                    wavesurfers.push(wavesurfer);
+                } else {
+                    console.error('audioElement not found');
+                }
+            });
         });
     });
-});
 
     function togglePlayPause(index: number) {
         wavesurfers[index].playPause();

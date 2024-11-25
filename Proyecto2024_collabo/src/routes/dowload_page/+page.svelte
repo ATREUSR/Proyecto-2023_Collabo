@@ -57,7 +57,7 @@
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `${title}.mp4`;
+            link.download = `${title}.mp3`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

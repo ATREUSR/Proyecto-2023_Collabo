@@ -51,7 +51,7 @@
 
     async function logIn() {
         const userData = { email, password };
-        const response = await fetch("https://proyecto2024collaboback.vercel.app/login", {
+        const response = await fetch("http://localhost:8003/login", {
           method: 'POST',
           headers: {
                 //'Authorization': 'Basic '+btoa('username:password'),
@@ -78,10 +78,7 @@
         }
 
         console.log(response);
-        const cookieHeader = response.headers.get('Set-Cookie');
-        if (cookieHeader) {
-            const cookies = cookieHeader.split(', ');
-        }
+
         console.log(response.headers.getSetCookie());
         if(response.ok){
             showModal = true; 
