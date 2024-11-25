@@ -95,8 +95,6 @@
     }
 </script>
 
-<svelte:document />
-
 <div class="yourloops-container">
     <div class="title">
         <h1>Uploads</h1>
