@@ -70,6 +70,13 @@
             return;
         }
 
+        const data = await response.json();
+        const token = data.token; // Asegúrate de que el token esté en la respuesta JSON
+
+        if (token) {
+            sessionStorage.setItem('token', token);
+        }
+
         console.log(response);
         const cookieHeader = response.headers.get('Set-Cookie');
         if (cookieHeader) {
