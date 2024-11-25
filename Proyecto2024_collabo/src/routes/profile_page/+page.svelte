@@ -20,6 +20,8 @@
     let userFollowers = 0;
     let userCollabs = 0;
 
+    const token = sessionStorage.getItem('token');
+
     interface Loop {
         title: string;
         audioFile: string;
@@ -38,8 +40,6 @@
             wavesurfers.forEach(wavesurfer => wavesurfer.load(audioFile));
         }
     }
-
-    const token = sessionStorage.getItem('token');
 
     const currentLoopId = $page.url.searchParams.get('loopid') || 'default-loopid';
     console.log(currentLoopId);
@@ -74,7 +74,7 @@
             userCollabs = data.collabs;
             userLoops = data.loops.map((loop: any) => ({
                 title: loop.Title,
-                audioFile: loop.id, // Assuming the audio file URL is stored in the Title property
+                audioFile: loop.id, 
                 name: loop.Name
             }));
 
