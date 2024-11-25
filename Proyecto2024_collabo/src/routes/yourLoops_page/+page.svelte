@@ -3,12 +3,6 @@
     import imagen from '../images/brawlstars.png';
     import { onMount } from 'svelte';
 
-    function getCookie(name: string) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop()?.split(';').shift() ?? '';
-    }
-
     function decodeToken(token: string): string {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -19,7 +13,7 @@
         return JSON.parse(jsonPayload); 
     }
 
-    const token = getCookie('token');
+    const token = sessionStorage.getItem('token');
     const user = token ? decodeToken(token) : null;
 
     interface Loop {
@@ -36,7 +30,6 @@
     let loops: Loop[] = [];
 
     onMount(async () => {
-
         if (!user) {
             console.error('Token no encontrado');
             return;
