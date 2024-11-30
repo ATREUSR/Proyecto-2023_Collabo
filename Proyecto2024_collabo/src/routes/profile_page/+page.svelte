@@ -52,12 +52,19 @@
         return JSON.parse(jsonPayload);
     }
 
+    const token = sessionStorage.getItem('token');
+    const user = token ? decodeToken(token) : null;
+
     async function fetchUserData() {
-        const token = sessionStorage.getItem('token');
 
         if (!token) {
             console.error('Token no encontrado');
             alert('No se encontró el token. Por favor, inicie sesión nuevamente.');
+            return;
+        }
+
+        if (!user) {
+            console.error('Token no encontrado');
             return;
         }
 
@@ -71,9 +78,10 @@
         }
 
         console.log('Token:', token);
+        const userId = user.sub;
         
         try {
-            const response = await fetch("https://proyecto2024collaboback.vercel.app/profile", {
+            const response = await fetch("https://proyecto2024collaboback.vercel.app/profile/", {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
