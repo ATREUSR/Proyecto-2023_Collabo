@@ -81,7 +81,7 @@
         const userId = user.sub;
         
         try {
-            const response = await fetch("https://proyecto2024collaboback.vercel.app/profile/", {
+            const response = await fetch(`https://proyecto2024collaboback.vercel.app/profile/${userId}`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
