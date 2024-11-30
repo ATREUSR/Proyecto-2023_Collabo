@@ -4,7 +4,8 @@
     import WaveSurfer from 'wavesurfer.js';
     import { onMount } from "svelte";
     import { page } from '$app/stores';
-    
+    import type { Load } from '@sveltejs/kit';
+
     let audioElements: HTMLDivElement[] = [];
     let wavesurfers: WaveSurfer[] = [];
     let title = '';
@@ -52,10 +53,12 @@
         return JSON.parse(jsonPayload);
     }
 
-    const token = sessionStorage.getItem('token');
-    const user = token ? decodeToken(token) : null;
+    let token: string | null = null;
+    let user: any = null;
 
     async function fetchUserData() {
+        token = await getTokenFromIndexedDB();
+        user = token ? decodeToken(token) : null;
 
         if (!token) {
             console.error('Token no encontrado');
@@ -129,7 +132,7 @@
     async function downloadAudio(e: MouseEvent) {
         e.preventDefault(); 
 
-        const token = sessionStorage.getItem('token');
+        token = await getTokenFromIndexedDB();
 
         if (!token) {
             console.error('Token no encontrado');
@@ -185,11 +188,10 @@
                         barRadius: 5,
                     });
 
-                    // Construye la URL de Cloudinary
                     const cloudinaryBaseUrl = "https://res.cloudinary.com/dw26qdtlf/video/upload/v1722284452/";
                     const audioUrl = `${cloudinaryBaseUrl}${userLoops[index].audioFile}.mp3`;
                     
-                    wavesurfer.load(audioUrl);  // Usa audioUrl para cargar el audio en WaveSurfer
+                    wavesurfer.load(audioUrl);
                     wavesurfers.push(wavesurfer);
                 } else {
                     console.error('audioElement not found');
@@ -200,6 +202,31 @@
 
     function togglePlayPause(index: number) {
         wavesurfers[index].playPause();
+    }
+
+    async function getTokenFromIndexedDB() {
+        return new Promise<string | null>((resolve, reject) => {
+            const request = indexedDB.open('authDB', 1);
+
+            request.onsuccess = (event) => {
+                const db = (event.target as IDBOpenDBRequest).result;
+                const transaction = db.transaction('tokens', 'readonly');
+                const store = transaction.objectStore('tokens');
+                const getRequest = store.get('authToken');
+
+                getRequest.onsuccess = () => {
+                    resolve(getRequest.result ? getRequest.result.token : null);
+                };
+
+                getRequest.onerror = (event) => {
+                    reject(event);
+                };
+            };
+
+            request.onerror = (event) => {
+                reject(event);
+            };
+        });
     }
 </script>
 
