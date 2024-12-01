@@ -39,7 +39,7 @@
         console.log(userId);
         console.log(token);
         console.log("alvarito saraviaaaaaaaaaaaaaaaa ");
-        fetch(`https://proyecto2024collaboback.vercel.app/${userId}`, {
+        fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json', 
