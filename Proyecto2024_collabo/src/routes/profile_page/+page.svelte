@@ -102,7 +102,7 @@
             console.error('Error fetching data:', err);
         });
 
-        fetch(`http://localhost:8003/artist-loops/${userId}`, {
+        fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
             method: 'GET',
             credentials: 'include',
             headers: {
