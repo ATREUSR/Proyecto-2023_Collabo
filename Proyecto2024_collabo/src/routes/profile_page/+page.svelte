@@ -70,18 +70,60 @@
         }
 
         const decodedToken = decodeToken(token);
-        const currentTime = Math.floor(Date.now() / 1000);
+        /*const currentTime = Math.floor(Date.now() / 1000);
 
         if (decodedToken.exp < currentTime) {
             console.error('Token expirado');
             alert('El token ha expirado. Por favor, inicie sesión nuevamente.');
             return;
-        }
+        }*/
 
         console.log('Token:', token);
         const userId = user.sub;
+
+        fetch(`https://proyecto2024collaboback.vercel.app/profile/${userId}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            userName = data.name;
+            userDescription = data.description;
+            userUploads = data.uploads;
+            userFollowers = data.followers;
+            userCollabs = data.collabs;
+            //console.log(loops);
+        })
+        .catch(err => {
+            console.error('Error fetching data:', err);
+        });
+
+        fetch(`http://localhost:8003/artist-loops/${userId}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            userLoops = data.map((loop: any) => ({
+                title: loop.Title,
+                audioFile: loop.id, 
+                name: loop.Name
+            }));
+            //console.log(loops);
+        })
+        .catch(err => {
+            console.error('Error fetching data:', err);
+        });
         
-        try {
+        /*try {
             const response = await fetch(`https://proyecto2024collaboback.vercel.app/profile/${userId}`, {
                 method: 'GET',
                 credentials: 'include',
@@ -124,7 +166,7 @@
             } else {
                 alert('An unknown error occurred while fetching user data.');
             }
-        }
+        }*/
     }
 
     async function downloadAudio(e: MouseEvent) {
