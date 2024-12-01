@@ -39,7 +39,7 @@
         console.log(userId);
         console.log(token);
         console.log("alvarito saraviaaaaaaaaaaaaaaaa ");
-        fetch(`https://proyecto2024collaboback.vercel.app/profile`, {
+        fetch(`http://localhost:8003/artist-loops/${userId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json', 
