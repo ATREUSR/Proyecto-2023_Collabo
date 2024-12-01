@@ -24,11 +24,18 @@
           method: 'POST',
           credentials: "include",
           headers: {
+                //'Authorization': 'Basic '+btoa('username:password'),
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Credentials': 'true'
             },
           body: JSON.stringify(userData)
         }).then((response) => {
+            const cookieHeader = response.headers.get('Set-Cookie');
+            if (cookieHeader) {
+                const cookies = cookieHeader.split(', ');
+            }
+            console.log(response.headers.getSetCookie());
+            //console.log(response);
             if(response.ok){
                 showModalRegister = true; 
             } 
@@ -38,6 +45,8 @@
         }).catch(err => {
           console.log(err);
         })
+
+        //console.log(userData); 
     }
 
     async function logIn() {
@@ -45,27 +54,37 @@
         const response = await fetch("https://proyecto2024collaboback.vercel.app/login", {
           method: 'POST',
           headers: {
+                //'Authorization': 'Basic '+btoa('username:password'),
                 'Content-Type': 'application/json',
             },
           body: JSON.stringify(userData),
           credentials: 'include',
+          
         })
 
         if (!response.ok) {
+            // TODO: Handle not ok
+            console.log(response);
             showModalError = true;
+
             return;
         }
 
         const data = await response.json();
-        const token = data.token;
+        const token = data.token; // Asegúrate de que el token esté en la respuesta JSON
 
         if (token) {
-            await saveTokenToIndexedDB(token);
+            sessionStorage.setItem('token', token);
         }
 
+        console.log(response);
+
+        console.log(response.headers.getSetCookie());
         if(response.ok){
             showModal = true; 
         }
+        //console.log(userData); 
+        
     }
 
     function handleModalClose() {
@@ -114,61 +133,6 @@
             email = '';
             password = '';
         }
-    }
-
-    async function saveTokenToIndexedDB(token: string) {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open('authDB', 1);
-
-            request.onupgradeneeded = (event) => {
-                const db = (event.target as IDBOpenDBRequest).result;
-                db.createObjectStore('tokens', { keyPath: 'id' });
-            };
-
-            request.onsuccess = (event) => {
-                const db = (event.target as IDBOpenDBRequest).result;
-                const transaction = db.transaction('tokens', 'readwrite');
-                const store = transaction.objectStore('tokens');
-                store.put({ id: 'authToken', token });
-
-                transaction.oncomplete = () => {
-                    resolve(true);
-                };
-
-                transaction.onerror = (event) => {
-                    reject(event);
-                };
-            };
-
-            request.onerror = (event) => {
-                reject(event);
-            };
-        });
-    }
-
-    async function getTokenFromIndexedDB() {
-        return new Promise<string | null>((resolve, reject) => {
-            const request = indexedDB.open('authDB', 1);
-
-            request.onsuccess = (event) => {
-                const db = (event.target as IDBOpenDBRequest).result;
-                const transaction = db.transaction('tokens', 'readonly');
-                const store = transaction.objectStore('tokens');
-                const getRequest = store.get('authToken');
-
-                getRequest.onsuccess = () => {
-                    resolve(getRequest.result ? getRequest.result.token : null);
-                };
-
-                getRequest.onerror = (event) => {
-                    reject(event);
-                };
-            };
-
-            request.onerror = (event) => {
-                reject(event);
-            };
-        });
     }
 </script>
 
