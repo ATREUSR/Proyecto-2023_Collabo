@@ -81,7 +81,7 @@
         console.log('Token:', token);
         const userId = user.sub;
 
-        fetch(`https://proyecto2024collaboback.vercel.app/profile/${userId}`, {
+        fetch(`https://proyecto2024collaboback.vercel.app/profile`, {
             method: 'GET',
             credentials: 'include',
             headers: {
