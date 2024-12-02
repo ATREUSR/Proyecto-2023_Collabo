@@ -25,6 +25,7 @@
         title: string;
         audioFile: string;
         name: string;
+        userNameBro: string;
     }
 
     let userLoops: Loop[] = [];
@@ -115,7 +116,8 @@
             userLoops = data.map((loop: any) => ({
                 title: loop.Title,
                 audioFile: loop.id, 
-                name: loop.Name
+                name: loop.Name,
+                userNameBro: loop.user.name
             }));
             //console.log(loops);
         })
@@ -294,7 +296,7 @@
                                 <div class="loop-title">{loop.name}</div>
                                 <div class="artist-detail">
                                     <img class="profile-img" src={profile} alt="">
-                                    <p class="artist-follow">{userName}</p>
+                                    <p class="artist-follow">{loop.userNameBro}</p>
                                 </div>
                                 <div bind:this={audioElements[index]} class="audio-container" id="audio-container">
                                     <source src={loop.audioFile} type="audio" class="audio">
