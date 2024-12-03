@@ -112,6 +112,8 @@
                 response.text().then(text => console.error(text));
             }
 
+            console.log("FormData:", Array.from(formData.entries()));
+
             //console.log(token);
         }).catch(err => {
             console.log(err);
