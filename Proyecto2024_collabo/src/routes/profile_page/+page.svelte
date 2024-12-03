@@ -107,7 +107,6 @@
                 name: loop.Name,
                 //aaa: loop.user,
             }));*/
-            console.log('Fetched user email:', userEmail);
         })
         .catch(err => {
             console.error('Error fetching data:', err);
@@ -130,6 +129,8 @@
                 artistName: loop.email,
             }));
 
+            console.log('Fetched user email:', userEmail);
+
             if (typeof userEmail === 'string') {
                 userName = userEmail.substring(0, userEmail.length - 10);
             } else {
@@ -139,6 +140,7 @@
             userName = userId.name;
             console.log('Fetched user loops:', userLoops);
             console.log('Fetched user id:', userId);
+            
         })
         .catch(err => {
             console.error('Error fetching data:', err);
