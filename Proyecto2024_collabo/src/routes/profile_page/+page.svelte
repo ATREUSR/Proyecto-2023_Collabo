@@ -320,13 +320,13 @@
                                     <img class="profile-img" src={profile} alt="">
                                     <p class="artist-follow">{userEmail}</p>
                                 </div>
-                                <div bind:this={audioElements[index]} class="audio-container" id="audio-container">
+                                <!--<div bind:this={audioElements[index]} class="audio-container" id="audio-container">
                                     <source src={loop.audioFile} type="audio" class="audio">
                                 </div>
                                 <div class="buttons-container">
                                     <button class="pause-play-button" on:click={() => togglePlayPause(index)}>play/pause</button>
                                     <button class="dowload-button">Collab</button>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>
