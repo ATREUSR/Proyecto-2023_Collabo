@@ -1,5 +1,5 @@
 <script>
-	import logo from './images/Logo_home.png';
+    import logo from './images/Logo_home.png';
     import logoborde from './images/borde_logo.png';
     import defaultpfp from './images/defaultpfp.png';
     import { goto } from '$app/navigation';
@@ -48,9 +48,9 @@
             </li>
             <li>
                 <div class="profile-container">
-                    <button type="button" on:click={navtoprofile} style="background: none; border: none; padding: 0;">
+                    <button type="button" on:click={navtoprofile} class="profile-button">
                         <img src={defaultpfp} alt="profile" />
-                      </button>
+                    </button>
                 </div>
             </li>
         </ul>
@@ -67,7 +67,6 @@
         box-sizing: border-box;
         font-family: 'Utendo', sans-serif;
     }
-
 
     nav {
         display: flex;
@@ -210,6 +209,14 @@
         height: 30px;
         border-radius: 50%;
         overflow: hidden;
+        cursor: pointer; /* Agrega esta línea */
+    }
+
+    .profile-button {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer; /* Agrega esta línea */
     }
 
     @media screen and (max-width: 600px) {
@@ -225,5 +232,9 @@
         .nav input[type=text] {
             border: 1px solid #000;
         }
+    }
+
+    .profile-container:hover{
+        cursor: pointer;
     }
 </style>
