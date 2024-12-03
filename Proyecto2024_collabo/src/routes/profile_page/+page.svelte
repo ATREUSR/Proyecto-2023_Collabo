@@ -25,7 +25,7 @@
         title: string;
         audioFile: string;
         name: string;
-        aaa: string
+        artistName: string
     }
 
     let userLoops: Loop[] = [];
@@ -125,7 +125,7 @@
                 title: loop.Title,
                 audioFile: loop.id, 
                 name: loop.Name,
-                //aaa: loop.user,
+                artistName: loop.user,
             }));
 
             userName = userId.name;
