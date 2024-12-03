@@ -129,7 +129,7 @@
             }));
 
             userName = userId.name;
-            console.log('Fetched user loops:', userName);
+            console.log('Fetched user loops:', userLoops);
         })
         .catch(err => {
             console.error('Error fetching data:', err);
