@@ -94,12 +94,7 @@
             },
         })
         .then(response => response.json())
-        .then(data => {
-            if (typeof userEmail === 'string') {
-                userName = userEmail.substring(0, userEmail.length - 10);
-            } else {
-                console.error('userEmail no es una cadena:', userEmail);
-            }  
+        .then(data => { 
             console.log('Fetched user token:', token);
             console.log('Fetched user data:', data);
             userDescription = data.description;
@@ -134,6 +129,12 @@
                 name: loop.Name,
                 artistName: loop.email,
             }));
+
+            if (typeof userEmail === 'string') {
+                userName = userEmail.substring(0, userEmail.length - 10);
+            } else {
+                console.error('userEmail no es una cadena:', userEmail);
+            } 
 
             userName = userId.name;
             console.log('Fetched user loops:', userLoops);
