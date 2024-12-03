@@ -125,7 +125,7 @@
                 title: loop.Title,
                 audioFile: loop.id, 
                 name: loop.Name,
-                artistName: loop.userId,
+                artistName: loop.User,
             }));
 
             userName = userId.name;
