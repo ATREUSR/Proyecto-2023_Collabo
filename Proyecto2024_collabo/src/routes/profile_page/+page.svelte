@@ -81,6 +81,7 @@
         }*/
 
         console.log('Token:', token);
+        console.log('userToken:', user);
         const userId = user.sub;
 
         fetch(`https://proyecto2024collaboback.vercel.app/profile`, {
@@ -125,7 +126,7 @@
                 title: loop.Title,
                 audioFile: loop.id, 
                 name: loop.Name,
-                artistName: loop.user,
+                artistName: loop.email,
             }));
 
             userName = userId.name;
