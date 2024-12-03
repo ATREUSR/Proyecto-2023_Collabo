@@ -9,13 +9,13 @@
     let audioElements: HTMLDivElement[] = [];
     let wavesurfers: WaveSurfer[] = [];
     let title = '';
-    let name = '';
+    let names = '';
     let audioFile = '';
     let loopId = '';
     let userId = '';
     let securityWrap: HTMLDivElement;
 
-    let userName = '';
+    let userNames = '';
     let userDescription = '';
     let userUploads = 0;
     let userFollowers = 0;
@@ -24,15 +24,15 @@
     interface Loop {
         title: string;
         audioFile: string;
-        name: string;
-        artistName: string
+        names: string;
+        artistNames: string
     }
 
     let userLoops: Loop[] = [];
 
     $: {
         title = $page.url.searchParams.get('title') || 'default title';
-        name = $page.url.searchParams.get('name') || 'default name';
+        names = $page.url.searchParams.get('names') || 'default names';
         audioFile = $page.url.searchParams.get('audioFile') || 'default-audio.mp3';
         loopId = $page.url.searchParams.get('loopid') || 'default-loopid';
         userId = $page.url.searchParams.get('userid') || 'default-userid';
@@ -93,7 +93,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            userName = data.name;
+            userNames = data.names;
             console.log('Fetched user token:', token);
             console.log('Fetched user data:', data);
             userDescription = data.description;
@@ -103,7 +103,7 @@
             /*userLoops = data.loops.map((loop: any) => ({
                 title: loop.Title,
                 audioFile: loop.id, 
-                name: loop.Name,
+                names: loop.Names,
                 //aaa: loop.user,
             }));*/
         })
@@ -124,11 +124,11 @@
             userLoops = data.map((loop: any) => ({
                 title: loop.Title,
                 audioFile: loop.id, 
-                name: loop.Name,
-                artistName: loop.user[name],
+                names: loop.Names,
+                artistNames: loop.user.name,
             }));
 
-            userName = userId.name;
+            userNames = userId.names;
             console.log('Fetched user loops:', userLoops);
         })
         .catch(err => {
@@ -158,7 +158,7 @@
             const data = await response.json();
             console.log('Fetched user data:', data);
 
-            userName = data.name;
+            userNames = data.names;
             userDescription = data.description;
             userUploads = data.uploads;
             userFollowers = data.followers;
@@ -166,7 +166,7 @@
             userLoops = data.loops.map((loop: any) => ({
                 title: loop.Title,
                 audioFile: loop.id, 
-                name: loop.Name
+                names: loop.Names
             }));
 
             console.log('Fetched user loops:', userLoops);
@@ -269,8 +269,8 @@
                 <div class="img">
                     <img src={profile} alt="">
                 </div>
-                <div class="user-name">
-                    <h2>{userName}</h2>
+                <div class="user-names">
+                    <h2>{userNames}</h2>
                 </div>
                 <div class="user-desc">
                     <span>-</span>
@@ -303,10 +303,10 @@
                         <div class="loop-info">
                             <img class="loop-img" src={artista} alt="">
                             <div class="artist-upload-info">
-                                <div class="loop-title">{loop.name}</div>
+                                <div class="loop-title">{loop.names}</div>
                                 <div class="artist-detail">
                                     <img class="profile-img" src={profile} alt="">
-                                    <p class="artist-follow">{userName}</p>
+                                    <p class="artist-follow">{userNames}</p>
                                 </div>
                                 <div bind:this={audioElements[index]} class="audio-container" id="audio-container">
                                     <source src={loop.audioFile} type="audio" class="audio">
@@ -406,7 +406,7 @@
         margin-bottom: 10px;
     }
 
-    .user-name, .user-desc, .user-info {
+    .user-names, .user-desc, .user-info {
         margin-bottom: 10px;
         text-align: center;
     }
