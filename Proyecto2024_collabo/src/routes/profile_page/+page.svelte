@@ -112,6 +112,7 @@
                 name: loop.Name,
                 //aaa: loop.user,
             }));*/
+            console.log('Fetched user email:', userEmail);
         })
         .catch(err => {
             console.error('Error fetching data:', err);
@@ -136,6 +137,7 @@
 
             userName = userId.name;
             console.log('Fetched user loops:', userLoops);
+            console.log('Fetched user id:', userId);
         })
         .catch(err => {
             console.error('Error fetching data:', err);
