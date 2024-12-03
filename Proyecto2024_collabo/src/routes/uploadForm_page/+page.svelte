@@ -88,8 +88,6 @@
         waveSurfer.playPause();
     }
 
-    const token = sessionStorage.getItem('token');
-
     function uploadAudio() {
         let formData = new FormData();
         console.log(inputValue);
@@ -104,8 +102,7 @@
             method: 'POST',
             credentials: "include",
             headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
+                //Authorization: `Bearer ${token}`,          
             },
             body: formData,
         }).then((response) => {
@@ -115,7 +112,7 @@
                 response.text().then(text => console.error(text));
             }
 
-            console.log(token);
+            //console.log(token);
         }).catch(err => {
             console.log(err);
         });
