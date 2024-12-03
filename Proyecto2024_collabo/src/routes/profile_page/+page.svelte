@@ -100,18 +100,18 @@
             userUploads = data.uploads;
             userFollowers = data.followers;
             userCollabs = data.collabs;
-            userLoops = data.loops.map((loop: any) => ({
+            /*userLoops = data.loops.map((loop: any) => ({
                 title: loop.Title,
                 audioFile: loop.id, 
                 name: loop.Name,
                 //aaa: loop.user,
-            }));
+            }));*/
         })
         .catch(err => {
             console.error('Error fetching data:', err);
         });
 
-        /*fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
+        fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -133,7 +133,7 @@
         })
         .catch(err => {
             console.error('Error fetching data:', err);
-        });*/
+        });
         
         /*try {
             const response = await fetch(`https://proyecto2024collaboback.vercel.app/profile/${userId}`, {
