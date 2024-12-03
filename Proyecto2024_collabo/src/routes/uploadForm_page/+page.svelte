@@ -113,6 +113,8 @@
             } else {
                 response.text().then(text => console.error(text));
             }
+
+            console.log(token);
         }).catch(err => {
             console.log(err);
         });
