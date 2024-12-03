@@ -83,6 +83,7 @@
         console.log('Token:', token);
         console.log('userToken:', user);
         const userId = user.sub;
+        const userEmail = user.email;
 
         fetch(`https://proyecto2024collaboback.vercel.app/profile`, {
             method: 'GET',
@@ -94,7 +95,11 @@
         })
         .then(response => response.json())
         .then(data => {
-            userName = data.name;
+            if (typeof userEmail === 'string') {
+                userName = userEmail.substring(0, userEmail.length - 10);
+            } else {
+                console.error('userEmail no es una cadena:', userEmail);
+            }  
             console.log('Fetched user token:', token);
             console.log('Fetched user data:', data);
             userDescription = data.description;
