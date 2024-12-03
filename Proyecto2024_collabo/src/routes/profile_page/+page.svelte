@@ -25,7 +25,7 @@
         title: string;
         audioFile: string;
         name: string;
-        userNameBro: string;
+        aaa: string
     }
 
     let userLoops: Loop[] = [];
@@ -56,6 +56,7 @@
 
     const token = sessionStorage.getItem('token');
     const user = token ? decodeToken(token) : null;
+    console.log('Token:', user);
 
     async function fetchUserData() {
 
@@ -93,17 +94,24 @@
         .then(response => response.json())
         .then(data => {
             userName = data.name;
+            console.log('Fetched user token:', token);
+            console.log('Fetched user data:', data);
             userDescription = data.description;
             userUploads = data.uploads;
             userFollowers = data.followers;
             userCollabs = data.collabs;
-            //console.log(loops);
+            userLoops = data.loops.map((loop: any) => ({
+                title: loop.Title,
+                audioFile: loop.id, 
+                name: loop.Name,
+                //aaa: loop.user,
+            }));
         })
         .catch(err => {
             console.error('Error fetching data:', err);
         });
 
-        fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
+        /*fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -117,13 +125,15 @@
                 title: loop.Title,
                 audioFile: loop.id, 
                 name: loop.Name,
-                userNameBro: loop.user.name
+                //aaa: loop.user,
             }));
-            //console.log(loops);
+
+            userName = userId.name;
+            console.log('Fetched user loops:', userName);
         })
         .catch(err => {
             console.error('Error fetching data:', err);
-        });
+        });*/
         
         /*try {
             const response = await fetch(`https://proyecto2024collaboback.vercel.app/profile/${userId}`, {
@@ -296,7 +306,7 @@
                                 <div class="loop-title">{loop.name}</div>
                                 <div class="artist-detail">
                                     <img class="profile-img" src={profile} alt="">
-                                    <p class="artist-follow">{loop.userNameBro}</p>
+                                    <p class="artist-follow">{userName}</p>
                                 </div>
                                 <div bind:this={audioElements[index]} class="audio-container" id="audio-container">
                                     <source src={loop.audioFile} type="audio" class="audio">
