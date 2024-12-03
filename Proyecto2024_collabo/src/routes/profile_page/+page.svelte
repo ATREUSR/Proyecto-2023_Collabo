@@ -14,6 +14,7 @@
     let loopId = '';
     let userId = '';
     let securityWrap: HTMLDivElement;
+    let userEmail = '';
 
     let userName = '';
     let userDescription = '';
@@ -83,7 +84,7 @@
         console.log('Token:', token);
         console.log('userToken:', user);
         const userId = user.sub;
-        const userEmail = user.email;
+        userEmail = user.email
 
         fetch(`https://proyecto2024collaboback.vercel.app/profile`, {
             method: 'GET',
@@ -132,7 +133,7 @@
             console.log('Fetched user email:', userEmail);
 
             if (typeof userEmail === 'string') {
-                userName = userEmail.substring(0, userEmail.length - 10);
+                userEmail = userEmail.substring(0, userEmail.length - 10);
             } else {
                 console.error('userEmail no es una cadena:', userEmail);
             } 
@@ -281,7 +282,7 @@
                     <img src={profile} alt="">
                 </div>
                 <div class="user-name">
-                    <h2>{userName}</h2>
+                    <h2>{userEmail}</h2>
                 </div>
                 <div class="user-desc">
                     <span>-</span>
@@ -317,7 +318,7 @@
                                 <div class="loop-title">{loop.name}</div>
                                 <div class="artist-detail">
                                     <img class="profile-img" src={profile} alt="">
-                                    <p class="artist-follow">{userName}</p>
+                                    <p class="artist-follow">{userEmail}</p>
                                 </div>
                                 <div bind:this={audioElements[index]} class="audio-container" id="audio-container">
                                     <source src={loop.audioFile} type="audio" class="audio">
