@@ -21,6 +21,8 @@
 
     let showModal = false;
 
+    const token = sessionStorage.getItem('token');
+
     function handleImageChange(event: Event) {
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0];
@@ -102,7 +104,7 @@
             method: 'POST',
             credentials: "include",
             headers: {
-                //Authorization: `Bearer ${token}`,          
+                Authorization: `Bearer ${token}`,          
             },
             body: formData,
         }).then((response) => {
@@ -111,7 +113,8 @@
             } else {
                 response.text().then(text => console.error(text));
             }
-
+ 
+            console.log("Token: ", token);   
             console.log("FormData:", Array.from(formData.entries()));
 
             //console.log(token);
