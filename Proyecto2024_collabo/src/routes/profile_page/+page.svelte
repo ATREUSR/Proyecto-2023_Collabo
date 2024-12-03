@@ -4,6 +4,7 @@
     import WaveSurfer from 'wavesurfer.js';
     import { onMount } from "svelte";
     import { page } from '$app/stores';
+    import type { Load } from '@sveltejs/kit';
     
     let audioElements: HTMLDivElement[] = [];
     let wavesurfers: WaveSurfer[] = [];
@@ -24,6 +25,7 @@
         title: string;
         audioFile: string;
         name: string;
+        artistName: string
     }
 
     let userLoops: Loop[] = [];
@@ -52,8 +54,11 @@
         return JSON.parse(jsonPayload);
     }
 
+    const token = sessionStorage.getItem('token');
+    const user = token ? decodeToken(token) : null;
+    console.log('Token:', user);
+
     async function fetchUserData() {
-        const token = sessionStorage.getItem('token');
 
         if (!token) {
             console.error('Token no encontrado');
@@ -61,19 +66,77 @@
             return;
         }
 
+        if (!user) {
+            console.error('Token no encontrado');
+            return;
+        }
+
         const decodedToken = decodeToken(token);
-        const currentTime = Math.floor(Date.now() / 1000);
+        /*const currentTime = Math.floor(Date.now() / 1000);
 
         if (decodedToken.exp < currentTime) {
             console.error('Token expirado');
             alert('El token ha expirado. Por favor, inicie sesión nuevamente.');
             return;
-        }
+        }*/
 
         console.log('Token:', token);
+        const userId = user.sub;
+
+        fetch(`https://proyecto2024collaboback.vercel.app/profile`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            userName = data.name;
+            console.log('Fetched user token:', token);
+            console.log('Fetched user data:', data);
+            userDescription = data.description;
+            userUploads = data.uploads;
+            userFollowers = data.followers;
+            userCollabs = data.collabs;
+            /*userLoops = data.loops.map((loop: any) => ({
+                title: loop.Title,
+                audioFile: loop.id, 
+                name: loop.Name,
+                //aaa: loop.user,
+            }));*/
+        })
+        .catch(err => {
+            console.error('Error fetching data:', err);
+        });
+
+        fetch(`https://proyecto2024collaboback.vercel.app/artist-loops/${userId}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            userLoops = data.map((loop: any) => ({
+                title: loop.Title,
+                audioFile: loop.id, 
+                name: loop.Name,
+                artistName: loop.user,
+            }));
+
+            userName = userId.name;
+            console.log('Fetched user loops:', userLoops);
+        })
+        .catch(err => {
+            console.error('Error fetching data:', err);
+        });
         
-        try {
-            const response = await fetch("https://proyecto2024collaboback.vercel.app/profile", {
+        /*try {
+            const response = await fetch(`https://proyecto2024collaboback.vercel.app/profile/${userId}`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -115,7 +178,7 @@
             } else {
                 alert('An unknown error occurred while fetching user data.');
             }
-        }
+        }*/
     }
 
     async function downloadAudio(e: MouseEvent) {

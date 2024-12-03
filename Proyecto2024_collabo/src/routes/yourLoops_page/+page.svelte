@@ -57,7 +57,8 @@
                 comments: loop.comments,
                 date: new Date(loop.createdAt).toLocaleDateString(), // Convertir a string
             }));
-            //console.log(loops);
+            console.log("loops: " + loops);
+            console.log("data: " + data);
         })
         .catch(err => {
             console.error('Error fetching data:', err);
